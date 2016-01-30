@@ -10,6 +10,18 @@ cmd:option('-classifier', 'nb', 'classifier to use')
 -- Hyperparameters
 -- ...
 
+function validateModel(W, b)
+    local f = hdf5.open(opt.datafile, 'r')
+    local validation_input = f:read('valid_input'):all():double()
+    n, nfeat = validation_input:size()   
+    --print(n[1], n[2], nfeat)
+    --print(nclasses)
+    Ans = torch.Tensor(n[1], nclasses)
+    Ans:mm(validation_input, W:t())
+
+end   
+    
+
 
 function main() 
    -- Parse input params
@@ -20,7 +32,7 @@ function main()
 
    local W = torch.DoubleTensor(nclasses, nfeatures)
    local b = torch.DoubleTensor(nclasses)
-
+   validateModel(W, b)
    -- Train.
 
    -- Test.
