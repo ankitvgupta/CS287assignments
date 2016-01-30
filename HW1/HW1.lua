@@ -11,16 +11,16 @@ cmd:option('-classifier', 'nb', 'classifier to use')
 -- ...
 function unitTest()
 	local x = torch.ones(3, 2)
-	x[1][1] = 4
+	x[1][1] = 5
 	x[2][1] = 3
 	x[2][2] = 2
 	x[3][1] = 2
 	local Wt = torch.Tensor(4, 2)
 	local b = torch.ones(1, 2)
-	b[1][2] = -1
 	i=0; Wt:apply(function() i = i+1; return i end)
+	Wt[4][2] = 0
 	local output = validateModel(Wt:t(), b, x)
-	print (output)
+	print(output)
 
 end
 
@@ -56,7 +56,8 @@ function validateModel(W, b, x)
     for r = 1, Ans:size(1) do
     	Ans[r]:add(b)
     end
-    return Ans
+    a, b = torch.max(Ans, 2)
+    return b
 end   
     
 
@@ -68,7 +69,7 @@ function main()
    nclasses = f:read('nclasses'):all():long()[1]
    nfeatures = f:read('nfeatures'):all():long()[1]
 
-   local W = torch.DoubleTensor(nclasses, nfeatures)
+   local W = torch.randn(nclasses, nfeatures)
    local b = torch.DoubleTensor(nclasses)
    local validation_input = f:read('valid_input'):all():double()
    print(validateModel(W, b, validation_input))
