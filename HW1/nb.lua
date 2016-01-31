@@ -50,23 +50,27 @@ function sparseMultiply(A, B)
 end
 
 
-
-function validateModel(W, b, x)
+-- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
+function validateModel(W, b, x, y)
     Ans = sparseMultiply(x, W:t())
     for r = 1, Ans:size(1) do
     	Ans[r]:add(b)
     end
     a, b = torch.max(Ans, 2)
-    return b
+    equality = torch.eq(b, y)
+    --print(torch.sum(equality, 1)[1])
+
+    score = equality:sum()/equality:size()[1]
+    return score
 end   
     
 
-function naiveBayes(train_data_name)
+function naiveBayes(alpha)
 	local f = hdf5.open(opt.datafile, 'r')
-	F = torch.zeros(nfeatures, nclasses)
-	training_input = f:read('train_input'):all():double()
-	training_output = f:read('train_output'):all():double()
-	train_size = training_input:size()
+	local F = torch.zeros(nfeatures, nclasses)
+	local training_input = f:read('train_input'):all():double()
+	local training_output = f:read('train_output'):all():double()
+	local train_size = training_input:size()
 	for n = 1, train_size[1] do
 		for j = 1, train_size[2] do
 			feat = training_input[n][j] - 1
@@ -77,8 +81,8 @@ function naiveBayes(train_data_name)
 		end
 	end
 
-	-- Add a small offset to deal with divide by 0 issues
-	alpha = 1
+	-- Add a small offset for smoothing
+	--alpha = 1
 	F = F + alpha
 
 	-- Now, we row normalize the Tensor
@@ -96,15 +100,18 @@ function naiveBayes(train_data_name)
 		class = training_output[n]
 		class_distribution[class] = class_distribution[class] + 1
 	end
-	print(class_distribution, "\n")
+	--print(class_distribution, "\n")
 	--print(torch.sum(class_distribution, 1))
 	p_y = torch.div(class_distribution, torch.sum(class_distribution, 1)[1])
-	print(p_y, "\n")
+	--print(p_y, "\n")
 
 	local W = torch.log(p_x_given_y)
 	local b = torch.log(p_y)
-	print(W)
-	print(b)
+	local validation_input = f:read('valid_input'):all():double()
+	local validation_output = f:read('valid_output'):all():long()
+    validation_accuracy = validateModel(W:t(), b, validation_input,validation_output)
+    print("Naive Bayes accuracy", validation_accuracy)
+	--return W, b
 
 
 
@@ -138,7 +145,7 @@ function main()
    local b = torch.DoubleTensor(nclasses)
    local validation_input = f:read('valid_input'):all():double()
    --print(validateModel(W, b, validation_input))
-   naiveBayes()
+   naiveBayes(1)
    --unitTest()
    -- Train.
 
