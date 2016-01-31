@@ -78,17 +78,38 @@ function naiveBayes(train_data_name)
 	end
 
 	-- Add a small offset to deal with divide by 0 issues
-	offset = 1
-	F = F + offset
+	alpha = 1
+	F = F + alpha
 
 	-- Now, we row normalize the Tensor
-	sum_of_each_row = torch.sum(F, 2)
-	reciprocal = torch.cdiv(torch.ones(nfeatures), sum_of_each_row)
-	print(reciprocal:size())
-	normalized = torch.Tensor(nfeatures, nclasses):zero()
+	sum_of_each_col = torch.sum(F, 1)
+	--reciprocal = torch.cdiv(torch.ones(nclasses), sum_of_each_col)
+	--print(reciprocal:size())
+	p_x_given_y = torch.Tensor(nfeatures, nclasses):zero()
 	for s = 1, F:size()[1] do
-		normalized[s] = torch.mul(F[s] , reciprocal[s])
+		p_x_given_y[s] = torch.cdiv(F[s] , sum_of_each_col)
 	end
+	--print(train_size[1])
+
+	class_distribution = torch.zeros(nclasses)
+	for n=1, training_output:size()[1] do
+		class = training_output[n]
+		class_distribution[class] = class_distribution[class] + 1
+	end
+	print(class_distribution, "\n")
+	--print(torch.sum(class_distribution, 1))
+	p_y = torch.div(class_distribution, torch.sum(class_distribution, 1)[1])
+	print(p_y, "\n")
+
+
+
+
+
+
+
+
+
+
 	--for n = 1, train_size[1], 1000 do
 	--	print(normalized[n])
 	--end
