@@ -101,6 +101,11 @@ function naiveBayes(train_data_name)
 	p_y = torch.div(class_distribution, torch.sum(class_distribution, 1)[1])
 	print(p_y, "\n")
 
+	local W = torch.log(p_x_given_y)
+	local b = torch.log(p_y)
+	print(W)
+	print(b)
+
 
 
 
