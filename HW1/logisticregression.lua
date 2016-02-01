@@ -65,6 +65,28 @@ function validateModel(W, b, x, y)
 end   
     
 
+-- Given W which is a matrix (nclasses x nfeatures) and
+--       x, which is a single feature vector (1 x nfeatures)
+-- Returns a Tensor (length nclasses) that contains softmax for each class
+function softmax(x, W)
+	local W_size = W:size()
+	local nclasses = W_size[1]
+	local nfeatures = W_size[2]
+	local Ans = torch.Tensor(nclasses)
+	-- Perform the matrix multiplication
+	Ans:mv(W,x)
+	-- exponentiate it
+	Ans:exp()
+	-- normalize it
+	Ans:div(Ans:sum())
+	return Ans
+end
+
+
+
+
+
+
 function createCountsMatrix(training_input, training_output)
 	print("     CreateCountsMatrix: Opened Data File")
 	local f = hdf5.open(opt.datafile, 'r')
@@ -86,29 +108,12 @@ function createCountsMatrix(training_input, training_output)
 	return F
 end
 
+--[[
 function naiveBayes(alpha)
 	local f = hdf5.open(opt.datafile, 'r')
 	local training_input = f:read('train_input'):all():double()
 	local training_output = f:read('train_output'):all():double()
-	--[[
-	print("     NaiveBayes: Opened Data File")
-	local f = hdf5.open(opt.datafile, 'r')
-	local F = torch.zeros(nfeatures, nclasses)
-	local training_input = f:read('train_input'):all():double()
-	local training_output = f:read('train_output'):all():double()
-	print("     NaiveBayes: Loaded training data")
-	local train_size = training_input:size()
-	for n = 1, train_size[1] do
-		for j = 1, train_size[2] do
-			feat = training_input[n][j] - 1
-			class = training_output[n]
-			if feat > 0 then
-				F[feat][class] = F[feat][class] + 1
-			end
-		end
-	end
-	print("     NaiveBayes: Calculated counts")
-	--]]
+
 	local F = createCountsMatrix(training_input, training_output)
 
 	-- Add a small offset for smoothing
@@ -140,7 +145,7 @@ function naiveBayes(alpha)
 
 	return validation_accuracy	
 end
-
+--]]
 
 function main() 
    -- Parse input params
