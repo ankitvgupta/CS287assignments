@@ -68,7 +68,7 @@ end
 
 
 -- Given W which is a matrix (nclasses x nfeatures) and
---       x, which is a single feature vector (1 x nfeatures)
+--       X, which is a sparse matrix with 1-padding
 -- Returns a Tensor (length nclasses) that contains softmax for each class
 --     According to Murphy, when given W and x_i, this function returns the
 --     vector [u_{i,1}   u_{i,2}   ...   u_{i,nclasses}]
@@ -76,9 +76,11 @@ function softmax(x, W)
 	local W_size = W:size()
 	local nclasses = W_size[1]
 	local nfeatures = W_size[2]
-	local Ans = torch.Tensor(nclasses)
+
+	local Ans = sparseMultiply(x, W:t())
+	--local Ans = torch.Tensor(nclasses)
 	-- Perform the matrix multiplication
-	Ans:mv(W,x)
+	--Ans:mv(W,x)
 	-- exponentiate it
 	Ans:exp()
 	-- normalize it
@@ -86,8 +88,53 @@ function softmax(x, W)
 	return Ans
 end
 
+-- returns a one-hot tensor of size n with a 1 the ith place.
+--    Note that this is 1-indexed
+function makeOneHot(i, n)
+	local tmp = tensor.zeros(n)
+	tmp[i] = 1
+	return tmp
+end
 
+-- convert from sparse 1-padded 1-dimensional tensor to real 1-dimensional tensor
+function convertSparseToReal(sparse, numFeatures)
+	local res = tensor.zeros(numFeatures):double()
+	for i = 1, sparse:size()[1] do
+		local ind = sparse[i] - 1
+		if ind > 0 do
+			res[ind] = res[ind] + 1
+		end
+	end
+	return res
+end
 
+-- Calculates the gradient of W
+-- This is essentially an implementation of equation 8.40 from Murphy.
+--      Will be using stochastic gradient descent with minibatches
+-- Inputs:
+--       W:           weights (nclasses x nfeatures)
+--       Xs:          input features (sparse representation)
+-- 		 Ys:          output classes (N x 1)
+--       start_index: index of start of minibatch
+--       end_index:   index of end of minibach
+function gradient_W(W, Xs, Ys, start_index, end_index)
+	local W_size = W:size()
+	local nclasses = W_size[1]
+	local nfeatures = W_size[2]
+	local W_grad = torch.zeros(nclasses, nfeatures)
+	for n = start_index, end_index do
+ 		local class = Ys[n]
+ 		local softmax_res = softmax(Xs[n], W)
+
+ 		-- this is u_i - y_i
+ 		local diff = softmax_res - makeOneHot(class, nclasses)
+ 		local denseTensor = convertSparseToReal(Xs[n], nfeatures)
+ 		for i = 1, nclasses do
+ 			local tmp = torch.mul(denseTensor, diff[i])
+ 			W_grad[i] = W_grad[i] + tmp
+ 		end
+	end
+end
 
 function createCountsMatrix(training_input, training_output)
 	print("     CreateCountsMatrix: Opened Data File")
@@ -169,4 +216,10 @@ function main()
    -- Test.
 end
 
-main()
+--main()
+xtmp = torch.Tensor({{1,2,3},{1,2,3}})
+print(xtmp[2])
+print(xtmp[2][2])
+
+
+

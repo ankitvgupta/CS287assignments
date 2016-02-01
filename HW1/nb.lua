@@ -86,6 +86,8 @@ function createCountsMatrix(training_input, training_output)
 	return F
 end
 
+
+
 function naiveBayes(alpha)
 	local f = hdf5.open(opt.datafile, 'r')
 	local training_input = f:read('train_input'):all():double()
