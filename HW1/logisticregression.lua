@@ -65,9 +65,13 @@ function validateModel(W, b, x, y)
 end   
     
 
+
+
 -- Given W which is a matrix (nclasses x nfeatures) and
 --       x, which is a single feature vector (1 x nfeatures)
 -- Returns a Tensor (length nclasses) that contains softmax for each class
+--     According to Murphy, when given W and x_i, this function returns the
+--     vector [u_{i,1}   u_{i,2}   ...   u_{i,nclasses}]
 function softmax(x, W)
 	local W_size = W:size()
 	local nclasses = W_size[1]
@@ -81,8 +85,6 @@ function softmax(x, W)
 	Ans:div(Ans:sum())
 	return Ans
 end
-
-
 
 
 
