@@ -72,36 +72,45 @@ end
 -- Returns a Tensor (length nclasses) that contains softmax for each class
 --     According to Murphy, when given W and x_i, this function returns the
 --     vector [u_{i,1}   u_{i,2}   ...   u_{i,nclasses}]
-function softmax(x, W)
+function softmax(X, W)
 	local W_size = W:size()
 	local nclasses = W_size[1]
 	local nfeatures = W_size[2]
 
-	local Ans = sparseMultiply(x, W:t())
+	local Ans = sparseMultiply(X, W:t())
 	--local Ans = torch.Tensor(nclasses)
 	-- Perform the matrix multiplication
 	--Ans:mv(W,x)
+
 	-- exponentiate it
 	Ans:exp()
+
+	-- sum each row
+	local row_sums = Ans:sum(2)
+
 	-- normalize it
-	Ans:div(Ans:sum())
+	for i = 1, X:size()[1] do
+		--print(Ans[i], row_sums[i][1])
+		Ans[i]:div(row_sums[i][1])
+	end
+	--Ans:div(Ans:sum())
 	return Ans
 end
 
 -- returns a one-hot tensor of size n with a 1 the ith place.
 --    Note that this is 1-indexed
 function makeOneHot(i, n)
-	local tmp = tensor.zeros(n)
-	tmp[i] = 1
-	return tmp
+	local tmp_tensor = torch.zeros(n)
+	tmp_tensor[i] = 1
+	return tmp_tensor
 end
 
 -- convert from sparse 1-padded 1-dimensional tensor to real 1-dimensional tensor
 function convertSparseToReal(sparse, numFeatures)
-	local res = tensor.zeros(numFeatures):double()
+	local res = torch.zeros(numFeatures):double()
 	for i = 1, sparse:size()[1] do
 		local ind = sparse[i] - 1
-		if ind > 0 do
+		if ind > 0 then
 			res[ind] = res[ind] + 1
 		end
 	end
@@ -118,22 +127,36 @@ end
 --       start_index: index of start of minibatch
 --       end_index:   index of end of minibach
 function gradient_W(W, Xs, Ys, start_index, end_index)
+	local num_rows_wanted = end_index - start_index + 1
+
+	-- Selects the num_rows_wanted rows that start at start_index
+	local X = Xs:narrow(1,start_index,num_rows_wanted)
+
+	-- Extract parameters
 	local W_size = W:size()
 	local nclasses = W_size[1]
 	local nfeatures = W_size[2]
+
+	-- Initiailize gradient 
 	local W_grad = torch.zeros(nclasses, nfeatures)
-	for n = start_index, end_index do
+
+	-- Calculate the softmax for each row
+	-- softmax_res should be (num_rows_wanted X nclasses)
+	local softmax_res = softmax(X, W)
+
+	for n = 1, num_rows_wanted do
  		local class = Ys[n]
- 		local softmax_res = softmax(Xs[n], W)
+ 		local softmax_val = softmax_res[n]
 
  		-- this is u_i - y_i
- 		local diff = softmax_res - makeOneHot(class, nclasses)
+ 		local diff = softmax_val - makeOneHot(class, nclasses)
  		local denseTensor = convertSparseToReal(Xs[n], nfeatures)
  		for i = 1, nclasses do
  			local tmp = torch.mul(denseTensor, diff[i])
  			W_grad[i] = W_grad[i] + tmp
  		end
 	end
+	return W_grad
 end
 
 function createCountsMatrix(training_input, training_output)
@@ -208,18 +231,22 @@ function main()
    local W = torch.randn(nclasses, nfeatures)
    local b = torch.DoubleTensor(nclasses)
    local validation_input = f:read('valid_input'):all():double()
+   local training_input = f:read('train_input'):all():double()
+   local training_output = f:read('train_output'):all():double()
+   print(validation_input:size())
    --print(validateModel(W, b, validation_input))
-   naiveBayes(1)
+   --naiveBayes(1)
+   print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
 
    -- Test.
 end
 
---main()
-xtmp = torch.Tensor({{1,2,3},{1,2,3}})
-print(xtmp[2])
-print(xtmp[2][2])
+main()
+--xtmp = torch.Tensor({{1,2,3},{1,2,3}})
+--print(xtmp[2])
+--print(xtmp[2][2])
 
 
 
