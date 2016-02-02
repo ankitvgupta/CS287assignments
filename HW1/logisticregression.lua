@@ -37,10 +37,17 @@ function sparseMultiply(A, B)
 			-- dot product of row r in dense A and col c in B
 			for j = 1, A:size(2) do		
 				indexIntoB = A[r][j]-1
+				--[[
 				if indexIntoB == 0 then
 					break
 				else
 					dotProd = dotProd + B[indexIntoB][c]
+				end
+				--]]
+				if indexIntoB > 0 then
+					dotProd = dotProd + B[indexIntoB][c]
+				elseif indexIntoB == 0 then
+					break
 				end
 			end
 			output[r][c] = dotProd
@@ -117,6 +124,24 @@ function convertSparseToReal(sparse, numFeatures)
 	return res
 end
 
+
+function loss(W, b, Xs, Ys)
+	local N = Xs:size()[1]
+	local K = W:size()[1]
+	local softmax_res = softmax(Xs, W)
+	print("LOSS:Calculated softmax res")
+	local total = 0.0
+	for n = 1, N do
+		--print(n)
+		for k = 1, K do
+			local t = (Ys[n] == k) and 1 or 0
+			local y = softmax_res[n][k]
+			total = total + t*math.log(y)
+		end
+	end
+	return total
+end
+
 -- Calculates the gradient of W
 -- This is essentially an implementation of equation 8.40 from Murphy.
 --      Will be using stochastic gradient descent with minibatches
@@ -163,9 +188,17 @@ end
 
 -- Implements stochastic gradient descent with minibatching
 function SGD(Xs, Ys, minibatch_size, learning_rate)
+	local testmode = true
+
+
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
 	W:div(1000)
+
+	if testmode == true then
+		N = 1000
+	end
+
 
 	for rep = 1, 10 do
 		for index = 1, N, minibatch_size do
@@ -260,7 +293,8 @@ function main()
    print(validation_input:size())
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
-   SGD(training_input, training_output, 500, .1)
+   --print(loss(W, b, training_input, training_output))
+   SGD(training_input, training_output, 50, .01)
    --print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
@@ -268,8 +302,28 @@ function main()
    -- Test.
 end
 
+--main()
+
+-- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
+function checkSparseMultiply()
+	--xtmp = torch.Tensor({{2,3,1,1},{3,1,1,1}})
+	xtmp = torch.rand(3,4):mul(3):abs():round() + 2
+	print(xtmp)
+	local numfeatures = 6
+	newarray = torch.zeros(xtmp:size()[1], numfeatures)
+	for i = 1, newarray:size()[1] do
+		newarray[i] = convertSparseToReal(xtmp[i], numfeatures)
+	end
+	print(newarray)
+	local B = torch.randn(numfeatures, 3)
+	print(torch.mm(newarray, B))
+	print(sparseMultiply(xtmp, B))
+end
+
 main()
---xtmp = torch.Tensor({{1,2,3},{1,2,3}})
+--checkSparseMultiply()
+
+--print(convertSparseToReal(xtmp, 4))
 --print(xtmp[2])
 --print(xtmp[2][2])
 
