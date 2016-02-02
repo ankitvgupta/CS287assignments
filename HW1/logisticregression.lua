@@ -131,6 +131,7 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
 
 	-- Selects the num_rows_wanted rows that start at start_index
 	local X = Xs:narrow(1,start_index,num_rows_wanted)
+	local Y = Ys:narrow(1,start_index,num_rows_wanted)
 
 	-- Extract parameters
 	local W_size = W:size()
@@ -145,7 +146,7 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
 	local softmax_res = softmax(X, W)
 
 	for n = 1, num_rows_wanted do
- 		local class = Ys[n]
+ 		local class = Y[n]
  		local softmax_val = softmax_res[n]
 
  		-- this is u_i - y_i
@@ -156,6 +157,7 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
  			W_grad[i] = W_grad[i] + tmp
  		end
 	end
+
 	return W_grad
 end
 
@@ -163,12 +165,14 @@ end
 function SGD(Xs, Ys, minibatch_size, learning_rate)
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
+	W:div(1000)
 
 	for rep = 1, 10 do
 		for index = 1, N, minibatch_size do
 			local start_index = index
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
+			print(start_index, end_index)
 			local W_grad = gradient_W(W, Xs, Ys, start_index, end_index)
 			W = W - W_grad:mul(learning_rate)
 			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
