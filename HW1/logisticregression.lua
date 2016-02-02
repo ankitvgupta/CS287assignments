@@ -159,6 +159,26 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
 	return W_grad
 end
 
+-- Implements stochastic gradient descent with minibatching
+function SGD(Xs, Ys, minibatch_size, learning_rate)
+	local N = Xs:size()[1]
+	local W = torch.randn(nclasses, nfeatures)
+
+	for rep = 1, 10 do
+		for index = 1, N, minibatch_size do
+			local start_index = index
+			-- don't let the end_index exceed N
+			local end_index = math.min(start_index + minibatch_size - 1, N)
+			local W_grad = gradient_W(W, Xs, Ys, start_index, end_index)
+			W = W - W_grad:mul(learning_rate)
+			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
+			print("Magnitude of W:", torch.abs(W):sum())
+		end
+
+	end
+end
+
+
 function createCountsMatrix(training_input, training_output)
 	print("     CreateCountsMatrix: Opened Data File")
 	local f = hdf5.open(opt.datafile, 'r')
@@ -236,7 +256,8 @@ function main()
    print(validation_input:size())
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
-   print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
+   SGD(training_input, training_output, 500, .1)
+   --print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
 
