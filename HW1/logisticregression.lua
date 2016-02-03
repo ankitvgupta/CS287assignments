@@ -135,7 +135,7 @@ function loss(W, b, Xs, Ys, lambda)
 			total = total + t*math.log(y)
 		end
 	end
-	return ((-1)*total) + lambda*torch.pow(W,2):sum()
+	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
 end
 
 -- Calculates the gradient of W
@@ -177,8 +177,8 @@ function gradient(W, b, Xs, Ys, start_index, end_index)
  		for i = 1, nclasses do
  			local tmp = torch.mul(denseTensor, diff[i])
  			W_grad[i] = W_grad[i] + tmp:div(num_rows_wanted)
- 			b_grad = b_grad + torch.div(diff, num_rows_wanted)
  		end
+ 		b_grad = b_grad + torch.div(diff, num_rows_wanted)
 	end
 
 	return W_grad, b_grad
@@ -198,16 +198,25 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 		N = 1000
 	end
 
+	local f = hdf5.open(opt.datafile, 'r')
+	local validation_input = f:read('valid_input'):all():double()
+	local validation_output = f:read('valid_output'):all():long()
+    
 
 	for rep = 1, 10 do
+		-- Calculate the loss and validation accuracy
 		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
+		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
+		print("SGD: Validation Accuracy is:", validation_accuracy)
+
 		for index = 1, N, minibatch_size do
 			local start_index = index
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
+			local size = end_index - start_index + 1
 			print(start_index, end_index)
 			local W_grad, b_grad = gradient(W, b, Xs, Ys, start_index, end_index)
-			W = W - (W_grad + torch.mul(W,lambda*minibatch_size/N)):mul(learning_rate)
+			W = W - (W_grad + torch.mul(W,lambda*size/N)):mul(learning_rate)
 			b = b - torch.mul(b_grad,learning_rate)
 			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
 			print("Magnitude of W:", torch.abs(W):sum())
@@ -296,7 +305,7 @@ function main()
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
    --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, 500, 1, .1)
+   SGD(training_input, training_output, 500, 2.0, 1)
    --print(torch.abs(gradient(W, b, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
