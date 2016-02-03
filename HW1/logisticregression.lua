@@ -142,7 +142,7 @@ function loss(W, b, Xs, Ys, lambda)
 			total = total + t*math.log(y)
 		end
 	end
-	return ((-1)*total) + lambda*W:pow(2):sum()
+	return ((-1)*total) + lambda*torch.pow(W,2):sum()
 end
 
 -- Calculates the gradient of W
