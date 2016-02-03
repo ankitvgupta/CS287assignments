@@ -179,7 +179,7 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
  		local denseTensor = convertSparseToReal(Xs[n], nfeatures)
  		for i = 1, nclasses do
  			local tmp = torch.mul(denseTensor, diff[i])
- 			W_grad[i] = W_grad[i] + tmp
+ 			W_grad[i] = W_grad[i] + tmp:div(num_rows_wanted)
  		end
 	end
 
@@ -187,8 +187,8 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
 end
 
 -- Implements stochastic gradient descent with minibatching
-function SGD(Xs, Ys, minibatch_size, learning_rate)
-	local testmode = true
+function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
+	local testmode = false
 
 
 	local N = Xs:size()[1]
@@ -207,7 +207,7 @@ function SGD(Xs, Ys, minibatch_size, learning_rate)
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			print(start_index, end_index)
 			local W_grad = gradient_W(W, Xs, Ys, start_index, end_index)
-			W = W - W_grad:mul(learning_rate)
+			W = W - (W_grad +  W:mul(lambda*minibatch_size/N)):mul(learning_rate)
 			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
 			print("Magnitude of W:", torch.abs(W):sum())
 		end
@@ -294,7 +294,7 @@ function main()
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
    --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, 50, .01)
+   SGD(training_input, training_output, 500, .1, .5)
    --print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
