@@ -37,13 +37,6 @@ function sparseMultiply(A, B)
 			-- dot product of row r in dense A and col c in B
 			for j = 1, A:size(2) do		
 				indexIntoB = A[r][j]-1
-				--[[
-				if indexIntoB == 0 then
-					break
-				else
-					dotProd = dotProd + B[indexIntoB][c]
-				end
-				--]]
 				if indexIntoB > 0 then
 					dotProd = dotProd + B[indexIntoB][c]
 				elseif indexIntoB == 0 then
@@ -314,23 +307,44 @@ end
 --main()
 
 -- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
-function checkSparseMultiply()
+function checkSparseMultiply(numEntries, numClasses, numFeatures, verbosity)
 	--xtmp = torch.Tensor({{2,3,1,1},{3,1,1,1}})
-	xtmp = torch.rand(3,4):mul(3):abs():round() + 2
-	print(xtmp)
-	local numfeatures = 6
-	newarray = torch.zeros(xtmp:size()[1], numfeatures)
+	xtmp = torch.rand(numEntries,numClasses):mul(numFeatures-1):abs():round() + 2
+	newarray = torch.zeros(xtmp:size()[1], numFeatures)
 	for i = 1, newarray:size()[1] do
-		newarray[i] = convertSparseToReal(xtmp[i], numfeatures)
+		newarray[i] = convertSparseToReal(xtmp[i], numFeatures)
 	end
-	print(newarray)
-	local B = torch.randn(numfeatures, 3)
-	print(torch.mm(newarray, B))
-	print(sparseMultiply(xtmp, B))
+	local B = torch.randn(numFeatures, numClasses)
+
+	local ourAnswer = torch.mm(newarray, B)
+
+	if verbosity > 0 then
+		print("Starting sparse multiply...")
+	end
+
+	local trueAnswer = sparseMultiply(xtmp, B)
+
+	if verbosity > 0 then
+		print ("Done.")
+	end
+
+	if verbosity > 1 then
+		print(xtmp)
+		print(newarray)
+		print(ourAnswer)
+		print(trueAnswer)
+	end
+
+	if (ourAnswer:eq(trueAnswer):sum() - numClasses*numEntries) < 1 then
+		print("Test passed.")
+	else
+		print ("Test failed.")
+	end
+
 end
 
-main()
---checkSparseMultiply()
+--main()
+checkSparseMultiply(10000, 3, 3, 1)
 
 --print(convertSparseToReal(xtmp, 4))
 --print(xtmp[2])
