@@ -79,12 +79,15 @@ end
 -- Returns a Tensor (length nclasses) that contains softmax for each class
 --     According to Murphy, when given W and x_i, this function returns the
 --     vector [u_{i,1}   u_{i,2}   ...   u_{i,nclasses}]
-function softmax(X, W)
+function softmax(X, W, b)
 	local W_size = W:size()
 	local nclasses = W_size[1]
 	local nfeatures = W_size[2]
 
 	local Ans = sparseMultiply(X, W:t())
+	for i = 1, Ans:size()[1] do
+		Ans[i]:add(b)
+	end
 	--local Ans = torch.Tensor(nclasses)
 	-- Perform the matrix multiplication
 	--Ans:mv(W,x)
@@ -125,10 +128,10 @@ function convertSparseToReal(sparse, numFeatures)
 end
 
 
-function loss(W, b, Xs, Ys)
+function loss(W, b, Xs, Ys, lambda)
 	local N = Xs:size()[1]
 	local K = W:size()[1]
-	local softmax_res = softmax(Xs, W)
+	local softmax_res = softmax(Xs, W, b)
 	print("LOSS:Calculated softmax res")
 	local total = 0.0
 	for n = 1, N do
@@ -139,7 +142,7 @@ function loss(W, b, Xs, Ys)
 			total = total + t*math.log(y)
 		end
 	end
-	return total
+	return ((-1)*total) + W:pow(2):sum()
 end
 
 -- Calculates the gradient of W
@@ -151,7 +154,7 @@ end
 -- 		 Ys:          output classes (N x 1)
 --       start_index: index of start of minibatch
 --       end_index:   index of end of minibach
-function gradient_W(W, Xs, Ys, start_index, end_index)
+function gradient(W, b, Xs, Ys, start_index, end_index)
 	local num_rows_wanted = end_index - start_index + 1
 
 	-- Selects the num_rows_wanted rows that start at start_index
@@ -165,10 +168,11 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
 
 	-- Initiailize gradient 
 	local W_grad = torch.zeros(nclasses, nfeatures)
+	local b_grad = torch.zeros(nclasses)
 
 	-- Calculate the softmax for each row
 	-- softmax_res should be (num_rows_wanted X nclasses)
-	local softmax_res = softmax(X, W)
+	local softmax_res = softmax(X, W, b)
 
 	for n = 1, num_rows_wanted do
  		local class = Y[n]
@@ -180,10 +184,11 @@ function gradient_W(W, Xs, Ys, start_index, end_index)
  		for i = 1, nclasses do
  			local tmp = torch.mul(denseTensor, diff[i])
  			W_grad[i] = W_grad[i] + tmp:div(num_rows_wanted)
+ 			b_grad = b_grad + torch.div(diff, num_rows_wanted)
  		end
 	end
 
-	return W_grad
+	return W_grad, b_grad
 end
 
 -- Implements stochastic gradient descent with minibatching
@@ -193,6 +198,7 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
+	local b = torch.randn(nclasses)
 	W:div(1000)
 
 	if testmode == true then
@@ -201,13 +207,15 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 
 
 	for rep = 1, 10 do
+		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
 		for index = 1, N, minibatch_size do
 			local start_index = index
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			print(start_index, end_index)
-			local W_grad = gradient_W(W, Xs, Ys, start_index, end_index)
+			local W_grad, b_grad = gradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad +  W:mul(lambda*minibatch_size/N)):mul(learning_rate)
+			b = b - b_grad:mul(learning_rate)
 			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
 			print("Magnitude of W:", torch.abs(W):sum())
 		end
@@ -232,6 +240,7 @@ function createCountsMatrix(training_input, training_output)
 				F[feat][class] = F[feat][class] + 1
 			end
 		end
+
 	end
 	print("     CreateCountsMatrix: Calculated counts")
 	return F
@@ -294,8 +303,8 @@ function main()
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
    --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, 500, .1, .5)
-   --print(torch.abs(gradient_W(W, training_input, training_output, 100, 200)):sum())
+   SGD(training_input, training_output, 500, 1, .1)
+   --print(torch.abs(gradient(W, b, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
 
