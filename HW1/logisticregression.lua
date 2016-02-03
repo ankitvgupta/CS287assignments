@@ -142,7 +142,7 @@ function loss(W, b, Xs, Ys, lambda)
 			total = total + t*math.log(y)
 		end
 	end
-	return ((-1)*total) + W:pow(2):sum()
+	return ((-1)*total) + lambda*W:pow(2):sum()
 end
 
 -- Calculates the gradient of W
@@ -214,8 +214,8 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			print(start_index, end_index)
 			local W_grad, b_grad = gradient(W, b, Xs, Ys, start_index, end_index)
-			W = W - (W_grad +  W:mul(lambda*minibatch_size/N)):mul(learning_rate)
-			b = b - b_grad:mul(learning_rate)
+			W = W - (W_grad + torch.mul(W,lambda*minibatch_size/N)):mul(learning_rate)
+			b = b - torch.mul(b_grad,learning_rate)
 			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
 			print("Magnitude of W:", torch.abs(W):sum())
 		end
