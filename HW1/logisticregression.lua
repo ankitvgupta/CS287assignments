@@ -21,14 +21,15 @@ function unitTest()
 	Wt[4][2] = 0
 	local output = validateModel(Wt:t(), b, x)
 	print(output)
-
 end
 
 function sparseMultiply(A, B)
 	return fastSparseMultiply(A, B)
+end
 	-- A is a sparse tensor with 1-padding
 	-- B is a dense tensor
 	-- Matrix multiplication A*B in the straightforward way
+	--[[
 	numRows = A:size(1)
 	numCols = B:size(2)
 	local output = torch.Tensor(numRows, numCols)
@@ -38,13 +39,6 @@ function sparseMultiply(A, B)
 			-- dot product of row r in dense A and col c in B
 			for j = 1, A:size(2) do		
 				indexIntoB = A[r][j]-1
-				--[[
-				if indexIntoB == 0 then
-					break
-				else
-					dotProd = dotProd + B[indexIntoB][c]
-				end
-				--]]
 				if indexIntoB > 0 then
 					dotProd = dotProd + B[indexIntoB][c]
 				elseif indexIntoB == 0 then
@@ -56,6 +50,7 @@ function sparseMultiply(A, B)
 	end
 	return output
 end
+--]]
 
 function fastSparseMultiply(A,B)
 	local numRows = A:size()[1]
