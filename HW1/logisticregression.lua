@@ -23,6 +23,26 @@ function unitTest()
 	print(output)
 end
 
+
+
+function fastSparseMultiply(A,B)
+	local numRows = A:size()[1]
+	local numCols = B:size()[2]
+
+	local output = torch.Tensor(numRows, numCols)
+	for r = 1, numRows do
+		-- Grab the indicies that are not padding
+
+		local indicies = (A[r] - 1)[(A[r] - 1):ge(1)]
+		--print(A[r])
+		--print(indicies)
+		if (indicies:size():size() > 0) then
+			output[r] = B:index(1, indicies):sum(1)
+		end
+	end
+	return output
+end
+
 function sparseMultiply(A, B)
 	return fastSparseMultiply(A, B)
 end
@@ -52,21 +72,6 @@ end
 end
 --]]
 
-function fastSparseMultiply(A,B)
-	local numRows = A:size()[1]
-	local numCols = B:size()[2]
-
-	local output = torch.Tensor(numRows, numCols)
-	for r = 1, numRows do
-		-- Grab the indicies that are not padding
-		local indicies = (A[r] - 1)[(A[r] - 1):ge(1)]
-		--print(indicies)
-		output[r] = B:index(1, indicies):sum(1)
-	end
-	return output
-end
-
-
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateModel(W, b, x, y)
     Ans = sparseMultiply(x, W:t())
@@ -75,7 +80,7 @@ function validateModel(W, b, x, y)
     end
     a, b = torch.max(Ans, 2)
     equality = torch.eq(b, y)
-    print(b)
+    --print(b)
     --print(torch.sum(equality, 1)[1])
 
     score = equality:sum()/equality:size()[1]
@@ -220,13 +225,13 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 	end
 
 	local f = hdf5.open(opt.datafile, 'r')
-	local validation_input = f:read('valid_input'):all():double()
+	local validation_input = f:read('valid_input'):all():long()
 	local validation_output = f:read('valid_output'):all():long()
     
 
 	for rep = 1, num_epochs do
 		-- Calculate the loss and validation accuracy
-		--print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
+		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
 		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
 		print("SGD: Validation Accuracy is:", validation_accuracy)
 
@@ -319,14 +324,14 @@ function main()
 
    local W = torch.randn(nclasses, nfeatures)
    local b = torch.DoubleTensor(nclasses)
-   local validation_input = f:read('valid_input'):all():double()
-   local training_input = f:read('train_input'):all():double()
+   local validation_input = f:read('valid_input'):all():long()
+   local training_input = f:read('train_input'):all():long()
    local training_output = f:read('train_output'):all():double()
    print(validation_input:size())
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
    --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, 500, 2.0, .1)
+   SGD(training_input, training_output, 500, .5, 1)
    --print(torch.abs(gradient(W, b, training_input, training_output, 100, 200)):sum())
    --unitTest()
    -- Train.
