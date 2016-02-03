@@ -25,6 +25,7 @@ function unitTest()
 end
 
 function sparseMultiply(A, B)
+	return fastSparseMultiply(A, B)
 	-- A is a sparse tensor with 1-padding
 	-- B is a dense tensor
 	-- Matrix multiplication A*B in the straightforward way
@@ -356,8 +357,8 @@ function checkSparseMultiply()
 	print(fastSparseMultiply(xtmp, B))
 end
 
---main()
-checkSparseMultiply()
+main()
+--checkSparseMultiply()
 
 --print(convertSparseToReal(xtmp, 4))
 --print(xtmp[2])
