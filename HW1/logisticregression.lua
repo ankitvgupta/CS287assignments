@@ -120,6 +120,39 @@ function softmax(X, W, b)
 	return Ans
 end
 
+-- 
+function crossEntropy(X, W, b, Y)
+	local z = sparseMultiply(X, W:t())
+
+	local numEntries = z:size()[1]
+	local numClasses = z:size()[2]
+
+	for i = 1, numEntries do
+		z[i]:add(b)
+	end
+	-- z has numEntries rows and numClasses columns
+	-- zc is a vector of length numEntries
+	-- there must be a better way to do this!!!
+	local zc = torch.Tensor(numEntries)
+	for i = 1, numEntries do
+		zc[i] = z[i][Y[i]]
+	end
+	-- log-sum-exp trick for log(sum(exp(zc')))
+	-- M = max z_c'
+	local M = torch.max(z, 2):t()[1]
+	local total = torch.zeros(numEntries)
+	-- now z has numClasses rows
+	z = z:t()
+	for c = 1, numClasses do
+		z[c]:add(-M)
+		total = total + z[c]:exp()
+	end
+
+	local crossEnt = -zc + total:log() + M
+	return crossEnt:sum()
+
+end
+
 -- returns a one-hot tensor of size n with a 1 the ith place.
 --    Note that this is 1-indexed
 function makeOneHot(i, n)
@@ -156,6 +189,10 @@ function loss(W, b, Xs, Ys, lambda)
 		end
 	end
 	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
+end
+
+function crossEntropyLoss(W, b, Xs, Ys, lambda)
+	return crossEntropy(Xs, W, b, Ys) + .5*lambda*torch.pow(W,2):sum()
 end
 
 -- Calculates the gradient of W
@@ -229,6 +266,7 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 	for rep = 1, num_epochs do
 		-- Calculate the loss and validation accuracy
 		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
+		print ("SGD: crossEntropyLoss is", crossEntropyLoss(W, b, Xs, Ys, lambda))
 		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
 		print("SGD: Validation Accuracy is:", validation_accuracy)
 
