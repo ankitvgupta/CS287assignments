@@ -1,96 +1,18 @@
--- Only requirement allowed
-require("hdf5")
+dofile("utils.lua")
 
-cmd = torch.CmdLine()
+function logisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
+	printv("Parameters are:", 2)
+	printv("Eta:", 2)
+	printv(eta, 2)
+	printv("Lambda:", 2)
+	printv(lambda, 2)
+	printv("Minibatch size:", 2)
+	printv(minibatch_size, 2)
+	printv("Number of Epochs", 2)
+	printv(num_epochs, 2)
 
--- Cmd Args
-cmd:option('-datafile', '', 'data file')
-cmd:option('-classifier', 'nb', 'classifier to use')
-cmd:option('-eta', .5, 'Learning rate')
-cmd:option('-lambda', 1, 'regularization penalty')
-cmd:option('-minibatch', 500, 'Minibatch size')
-cmd:option('-epochs', 50, 'Number of epochs of SGD')
-
-
--- Hyperparameters
--- ...
-function unitTest()
-	local x = torch.ones(3, 2)
-	x[1][1] = 5
-	x[2][1] = 3
-	x[2][2] = 2
-	x[3][1] = 2
-	local Wt = torch.Tensor(4, 2)
-	local b = torch.ones(1, 2)
-	i=0; Wt:apply(function() i = i+1; return i end)
-	Wt[4][2] = 0
-	local output = validateModel(Wt:t(), b, x)
-	print(output)
+	return SGD(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
 end
-
-
-
-function sparseMultiply(A,B)
-	local numRows = A:size()[1]
-	local numCols = B:size()[2]
-
-	local output = torch.Tensor(numRows, numCols)
-	for r = 1, numRows do
-		-- Grab the indicies that are not padding
-
-		local indicies = (A[r] - 1)[(A[r] - 1):ge(1)]
-		--print(A[r])
-		--print(indicies)
-		if (indicies:size():size() > 0) then
-			output[r] = B:index(1, indicies):sum(1)
-		end
-	end
-	return output
-end
-
--- A is a sparse tensor with 1-padding
--- B is a dense tensor
--- Matrix multiplication A*B in the straightforward way
-function slowSparseMultiply(A, B)
-	--return fastSparseMultiply(A, B)
-	numRows = A:size(1)
-	numCols = B:size(2)
-	local output = torch.Tensor(numRows, numCols)
-	for r = 1, numRows do
-		for c = 1, numCols do
-			local dotProd = 0
-			-- dot product of row r in dense A and col c in B
-			for j = 1, A:size(2) do		
-				indexIntoB = A[r][j]-1
-				if indexIntoB > 0 then
-					dotProd = dotProd + B[indexIntoB][c]
-				elseif indexIntoB == 0 then
-					break
-				end
-			end
-			output[r][c] = dotProd
-		end
-	end
-	return output
-end
-
--- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
-function validateModel(W, b, x, y)
-    Ans = sparseMultiply(x, W:t())
-    for r = 1, Ans:size(1) do
-    	Ans[r]:add(b)
-    end
-    a, b = torch.max(Ans, 2)
-    equality = torch.eq(b, y)
-    --print(b)
-    --print(torch.sum(equality, 1)[1])
-
-    score = equality:sum()/equality:size()[1]
-    return score
-end   
-    
-
-
 
 -- Given W which is a matrix (nclasses x nfeatures) and
 --       X, which is a sparse matrix with 1-padding
@@ -125,7 +47,23 @@ function softmax(X, W, b)
 	return Ans
 end
 
--- 
+function loss(W, b, Xs, Ys, lambda)
+	local N = Xs:size()[1]
+	local K = W:size()[1]
+	local softmax_res = softmax(Xs, W, b)
+	printv("	LOSS:Calculated softmax res", 3)
+	local total = 0.0
+	for n = 1, N do
+		--print(n)
+		for k = 1, K do
+			local t = (Ys[n] == k) and 1 or 0
+			local y = softmax_res[n][k]
+			total = total + t*math.log(y)
+		end
+	end
+	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
+end
+
 function crossEntropy(X, W, b, Y)
 	local z = sparseMultiply(X, W:t())
 
@@ -156,44 +94,6 @@ function crossEntropy(X, W, b, Y)
 	local crossEnt = -zc + total:log() + M
 	return crossEnt:sum()
 
-end
-
--- returns a one-hot tensor of size n with a 1 the ith place.
---    Note that this is 1-indexed
-function makeOneHot(i, n)
-	local tmp_tensor = torch.zeros(n)
-	tmp_tensor[i] = 1
-	return tmp_tensor
-end
-
--- convert from sparse 1-padded 1-dimensional tensor to real 1-dimensional tensor
-function convertSparseToReal(sparse, numFeatures)
-	local res = torch.zeros(numFeatures):double()
-	for i = 1, sparse:size()[1] do
-		local ind = sparse[i] - 1
-		if ind > 0 then
-			res[ind] = res[ind] + 1
-		end
-	end
-	return res
-end
-
-
-function loss(W, b, Xs, Ys, lambda)
-	local N = Xs:size()[1]
-	local K = W:size()[1]
-	local softmax_res = softmax(Xs, W, b)
-	print("LOSS:Calculated softmax res")
-	local total = 0.0
-	for n = 1, N do
-		--print(n)
-		for k = 1, K do
-			local t = (Ys[n] == k) and 1 or 0
-			local y = softmax_res[n][k]
-			total = total + t*math.log(y)
-		end
-	end
-	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
 end
 
 function crossEntropyLoss(W, b, Xs, Ys, lambda)
@@ -247,9 +147,8 @@ function gradient(W, b, Xs, Ys, start_index, end_index)
 end
 
 -- Implements stochastic gradient descent with minibatching
-function SGD(Xs, Ys, minibatch_size, learning_rate, lambda, num_epochs)
+function SGD(Xs, Ys, validation_input, validation_output, nfeatures, nclasses, minibatch_size, learning_rate, lambda, num_epochs)
 	local testmode = false
-
 
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
@@ -263,19 +162,21 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda, num_epochs)
 		num_epochs = 50
 	end
 
-	local f = hdf5.open(opt.datafile, 'r')
-	local validation_input = f:read('valid_input'):all():long()
-	local validation_output = f:read('valid_output'):all():long()
-    
-
 	for rep = 1, num_epochs do
 		-- Calculate the loss and validation accuracy
-		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
-		print ("SGD: crossEntropyLoss is", crossEntropyLoss(W, b, Xs, Ys, lambda))
-		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
-		print("SGD: Validation Accuracy is:", validation_accuracy)
-		print("Magnitude of W:", torch.abs(W):sum())
-		print("Magnitude of b:", torch.abs(b):sum())
+		printv("SGD: Loss is", 3)
+		printv(loss(W, b, Xs, Ys, lambda), 3)
+		printv("SGD: crossEntropyLoss is", 3)
+		printv(crossEntropyLoss(W, b, Xs, Ys, lambda), 3)
+		
+		local validation_accuracy = validateLinearModel(W, b, validation_input,validation_output)
+		
+		printv("SGD: Validation Accuracy is:", 3)
+		printv(validation_accuracy, 3)
+		printv("Magnitude of W:", 3)
+		printv(torch.abs(W):sum(), 3)
+		printv("Magnitude of b:", 3)
+		printv(torch.abs(b):sum(), 3)
 
 
 		local counter = 0
@@ -290,104 +191,19 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda, num_epochs)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - torch.mul(b_grad,learning_rate)
 			if counter % 20 == 0 then
-				print("    Current index:", index)
-				print("    Magnitude of W_grad:", torch.abs(W_grad):sum())
-				print("    Magnitude of W:", torch.abs(W):sum())
-				print("    Magnitude of B_grad:", torch.abs(W_grad):sum())
-				print("    Magnitude of b:", torch.abs(W):sum(), "\n")
+				printv("    Current index:", 3)
+				printv(index, 3)
+				printv("    Magnitude of W_grad:", 3)
+				printv(torch.abs(W_grad):sum(), 3)
+				printv("    Magnitude of W:", 3)
+				printv(torch.abs(W):sum(), 3)
+				printv("    Magnitude of B_grad:", 3)
+				printv(torch.abs(b_grad):sum(), 3)
+				printv("    Magnitude of b:", 3)
+				printv(torch.abs(b):sum(), 3)
+				printv("\n", 3)
 			end
 		end
 	end
 	return W, b
 end
-
-
-function createCountsMatrix(training_input, training_output)
-	print("     CreateCountsMatrix: Opened Data File")
-	local f = hdf5.open(opt.datafile, 'r')
-	local F = torch.zeros(nfeatures, nclasses)
-	--local training_input = f:read(features_table):all():double()
-	--local training_output = f:read(classes_table):all():double()
-	print("     CreateCountsMatrix: Loaded training data")
-	local train_size = training_input:size()
-	for n = 1, train_size[1] do
-		for j = 1, train_size[2] do
-			feat = training_input[n][j] - 1
-			class = training_output[n]
-			if feat > 0 then
-				F[feat][class] = F[feat][class] + 1
-			end
-		end
-
-	end
-	print("     CreateCountsMatrix: Calculated counts")
-	return F
-end
-
-function main() 
-   -- Parse input params
-   opt = cmd:parse(arg)
-   local f = hdf5.open(opt.datafile, 'r')
-   local eta = opt.eta
-   local lambda = opt.lambda
-   local minibatch_size = opt.minibatch
-   local num_epochs = opt.epochs
-   print("Parameters are:", "Eta:", eta, "Lambda", lambda, "Minibatch size:", minibatch_size, "Number of Epochs", num_epochs)
-   print("Opened datafile")
-   nclasses = f:read('nclasses'):all():long()[1]
-   nfeatures = f:read('nfeatures'):all():long()[1]
-   print("Loaded size parameters")
-
-   local W = torch.randn(nclasses, nfeatures)
-   local b = torch.DoubleTensor(nclasses)
-   local training_input = f:read('train_input'):all():long()
-   local training_output = f:read('train_output'):all():long()
-   --print(validateModel(W, b, validation_input))
-   --naiveBayes(1)
-   --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, minibatch_size, eta, lambda, num_epochs)
-end
-
-
--- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
-function checkSparseMultiply(numEntries, numClasses, numFeatures, verbosity)
-	xtmp = (torch.rand(numEntries,numClasses):mul(numFeatures-1):abs():round() + 2):long()
-	newarray = torch.zeros(xtmp:size()[1], numFeatures)
-
-	for i = 1, newarray:size()[1] do
-		newarray[i] = convertSparseToReal(xtmp[i], numFeatures)
-	end
-	local B = torch.randn(numFeatures, numClasses)
-
-	local ourAnswer = torch.mm(newarray, B)
-
-	if verbosity > 0 then
-		print("Starting sparse multiply...")
-	end
-
-	local trueAnswer = sparseMultiply(xtmp, B)
-
-	if verbosity > 0 then
-		print ("Done.")
-	end
-
-	if verbosity > 1 then
-		print(xtmp)
-		print(newarray)
-		print(ourAnswer)
-		print(trueAnswer)
-	end
-
-	if (ourAnswer:eq(trueAnswer):sum() - numClasses*numEntries) < 1 then
-		print("Test passed.")
-	else
-		print ("Test failed.")
-	end
-end
-
-main()
-
-
-
-
-
