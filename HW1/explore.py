@@ -12,42 +12,42 @@ import preprocess as pp
 import sys
 
 
-def plot_word_count_distribution(sentences, outfile=None):
-	word_to_count = word_count(sentences)
-	x = np.log(word_to_count.values())
+def plot_gram_count_distribution(sentences, grams=1, outfile=None):
+	gram_dict = gram_count(sentences, grams)
+	gram_name = str(grams)+"-Gram"
+	x = np.log(gram_dict.values())
 	fig = plt.figure()
 	n, bins, patches = plt.hist(x, 100, normed=1, facecolor='green', alpha=0.75)
-	plt.xlabel("Word Count")
+	plt.xlabel(gram_name+" Count")
 	plt.ylabel("Log(Count Frequency)")
-	plt.title("Word Count Distribution (Log scale)")
+	plt.title(gram_name+" Count Distribution (Log scale)")
 	if outfile is not None:
 		fig.savefig(outfile)
-		print "Saved word count distribution plot to "+outfile
+		print "Saved gram count distribution plot to "+outfile
 	else:
 		plt.show()
 
-
-def word_count(sentences):
-	word_to_count = defaultdict(int)
+def gram_count(sentences, grams=1):
+	count = defaultdict(int)
 	for sentence in sentences:
-		for word in sentence:
-			word_to_count[word] += 1
-	return word_to_count
+		for start_idx in range(0, len(sentence)-(grams-1)):
+			gram = ' '.join(sentence[start_idx:start_idx+grams])
+			count[gram] += 1
+	return count
 
-def top_n_words(sentences, N):
-	word_to_count = word_count(sentences)
-	largest_keys = sorted(word_to_count, key=word_to_count.get, reverse=True)[:N]
-	largest_values = [word_to_count[k] for k in largest_keys]
+def top_n_grams(sentences, N, grams=1):
+	gram_dict = gram_count(sentences, grams)
+	largest_keys = sorted(gram_dict, key=gram_dict.get, reverse=True)[:N]
+	largest_values = [gram_dict[k] for k in largest_keys]
 	return dict(zip(largest_keys, largest_values))
 
-def print_word_dict(word_dict, value_title="COUNT"):
-	words = sorted(word_dict, key=word_dict.get, reverse=True)
-	print "WORD:",
+def print_gram_dict(gram_dict, value_title="COUNT"):
+	grams = sorted(gram_dict, key=gram_dict.get, reverse=True)
+	print "GRAM:",
 	print value_title
-	for word in words:
-		print word+":",
-		print word_dict[word]
-
+	for gram in grams:
+		print gram+":",
+		print gram_dict[gram]
 
 def file_list_to_sentences(file_list, dataset):
 	sentences = []
@@ -72,10 +72,14 @@ def main(arguments):
     sentences = file_list_to_sentences([train, valid, test], dataset)
 
     N = 10
-    top_words = top_n_words(sentences, N)
-    print_word_dict(top_words)
+    for i in range(1, 4):
+    	print "Top "+str(N)+" "+str(i)+"-grams"
+    	top_grams = top_n_grams(sentences, N, i)
+    	print_gram_dict(top_grams)
+    	print
+    	plot_gram_count_distribution(sentences, i, str(i)+'countdist.png')
 
-    plot_word_count_distribution(sentences, 'wordcountdist.png')
+    #plot_word_count_distribution(sentences, 'wordcountdist.png')
 
 
 if __name__ == '__main__':
