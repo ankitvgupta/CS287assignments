@@ -18,8 +18,8 @@ def plot_gram_count_distribution(sentences, grams=1, outfile=None):
 	x = np.log(gram_dict.values())
 	fig = plt.figure()
 	n, bins, patches = plt.hist(x, 100, normed=1, facecolor='green', alpha=0.75)
-	plt.xlabel(gram_name+" Count")
-	plt.ylabel("Log(Count Frequency)")
+	plt.xlabel("Log("+gram_name+" Count)")
+	plt.ylabel("Count Frequency")
 	plt.title(gram_name+" Count Distribution (Log scale)")
 	if outfile is not None:
 		fig.savefig(outfile)
