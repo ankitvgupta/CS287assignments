@@ -30,7 +30,7 @@ end
 
 
 
-function fastSparseMultiply(A,B)
+function sparseMultiply(A,B)
 	local numRows = A:size()[1]
 	local numCols = B:size()[2]
 
@@ -48,13 +48,11 @@ function fastSparseMultiply(A,B)
 	return output
 end
 
-function sparseMultiply(A, B)
-	return fastSparseMultiply(A, B)
-end
-	-- A is a sparse tensor with 1-padding
-	-- B is a dense tensor
-	-- Matrix multiplication A*B in the straightforward way
-	--[[
+-- A is a sparse tensor with 1-padding
+-- B is a dense tensor
+-- Matrix multiplication A*B in the straightforward way
+function slowSparseMultiply(A, B)
+	--return fastSparseMultiply(A, B)
 	numRows = A:size(1)
 	numCols = B:size(2)
 	local output = torch.Tensor(numRows, numCols)
@@ -75,7 +73,6 @@ end
 	end
 	return output
 end
---]]
 
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateModel(W, b, x, y)
@@ -128,6 +125,39 @@ function softmax(X, W, b)
 	return Ans
 end
 
+-- 
+function crossEntropy(X, W, b, Y)
+	local z = sparseMultiply(X, W:t())
+
+	local numEntries = z:size()[1]
+	local numClasses = z:size()[2]
+
+	for i = 1, numEntries do
+		z[i]:add(b)
+	end
+	-- z has numEntries rows and numClasses columns
+	-- zc is a vector of length numEntries
+	-- there must be a better way to do this!!!
+	local zc = torch.Tensor(numEntries)
+	for i = 1, numEntries do
+		zc[i] = z[i][Y[i]]
+	end
+	-- log-sum-exp trick for log(sum(exp(zc')))
+	-- M = max z_c'
+	local M = torch.max(z, 2):t()[1]
+	local total = torch.zeros(numEntries)
+	-- now z has numClasses rows
+	z = z:t()
+	for c = 1, numClasses do
+		z[c]:add(-M)
+		total = total + z[c]:exp()
+	end
+
+	local crossEnt = -zc + total:log() + M
+	return crossEnt:sum()
+
+end
+
 -- returns a one-hot tensor of size n with a 1 the ith place.
 --    Note that this is 1-indexed
 function makeOneHot(i, n)
@@ -164,6 +194,10 @@ function loss(W, b, Xs, Ys, lambda)
 		end
 	end
 	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
+end
+
+function crossEntropyLoss(W, b, Xs, Ys, lambda)
+	return crossEntropy(Xs, W, b, Ys) + .5*lambda*torch.pow(W,2):sum()
 end
 
 -- Calculates the gradient of W
@@ -237,6 +271,7 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda, num_epochs)
 	for rep = 1, num_epochs do
 		-- Calculate the loss and validation accuracy
 		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
+		print ("SGD: crossEntropyLoss is", crossEntropyLoss(W, b, Xs, Ys, lambda))
 		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
 		print("SGD: Validation Accuracy is:", validation_accuracy)
 		print("Magnitude of W:", torch.abs(W):sum())
@@ -315,22 +350,43 @@ end
 
 
 -- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
-function checkSparseMultiply()
-	--xtmp = torch.Tensor({{2,3,1,1},{3,1,1,1}})
-	xtmp = (torch.rand(100,50):mul(3):abs():round() + 2):long()
-	print(xtmp)
-	local numfeatures = 6
-	newarray = torch.zeros(xtmp:size()[1], numfeatures)
+function checkSparseMultiply(numEntries, numClasses, numFeatures, verbosity)
+	xtmp = (torch.rand(numEntries,numClasses):mul(numFeatures-1):abs():round() + 2):long()
+	newarray = torch.zeros(xtmp:size()[1], numFeatures)
+
 	for i = 1, newarray:size()[1] do
-		newarray[i] = convertSparseToReal(xtmp[i], numfeatures)
+		newarray[i] = convertSparseToReal(xtmp[i], numFeatures)
 	end
-	print(newarray)
-	local B = torch.randn(numfeatures, 3)
-	print(torch.mm(newarray, B))
-	print(fastSparseMultiply(xtmp, B))
+	local B = torch.randn(numFeatures, numClasses)
+
+	local ourAnswer = torch.mm(newarray, B)
+
+	if verbosity > 0 then
+		print("Starting sparse multiply...")
+	end
+
+	local trueAnswer = sparseMultiply(xtmp, B)
+
+	if verbosity > 0 then
+		print ("Done.")
+	end
+
+	if verbosity > 1 then
+		print(xtmp)
+		print(newarray)
+		print(ourAnswer)
+		print(trueAnswer)
+	end
+
+	if (ourAnswer:eq(trueAnswer):sum() - numClasses*numEntries) < 1 then
+		print("Test passed.")
+	else
+		print ("Test failed.")
+	end
 end
 
 main()
+
 
 
 
