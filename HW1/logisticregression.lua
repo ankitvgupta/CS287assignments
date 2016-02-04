@@ -6,6 +6,11 @@ cmd = torch.CmdLine()
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'nb', 'classifier to use')
+cmd:option('-eta', .5, 'Learning rate')
+cmd:option('-lambda', 1, 'regularization penalty')
+cmd:option('-minibatch', 500, 'Minibatch size')
+cmd:option('-epochs', 50, 'Number of epochs of SGD')
+
 
 -- Hyperparameters
 -- ...
@@ -208,14 +213,14 @@ function gradient(W, b, Xs, Ys, start_index, end_index)
 end
 
 -- Implements stochastic gradient descent with minibatching
-function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
+function SGD(Xs, Ys, minibatch_size, learning_rate, lambda, num_epochs)
 	local testmode = false
 
 
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
 	local b = torch.randn(nclasses)
-	local num_epochs = 10
+	--local num_epochs = 10
 	W:div(1000)
 
 	if testmode == true then
@@ -234,21 +239,31 @@ function SGD(Xs, Ys, minibatch_size, learning_rate, lambda)
 		print("SGD: Loss is", loss(W, b, Xs, Ys, lambda))
 		local validation_accuracy = validateModel(W, b, validation_input,validation_output)
 		print("SGD: Validation Accuracy is:", validation_accuracy)
+		print("Magnitude of W:", torch.abs(W):sum())
+		print("Magnitude of b:", torch.abs(b):sum())
 
+
+		local counter = 0
 		for index = 1, N, minibatch_size do
+			counter = counter + 1
 			local start_index = index
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			local size = end_index - start_index + 1
-			print(start_index, end_index)
+			--print(start_index, end_index)
 			local W_grad, b_grad = gradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - torch.mul(b_grad,learning_rate)
-			print("Magnitude of W_grad:", torch.abs(W_grad):sum())
-			print("Magnitude of W:", torch.abs(W):sum())
+			if counter % 20 == 0 then
+				print("    Current index:", index)
+				print("    Magnitude of W_grad:", torch.abs(W_grad):sum())
+				print("    Magnitude of W:", torch.abs(W):sum())
+				print("    Magnitude of B_grad:", torch.abs(W_grad):sum())
+				print("    Magnitude of b:", torch.abs(W):sum(), "\n")
+			end
 		end
-
 	end
+	return W, b
 end
 
 
@@ -274,49 +289,15 @@ function createCountsMatrix(training_input, training_output)
 	return F
 end
 
---[[
-function naiveBayes(alpha)
-	local f = hdf5.open(opt.datafile, 'r')
-	local training_input = f:read('train_input'):all():double()
-	local training_output = f:read('train_output'):all():double()
-
-	local F = createCountsMatrix(training_input, training_output)
-
-	-- Add a small offset for smoothing
-	F = F + alpha
-
-	-- Now, we column normalize the Tensor
-	sum_of_each_col = torch.sum(F, 1)
-	p_x_given_y = torch.Tensor(nfeatures, nclasses):zero()
-	for n = 1, F:size()[1] do
-		p_x_given_y[n] = torch.cdiv(F[n] , sum_of_each_col)
-	end
-	print("     NaiveBayes: Calculated p(x|y)")
-	class_distribution = torch.zeros(nclasses)
-	for n=1, training_output:size()[1] do
-		class = training_output[n]
-		class_distribution[class] = class_distribution[class] + 1
-	end
-	p_y = torch.div(class_distribution, torch.sum(class_distribution, 1)[1])
-	print("     NaiveBayes: Calculated p(y)")
-
-	local W = torch.log(p_x_given_y)
-	local b = torch.log(p_y)
-	local validation_input = f:read('valid_input'):all():double()
-	local validation_output = f:read('valid_output'):all():long()
-	print("     NaiveBayes: Initialized validation parameters")
-
-    validation_accuracy = validateModel(W:t(), b, validation_input,validation_output)
-	print("     NaiveBayes: Validation Accuracy:", validation_accuracy)
-
-	return validation_accuracy	
-end
---]]
-
 function main() 
    -- Parse input params
    opt = cmd:parse(arg)
    local f = hdf5.open(opt.datafile, 'r')
+   local eta = opt.eta
+   local lambda = opt.lambda
+   local minibatch_size = opt.minibatch
+   local num_epochs = opt.epochs
+   print("Parameters are:", "Eta:", eta, "Lambda", lambda, "Minibatch size:", minibatch_size, "Number of Epochs", num_epochs)
    print("Opened datafile")
    nclasses = f:read('nclasses'):all():long()[1]
    nfeatures = f:read('nfeatures'):all():long()[1]
@@ -324,22 +305,14 @@ function main()
 
    local W = torch.randn(nclasses, nfeatures)
    local b = torch.DoubleTensor(nclasses)
-   local validation_input = f:read('valid_input'):all():long()
    local training_input = f:read('train_input'):all():long()
-   local training_output = f:read('train_output'):all():double()
-   print(validation_input:size())
+   local training_output = f:read('train_output'):all():long()
    --print(validateModel(W, b, validation_input))
    --naiveBayes(1)
    --print(loss(W, b, training_input, training_output))
-   SGD(training_input, training_output, 500, .5, 1)
-   --print(torch.abs(gradient(W, b, training_input, training_output, 100, 200)):sum())
-   --unitTest()
-   -- Train.
-
-   -- Test.
+   SGD(training_input, training_output, minibatch_size, eta, lambda, num_epochs)
 end
 
---main()
 
 -- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
 function checkSparseMultiply()
@@ -358,11 +331,7 @@ function checkSparseMultiply()
 end
 
 main()
---checkSparseMultiply()
 
---print(convertSparseToReal(xtmp, 4))
---print(xtmp[2])
---print(xtmp[2][2])
 
 
 
