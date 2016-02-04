@@ -25,7 +25,7 @@ end
 
 
 
-function fastSparseMultiply(A,B)
+function sparseMultiply(A,B)
 	local numRows = A:size()[1]
 	local numCols = B:size()[2]
 
@@ -43,13 +43,11 @@ function fastSparseMultiply(A,B)
 	return output
 end
 
-function sparseMultiply(A, B)
-	return fastSparseMultiply(A, B)
-end
-	-- A is a sparse tensor with 1-padding
-	-- B is a dense tensor
-	-- Matrix multiplication A*B in the straightforward way
-	--[[
+-- A is a sparse tensor with 1-padding
+-- B is a dense tensor
+-- Matrix multiplication A*B in the straightforward way
+function slowSparseMultiply(A, B)
+	--return fastSparseMultiply(A, B)
 	numRows = A:size(1)
 	numCols = B:size(2)
 	local output = torch.Tensor(numRows, numCols)
@@ -70,7 +68,6 @@ end
 	end
 	return output
 end
---]]
 
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateModel(W, b, x, y)
@@ -343,7 +340,7 @@ end
 
 -- checks sparseMultiply by using convertSparseToReal and then doing normal matrix multiply
 function checkSparseMultiply(numEntries, numClasses, numFeatures, verbosity)
-	xtmp = torch.rand(numEntries,numClasses):mul(numFeatures-1):abs():round() + 2
+	xtmp = (torch.rand(numEntries,numClasses):mul(numFeatures-1):abs():round() + 2):long()
 	newarray = torch.zeros(xtmp:size()[1], numFeatures)
 
 	for i = 1, newarray:size()[1] do
@@ -377,8 +374,8 @@ function checkSparseMultiply(numEntries, numClasses, numFeatures, verbosity)
 	end
 end
 
---main()
-checkSparseMultiply(10000, 3, 3, 1)
+main()
+--checkSparseMultiply(10000, 3, 3, 1)
 
 --print(convertSparseToReal(xtmp, 4))
 --print(xtmp[2])
