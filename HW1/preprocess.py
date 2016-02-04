@@ -3,6 +3,7 @@
 """Text Classification Preprocessing
 """
 
+import features
 import numpy as np
 import h5py
 import argparse
@@ -43,8 +44,7 @@ def get_vocab(file_list, dataset=''):
                             idx += 1
     return max_sent_len, word_to_idx
 
-
-def convert_data(data_name, word_to_idx, max_sent_len, dataset, start_padding=0):
+def old_convert_data(data_name, word_to_idx, max_sent_len, dataset, start_padding=0):
     """
     Convert data to padded word index features.
     EXTENSION: Change to allow for other word features, or bigrams.
@@ -66,6 +66,51 @@ def convert_data(data_name, word_to_idx, max_sent_len, dataset, start_padding=0)
             lbl.append(y)
     return np.array(features, dtype=np.int32), np.array(lbl, dtype=np.int32)
 
+def pad_sentence(sent, max_features, padder=1):
+    if len(sent) < max_features:
+        sent.extend([padder] * (max_features - len(sent)))
+
+def prepare_features(data_name, feature_list, dataset):
+    sentences = []
+    inited_features = []
+    with open(data_name, 'r') as f:
+        for line in f:
+            sentence = line_to_words(line, dataset)
+            sentences.append(sentence)
+
+    index_offset = 2
+    for feature in feature_list:
+
+        if type(feature) is tuple:
+            kwargs = feature[1]
+            feature = feature[0]
+        else:
+            kwargs = {}
+
+        inited_feature = feature(index_offset=index_offset, **kwargs)
+        inited_feature.initialize(sentences)
+        inited_features.append(inited_feature)
+        index_offset += inited_feature.maxFeatureLength()
+
+    return inited_features, index_offset
+
+def convert_data(data_name, feature_list, max_features, dataset):
+    features = []
+    lbl = []
+
+    with open(data_name, 'r') as f:
+        for line in f:
+
+            y = int(line[0]) + 1
+            lbl.append(y)
+
+            sentence = line_to_words(line, dataset)
+            all_features = [feat.sentenceToFeatures(sentence) for feat in feature_list]
+            sentence_features = reduce(lambda l1, l2: l1+l2, all_features, [])
+            pad_sentence(sentence_features, max_features)
+            features.append(sentence_features)
+
+    return np.array(features, dtype=np.int32), np.array(lbl, dtype=np.int32)
 
 def clean_str_sst(string):
     """
@@ -123,29 +168,28 @@ def main(arguments):
     dataset = args.dataset
     train, valid, test = FILE_PATHS[dataset]
 
-    # Features are just the words.
-    max_sent_len, word_to_idx = get_vocab([train, valid, test])
+    #max_sent_len, word_to_idx = get_vocab([train, valid, test])
+    #old_train_input, old_train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
+    feature_list = [(features.NgramFeature, {'N': 1}), (features.NgramFeature, {'N': 2})]
+    prepared_features, max_features = prepare_features(train, feature_list, dataset)
+    train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
-    # Dataset name
-    train_input, train_output = convert_data(train, word_to_idx, max_sent_len,
-                                             dataset)
     if valid:
-        valid_input, valid_output = convert_data(valid, word_to_idx, max_sent_len,
-                                                 dataset)
+        # valid_input, valid_output = old_convert_data(valid, word_to_idx, max_sent_len, dataset)
+        valid_input, valid_output = convert_data(valid, prepared_features, max_features, dataset)
     if test:
-        test_input, _ = convert_data(test, word_to_idx, max_sent_len,
-                                 dataset)
+        # test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
+        test_input, _ = convert_data(test, prepared_features, max_features, dataset)
 
-    V = len(word_to_idx) + 1
-    print('Vocab size:', V)
+    for s in train_input[:10]:
+        print s
 
+    V = max_features
+    print "Loaded "+str(V)+" features."
     C = np.max(train_output)
 
     filename = args.dataset + '.hdf5'
     with h5py.File(filename, "w") as f:
-        print(valid_output.shape)
-        f['train_input'] = train_input
-        f['train_output'] = train_output
         if valid:
             f['valid_input'] = valid_input
             f['valid_output'] = valid_output
