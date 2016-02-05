@@ -30,6 +30,6 @@ function naiveBayes(training_input, training_output, nfeatures, nclasses, alpha)
 	local W = torch.log(p_x_given_y)
 	local b = torch.log(p_y)
 	
-	return W, b
+	return W:t(), b
 
 end
