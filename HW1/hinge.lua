@@ -20,7 +20,7 @@ function hingeLoss(W, b, Xs, Ys, lambda)
 
 	local yp = sparseMultiply(Xs, W:t())
 	local eb = torch.expand(b:view(numClasses, 1), numClasses, numEntries)
-	yp:add(eb)
+	yp = yp:add(eb)
 
 	local globalMin = yp:min()
 
@@ -56,7 +56,7 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 	-- yp (y predicted) should be (num_rows_wanted X nclasses)
 	local yp = sparseMultiply(X, W:t())
 	local eb = torch.expand(b:view(numClasses, 1), numClasses, num_rows_wanted)
-	yp:add(eb)
+	yp = yp:add(eb)
 
 	local globalMin = yp:min()
 
@@ -74,15 +74,17 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 	Yps = Yps:squeeze()
 
 	-- dL/dy
-	dLdy = torch.zeros(num_rows_wanted, numClasses)
+	local dLdy = torch.zeros(num_rows_wanted, numClasses)
 	-- zero if ypc - ypp > 1
 	for i = 1, num_rows_wanted do
-		idx = i
-		c = Y[i]
-		cp = Yps[i]
+		local c = Y[i]
+		local cp = Yps[i]
 
-		dLdy[i][c] = -1
-		dLdy[i][cp] = 1
+		if ypc[i] - ypp[i] <= 1 then
+			--print(c, cp, ypc[i], ypp[i])
+			dLdy[i][c] = -1.0
+			dLdy[i][cp] = 1.0
+		end
 	end
 
 	-- Initialize gradient 
@@ -91,13 +93,15 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 
 	--I think we can speed this up too
 	for i=1, num_rows_wanted do
- 		local denseTensor = convertSparseToReal(X[i], numFeatures)
- 		for c = 1, numClasses do
- 			local tmp = torch.mul(denseTensor, dLdy[i][c])
- 			W_grad[c] = W_grad[c] + tmp:div(num_rows_wanted)
+		for j=1, X:size()[2] do
+			feat = X[i][j]-1
+			if feat > 0 then
+ 				for c = 1, numClasses do
+ 					W_grad[c][feat] = W_grad[c][feat] +dLdy[i][c]/num_rows_wanted
+ 				end
+ 			end
  		end
 	end
-	--]]
 
 	return W_grad, b_grad
 end
@@ -109,7 +113,6 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 	local W = torch.randn(nclasses, nfeatures)
 	local b = torch.randn(nclasses)
 	--local num_epochs = 10
-	W:div(1)
 
 	if testmode == true then
 		N = 10000
@@ -142,7 +145,7 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 			--print(start_index, end_index)
 			local W_grad, b_grad = hingeGradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
-			b = b - torch.mul(b_grad,learning_rate)
+			b = b - (b_grad + torch.mul(b,lambda/N)):mul(learning_rate)
 			if counter % 20 == 0 then
 				print("    Current index:", index)
 				print("    Magnitude of W_grad:", torch.abs(W_grad):sum())
