@@ -79,6 +79,7 @@ def prepare_features(data_name, feature_list, dataset):
             sentences.append(sentence)
 
     index_offset = 2
+    max_feat_length = 0
     for feature in feature_list:
 
         if type(feature) is tuple:
@@ -90,9 +91,10 @@ def prepare_features(data_name, feature_list, dataset):
         inited_feature = feature(index_offset=index_offset, **kwargs)
         inited_feature.initialize(sentences)
         inited_features.append(inited_feature)
-        index_offset += inited_feature.maxFeatureLength()
+        index_offset += inited_feature.totalFeatureCount()
+        max_feat_length += inited_feature.maxFeatureLength()
 
-    return inited_features, index_offset
+    return inited_features, max_feat_length
 
 def convert_data(data_name, feature_list, max_features, dataset):
     features = []
@@ -170,7 +172,7 @@ def main(arguments):
 
     #max_sent_len, word_to_idx = get_vocab([train, valid, test])
     #old_train_input, old_train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
-    feature_list = [(features.NgramFeature, {'N': 1}), (features.NgramFeature, {'N': 2})]
+    feature_list = [(features.NgramFeature, {'N': 1}), (features.NgramFeature, {'N': 2}), features.SentimentFeature]
     prepared_features, max_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
