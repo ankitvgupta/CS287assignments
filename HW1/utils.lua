@@ -77,3 +77,11 @@ function validateLinearModel(W, b, x, y)
     score = equality:sum()/equality:size()[1]
     return score
 end   
+
+-- Returns another tensor with only the rows of X that have sentences of length minlength
+
+function removeSmallSentences(X, Y, minlength)
+    local desired_row_mask = torch.ge(torch.ge(X, 2):sum(2), minlength)
+    local desired_rows = torch.range(1, X:size()[1]):long()[desired_row_mask]
+    return X:index(1, desired_rows), Y:index(1, desired_rows)
+end
