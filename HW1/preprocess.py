@@ -196,6 +196,8 @@ def main(arguments):
 
     filename = args.dataset + '.hdf5'
     with h5py.File(filename, "w") as f:
+        f['train_input'] = train_input
+        f['train_output'] = train_output
         if valid:
             f['valid_input'] = valid_input
             f['valid_output'] = valid_output
