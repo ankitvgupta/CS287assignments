@@ -2,6 +2,7 @@
 
 """Text Classification Preprocessing
 """
+from nltk.corpus import stopwords
 
 import features
 import numpy as np
@@ -10,8 +11,10 @@ import argparse
 import sys
 import re
 
+STOP_WORDS = set(stopwords.words('english'))
 
-def line_to_words(line, dataset):
+
+def line_to_words(line, dataset, exclude_stops=False, exclude_aposts=False):
     # Different preprocessing is used for these datasets.
     if dataset not in ['SST1', 'SST2']:
         clean_line = clean_str_sst(line.strip())
@@ -20,9 +23,13 @@ def line_to_words(line, dataset):
     clean_line = clean_str_sst(line.strip())
     words = clean_line.split(' ')
     words = words[1:]
+    if exclude_stops:
+        words = [w for w in words if w not in STOP_WORDS]
+    if exclude_aposts:
+        words = [w for w in words if "'" not in w]
     return words
 
-
+# deprecated
 def get_vocab(file_list, dataset=''):
     """
     Construct index feature dictionary.
@@ -44,6 +51,7 @@ def get_vocab(file_list, dataset=''):
                             idx += 1
     return max_sent_len, word_to_idx
 
+# deprecated
 def old_convert_data(data_name, word_to_idx, max_sent_len, dataset, start_padding=0):
     """
     Convert data to padded word index features.
@@ -94,7 +102,7 @@ def prepare_features(data_name, feature_list, dataset):
         index_offset += inited_feature.totalFeatureCount()
         max_feat_length += inited_feature.maxFeatureLength()
 
-    return inited_features, max_feat_length
+    return inited_features, max_feat_length, index_offset
 
 def convert_data(data_name, feature_list, max_features, dataset):
     features = []
@@ -172,8 +180,8 @@ def main(arguments):
 
     #max_sent_len, word_to_idx = get_vocab([train, valid, test])
     #old_train_input, old_train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
-    feature_list = [(features.NgramFeature, {'N': 1}), (features.NgramFeature, {'N': 2}), features.SentimentFeature]
-    prepared_features, max_features = prepare_features(train, feature_list, dataset)
+    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature]
+    prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
     if valid:
@@ -183,15 +191,14 @@ def main(arguments):
         # test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
         test_input, _ = convert_data(test, prepared_features, max_features, dataset)
 
-    for s in train_input[:10]:
-        print s
-
-    V = max_features
+    V = total_features-2
     print "Loaded "+str(V)+" features."
     C = np.max(train_output)
 
     filename = args.dataset + '.hdf5'
     with h5py.File(filename, "w") as f:
+        f['train_input'] = train_input
+        f['train_output'] = train_output
         if valid:
             f['valid_input'] = valid_input
             f['valid_output'] = valid_output

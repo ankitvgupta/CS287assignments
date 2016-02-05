@@ -4,7 +4,6 @@
 """
 from textblob import TextBlob
 
-
 class SentenceFeature(object):
 
 	def __init__(self, index_offset=2):
