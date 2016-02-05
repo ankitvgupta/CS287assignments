@@ -154,7 +154,7 @@ function SGD(Xs, Ys, validation_input, validation_output, nfeatures, nclasses, m
 	local W = torch.randn(nclasses, nfeatures)
 	local b = torch.randn(nclasses)
 	--local num_epochs = 10
-	W:div(1000)
+	W:div(1)
 
 	if testmode == true then
 		N = 10000
@@ -173,9 +173,9 @@ function SGD(Xs, Ys, validation_input, validation_output, nfeatures, nclasses, m
 		
 		printv("SGD: Validation Accuracy is:", 3)
 		printv(validation_accuracy, 3)
-		printv("Magnitude of W:", 3)
+		printv("SGD: Magnitude of W:", 3)
 		printv(torch.abs(W):sum(), 3)
-		printv("Magnitude of b:", 3)
+		printv("SGD: Magnitude of b:", 3)
 		printv(torch.abs(b):sum(), 3)
 
 
@@ -191,17 +191,12 @@ function SGD(Xs, Ys, validation_input, validation_output, nfeatures, nclasses, m
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - torch.mul(b_grad,learning_rate)
 			if counter % 20 == 0 then
-				printv("    Current index:", 3)
-				printv(index, 3)
-				printv("    Magnitude of W_grad:", 3)
-				printv(torch.abs(W_grad):sum(), 3)
-				printv("    Magnitude of W:", 3)
-				printv(torch.abs(W):sum(), 3)
-				printv("    Magnitude of B_grad:", 3)
-				printv(torch.abs(b_grad):sum(), 3)
-				printv("    Magnitude of b:", 3)
-				printv(torch.abs(b):sum(), 3)
-				printv("\n", 3)
+				print("    Current index:", index)
+				print("    Magnitude of W_grad:", torch.abs(W_grad):sum())
+				print("    Magnitude of W:",torch.abs(W):sum())
+				print("    Magnitude of B_grad:", torch.abs(b_grad):sum())
+				print("    Magnitude of b:", torch.abs(b):sum())
+				print("\n")
 			end
 		end
 	end

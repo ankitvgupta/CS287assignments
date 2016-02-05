@@ -16,6 +16,7 @@ cmd:option('-eta', .5, 'Learning rate')
 cmd:option('-lambda', 1, 'regularization penalty')
 cmd:option('-minibatch', 500, 'Minibatch size')
 cmd:option('-epochs', 50, 'Number of epochs of SGD')
+cmd:option('-min_sentence_length', 0, 'Minimum length of sentence to be included in training set')
 
 
 function main() 
@@ -27,6 +28,9 @@ function main()
    	local f = hdf5.open(opt.datafile, 'r')
    	local training_input = f:read('train_input'):all():long()
    	local training_output = f:read('train_output'):all():long()
+   	print("Number of training samples before removing small sentences", training_input:size()[1])
+   	training_input, training_output = removeSmallSentences(training_input, training_output, opt.min_sentence_length)
+   	print("Number of training samples after removing small sentences", training_input:size()[1])
    	local validation_input = f:read('valid_input'):all():long()
    	local validation_output = f:read('valid_output'):all():long()
    	local nfeatures = f:read('nfeatures'):all():long()[1]
@@ -46,7 +50,7 @@ function main()
 
    -- Test.
    printv("Testing on validation set...", 2)
-   local validation_accuracy = validateLinearModel(W:t(), b, validation_input, validation_output)
+   local validation_accuracy = validateLinearModel(W, b, validation_input, validation_output)
    printv("Done", 2)
    printv("Accuracy:", 1)
    printv(validation_accuracy, 1)
