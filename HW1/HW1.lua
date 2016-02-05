@@ -4,6 +4,7 @@ require("hdf5")
 -- Common functions and classifiers
 dofile("nb.lua")
 dofile("logisticregression.lua")
+dofile("hinge.lua")
 dofile("utils.lua")
 
 cmd = torch.CmdLine()
@@ -43,8 +44,10 @@ function main()
    		W, b = naiveBayes(training_input, training_output, nfeatures, nclasses, opt.alpha)	
    	elseif (opt.classifier == 'lr') then
    		W, b = logisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, opt.minibatch, opt.eta, opt.lambda, opt.epochs)
+   	elseif (opt.classifier == 'hinge') then
+   		W, b = hingeLogisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, opt.minibatch, opt.eta, opt.lambda, opt.epochs)
    	else
-   		printv("Not yet implemented.", 0)
+   		printv("Unknown classifier.", 0)
    	end
    	printv("Done.", 2)
 
