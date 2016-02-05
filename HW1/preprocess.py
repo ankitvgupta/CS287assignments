@@ -14,7 +14,7 @@ import re
 STOP_WORDS = set(stopwords.words('english'))
 
 
-def line_to_words(line, dataset, exclude_aposts=True):
+def line_to_words(line, dataset, exclude_stops=False, exclude_aposts=False):
     # Different preprocessing is used for these datasets.
     if dataset not in ['SST1', 'SST2']:
         clean_line = clean_str_sst(line.strip())
@@ -23,7 +23,8 @@ def line_to_words(line, dataset, exclude_aposts=True):
     clean_line = clean_str_sst(line.strip())
     words = clean_line.split(' ')
     words = words[1:]
-    words = [w for w in words if w not in STOP_WORDS]
+    if exclude_stops:
+        words = [w for w in words if w not in STOP_WORDS]
     if exclude_aposts:
         words = [w for w in words if "'" not in w]
     return words
@@ -179,7 +180,7 @@ def main(arguments):
 
     #max_sent_len, word_to_idx = get_vocab([train, valid, test])
     #old_train_input, old_train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
-    feature_list = [(features.NgramFeature, {'N': 1}), (features.NgramFeature, {'N': 2}), features.SentimentFeature]
+    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature]
     prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
@@ -190,7 +191,7 @@ def main(arguments):
         # test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
         test_input, _ = convert_data(test, prepared_features, max_features, dataset)
 
-    V = total_features
+    V = total_features-2
     print "Loaded "+str(V)+" features."
     C = np.max(train_output)
 

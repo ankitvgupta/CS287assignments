@@ -67,7 +67,7 @@ end
 
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateLinearModel(W, b, x, y)
-    local Ans = sparseMultiply(x, W:t())
+    local Ans = sparseMultiply(x, W)
     for r = 1, Ans:size(1) do
     	Ans[r]:add(b)
     end
