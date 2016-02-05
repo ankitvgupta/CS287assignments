@@ -135,7 +135,7 @@ function gradient(W, b, Xs, Ys, start_index, end_index)
 
  		-- this is u_i - y_i
  		local diff = softmax_val - makeOneHot(class, nclasses)
- 		local denseTensor = convertSparseToReal(Xs[n], nfeatures)
+ 		local denseTensor = convertSparseToReal(X[n], nfeatures)
  		for i = 1, nclasses do
  			local tmp = torch.mul(denseTensor, diff[i])
  			W_grad[i] = W_grad[i] + tmp:div(num_rows_wanted)
