@@ -2,16 +2,21 @@
 
 """Classes for binary features of sentences
 """
+from textblob import TextBlob
+
 
 class SentenceFeature(object):
 
 	def __init__(self, index_offset=2):
 		self.index_offset = index_offset
 
-	def initialize(self, sentences=None):
-		raise UnimplementedError
+	def initialize(self, sentences):
+		pass
 
 	def sentenceToFeatures(self, sentence):
+		raise UnimplementedError
+
+	def totalFeatureCount(self):
 		raise UnimplementedError
 
 	def maxFeatureLength(self):
@@ -49,5 +54,45 @@ class NgramFeature(SentenceFeature):
 				continue
 		return feat
 
+	def totalFeatureCount(self):
+		return len(self.word_to_idx)
+
 	def maxFeatureLength(self):
 		return self.max_sent_len
+
+
+# four features: 
+# first is high polarity, second is low polarity
+# third is high subjectivity, fourth is low subjectivity
+class SentimentFeature(SentenceFeature):
+
+	def __init__(self, neutral_width=0.2, index_offset=2):
+		self.neutral_width = neutral_width
+		self.index_offset = index_offset
+
+	def sentenceToFeatures(self, sentence):
+		sentence_str = ' '.join(sentence)
+		blob = TextBlob(sentence_str)
+		feats = []
+
+		# polarity comes between -1 and 1, so normalize it
+		polarity = (blob.sentiment.polarity+1.0)/2
+		if polarity > (0.5 + self.neutral_width):
+			feats.append(self.index_offset)
+		elif polarity < (0.5 - self.neutral_width):
+			feats.append(self.index_offset+1)
+
+		subjectivity = blob.sentiment.subjectivity
+		if subjectivity > (0.5 + self.neutral_width):
+			feats.append(self.index_offset+2)
+		elif subjectivity < (0.5 - self.neutral_width):
+			feats.append(self.index_offset+3)
+
+		return feats
+
+	def totalFeatureCount(self):
+		return 4
+
+	def maxFeatureLength(self):
+		return 2
+
