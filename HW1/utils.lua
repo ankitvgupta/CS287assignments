@@ -1,8 +1,17 @@
 VERBOSITY = 3
+ERROR_TOLERANCE = 0.1
 
 function printv(s, verbosity)
 	if VERBOSITY >= verbosity then
 		print(s)
+	end
+end
+
+function printtest(s, result)
+	if result then
+		print("\x1B[32m" .. s .. " passed")
+	else
+		print("\x1B[31m" .. s .." failed")
 	end
 end
 
@@ -84,4 +93,25 @@ function removeSmallSentences(X, Y, minlength)
     local desired_row_mask = torch.ge(torch.ge(X, 2):sum(2), minlength)
     local desired_rows = torch.range(1, X:size()[1]):long()[desired_row_mask]
     return X:index(1, desired_rows), Y:index(1, desired_rows)
+end
+
+--compare two tensors
+function tensorsEqual(A, B)
+	if ((torch.abs(A-B)):sum()) < ERROR_TOLERANCE then
+		return true
+	else
+		local N = A:size()[1]
+		for i=1, N do
+			local err = 0
+			if A:dim() == 2 then
+				err = (torch.abs(A[i] - B[i])):sum()
+			else
+				err = (torch.abs(A[i] - B[i]))
+			end
+			if err > ERROR_TOLERANCE/N then
+				print(i, "A[i]:", A[i], "B[i]", B[i], "diff:", err)
+				break
+			end
+		end
+	end
 end

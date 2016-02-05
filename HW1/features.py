@@ -2,7 +2,9 @@
 
 """Classes for binary features of sentences
 """
-from textblob import TextBlob
+from textblob import Blobber, TextBlob, Word
+from textblob.taggers import PatternTagger
+
 
 class SentenceFeature(object):
 
@@ -51,7 +53,7 @@ class NgramFeature(SentenceFeature):
 				feat.append(self.word_to_idx[gram])
 			except KeyError:
 				continue
-		return feat
+		return list(set(feat))
 
 	def totalFeatureCount(self):
 		return len(self.word_to_idx)
@@ -94,4 +96,72 @@ class SentimentFeature(SentenceFeature):
 
 	def maxFeatureLength(self):
 		return 2
+
+# checks for presence for parts of speech
+class POSFeature(SentenceFeature):
+
+	def initialize(self, sentences):
+		self.tagger = Blobber(pos_tagger=PatternTagger())
+		parts_of_speech = ['DT', 'NN', 'VBZ', 'TO', 'VB', 'CD', 'POS', 'JJ', 'CC', 'IN', 'PRP', 'VBG', 'RB', 'JJR', 'NNS', 'MD']
+		self.pos_to_idx = {}
+		for i,pos in enumerate(parts_of_speech):
+			self.pos_to_idx[pos] = i+self.index_offset
+
+	def sentenceToFeatures(self, sentence):
+		feats = []
+		sentence_str = ' '.join(sentence)
+		blob = self.tagger(sentence_str)
+		for _, pos in blob.tags:
+			try:
+				feats.append(self.pos_to_idx[pos])
+			except KeyError:
+				continue
+		return list(set(feats))
+
+	def totalFeatureCount(self):
+		return len(self.pos_to_idx)
+
+	def maxFeatureLength(self):
+		return len(self.pos_to_idx)
+
+
+class SynFeature(SentenceFeature):
+
+	def initialize(self, sentences):
+		self.max_feat_len = 0
+		self.word_to_idx = {}
+		idx = self.index_offset
+		for sentence in sentences:
+			syn_count = 0
+			for word in sentence:
+				werd = Word(word)
+				syns = [w.lemma_names for w in werd.get_synsets()]
+				for syn in syns:
+					syn_count += 1
+					if syn not in self.word_to_idx:
+						self.word_to_idx[syn] = idx
+						idx += 1
+			self.max_feat_len = max(self.max_feat_len, syn_count)
+
+	def sentenceToFeatures(self, sentence):
+		feat = []
+
+		for word in sentence:
+			werd = Word(word)
+			syns = [w.lemma_names for w in werd.get_synsets()]
+			for syn in syns:
+				try:
+					feat.append(self.word_to_idx[syn])
+				except KeyError:
+					continue
+		return list(set(feat))
+
+	def totalFeatureCount(self):
+		return len(self.word_to_idx)
+
+	def maxFeatureLength(self):
+		return self.max_feat_len
+
+
+
 

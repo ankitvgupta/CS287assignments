@@ -178,20 +178,29 @@ def main(arguments):
     dataset = args.dataset
     train, valid, test = FILE_PATHS[dataset]
 
-    #max_sent_len, word_to_idx = get_vocab([train, valid, test])
-    #old_train_input, old_train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
-    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature]
+    # max_sent_len, word_to_idx = get_vocab([train, valid, test])
+    # train_input, train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
+    
+    # if valid:
+    #     valid_input, valid_output = old_convert_data(valid, word_to_idx, max_sent_len, dataset)
+
+    # if test:
+    #     test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
+
+    # V = len(word_to_idx)
+
+    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature, features.SynFeature]
     prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
     if valid:
-        # valid_input, valid_output = old_convert_data(valid, word_to_idx, max_sent_len, dataset)
         valid_input, valid_output = convert_data(valid, prepared_features, max_features, dataset)
     if test:
-        # test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
         test_input, _ = convert_data(test, prepared_features, max_features, dataset)
 
     V = total_features-2
+
+
     print "Loaded "+str(V)+" features."
     C = np.max(train_output)
 
