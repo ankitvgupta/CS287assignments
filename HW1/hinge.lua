@@ -19,26 +19,26 @@ function hingeLoss(W, b, Xs, Ys, lambda)
 	local numClasses = W:size()[1]
 
 	local yp = sparseMultiply(Xs, W:t())
-    for r = 1, yp:size(1) do
-    	yp[r]:add(b)
-    end
+	local eb = torch.expand(b:view(numClasses, 1), numClasses, numEntries)
+	yp:add(eb)
 
-	local total = 0.0
-	for n = 1, numEntries do
-		--true class probability
-		local yc = 0
-		--greatest false class probability
-		local ycp = 0
-		for k = 1, numClasses do
-			if (Ys[n] == k) then
-				yc = yp[n][k]
-			elseif (Ys[n] > ycp) then
-				ycp = Ys[n]
-			end
-		end
-		total = total+math.max(0, 1-(yc-ycp))
+	local globalMin = yp:min()
+
+	-- Scores of true classes
+	local ypc = torch.Tensor(numEntries)
+	for i = 1, numEntries do
+		ypc[i] = yp[i][Ys[i]]
+		-- to allow for next max operation
+		yp[i][Ys[i]] = globalMin
 	end
-	return total + lambda*torch.pow(W,2):sum()
+
+	-- Scores of max false classes
+	local ypp = yp:max(2):squeeze()
+
+	local rlu = torch.ones(numEntries)-(ypc-ypp)
+	rlu:apply(function(x) return (x<0) and 0 or x end)
+
+	return rlu:sum() + lambda*torch.pow(W,2):sum()
 end
 
 function hingeGradient(W, b, Xs, Ys, start_index, end_index)
@@ -50,47 +50,54 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 
 	-- Extract parameters
 	local W_size = W:size()
-	local nclasses = W_size[1]
-	local nfeatures = W_size[2]
-
-	-- Initiailize gradient 
-	local W_grad = torch.zeros(nclasses, nfeatures)
-	local b_grad = torch.zeros(nclasses)
+	local numClasses = W_size[1]
+	local numFeatures = W_size[2]
 
 	-- yp (y predicted) should be (num_rows_wanted X nclasses)
-	local yp = sparseMultiply(Xs, W)
-    for r = 1, yp:size(1) do
-    	yp[r]:add(b)
-    end
+	local yp = sparseMultiply(X, W:t())
+	local eb = torch.expand(b:view(numClasses, 1), numClasses, num_rows_wanted)
+	yp:add(eb)
 
-	for n = 1, num_rows_wanted do
- 		--true class probability
-		local yc = 0
-		--greatest false class probability
-		local ycp = 0
-		local cp = 0
-		for k = 1, nclasses do
-			if (Ys[n] == k) then
-				yc = yp[n][k]
-			elseif (Ys[n] > ycp) then
-				ycp = Ys[n]
-				cp = k
-			end
-		end
-		-- dL/dy
-		dLdy = torch.zeros(nclasses)
-		if yc - ycp <= 1 then
-			dLdy[cp] = 1
-			dLdy[Ys[n]] = -1
-		end
+	local globalMin = yp:min()
 
- 		local denseTensor = convertSparseToReal(Xs[n], nfeatures)
- 		for i = 1, nclasses do
- 			local tmp = torch.mul(denseTensor, dLdy[i])
- 			W_grad[i] = W_grad[i] + tmp:div(num_rows_wanted)
- 		end
- 		b_grad = b_grad + torch.div(dLdy, num_rows_wanted)
+	-- Scores of true classes
+	local ypc = torch.Tensor(num_rows_wanted)
+	for i = 1, num_rows_wanted do
+		ypc[i] = yp[i][Y[i]]
+		-- to allow for next max operation
+		yp[i][Y[i]] = globalMin
 	end
+
+	-- Scores of max false classes
+	local ypp, Yps = yp:max(2)
+	ypp = ypp:squeeze()
+	Yps = Yps:squeeze()
+
+	-- dL/dy
+	dLdy = torch.zeros(num_rows_wanted, numClasses)
+	-- zero if ypc - ypp > 1
+	for i = 1, num_rows_wanted do
+		idx = i
+		c = Y[i]
+		cp = Yps[i]
+
+		dLdy[i][c] = -1
+		dLdy[i][cp] = 1
+	end
+
+	-- Initialize gradient 
+	local W_grad = torch.zeros(numClasses, numFeatures)
+	local b_grad = torch.div(dLdy:sum(1), num_rows_wanted)
+
+	--I think we can speed this up too
+	for i=1, num_rows_wanted do
+ 		local denseTensor = convertSparseToReal(X[i], numFeatures)
+ 		for c = 1, numClasses do
+ 			local tmp = torch.mul(denseTensor, dLdy[i][c])
+ 			W_grad[c] = W_grad[c] + tmp:div(num_rows_wanted)
+ 		end
+	end
+	--]]
 
 	return W_grad, b_grad
 end
@@ -133,7 +140,7 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			local size = end_index - start_index + 1
 			--print(start_index, end_index)
-			local W_grad, b_grad = gradient(W, b, Xs, Ys, start_index, end_index)
+			local W_grad, b_grad = hingeGradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - torch.mul(b_grad,learning_rate)
 			if counter % 20 == 0 then
