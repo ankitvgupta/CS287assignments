@@ -19,8 +19,9 @@ function hingeLoss(W, b, Xs, Ys, lambda)
 	local numClasses = W:size()[1]
 
 	local yp = sparseMultiply(Xs, W:t())
-	local eb = torch.expand(b:view(numClasses, 1), numClasses, numEntries)
-	yp = yp:add(eb)
+	for i = 1, numEntries do
+		yp[i]:add(b)
+	end
 
 	local globalMin = yp:min()
 
@@ -55,8 +56,9 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 
 	-- yp (y predicted) should be (num_rows_wanted X nclasses)
 	local yp = sparseMultiply(X, W:t())
-	local eb = torch.expand(b:view(numClasses, 1), numClasses, num_rows_wanted)
-	yp = yp:add(eb)
+	for i = 1, num_rows_wanted do
+		yp[i]:add(b)
+	end
 
 	local globalMin = yp:min()
 
