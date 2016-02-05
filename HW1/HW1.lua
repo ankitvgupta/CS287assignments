@@ -22,8 +22,10 @@ cmd:option('-min_sentence_length', 0, 'Minimum length of sentence to be included
 function main() 
    	-- Parse input params
    	opt = cmd:parse(arg)
-
-   	-- Load datafiles
+    print("Parameters are:\n")
+    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
+   	print("Note that not all parameters may apply to all classifiers")
+    -- Load datafiles
    	printv("Loading datafiles...", 2)
    	local f = hdf5.open(opt.datafile, 'r')
    	local training_input = f:read('train_input'):all():long()
