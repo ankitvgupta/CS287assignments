@@ -37,12 +37,15 @@ function crossValidation(Xs, Ys, K, options)
 
 end
 
+function printoptions(opt)
+    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
+end
 
 function main() 
    	-- Parse input params
    	opt = cmd:parse(arg)
-    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
-   	print("Note that not all parameters may apply to all classifiers")
+   	printoptions(opt)
+    print("Note that not all parameters may apply to all classifiers")
     -- Load datafiles
    	printv("Loading datafiles...", 2)
    	local f = hdf5.open(opt.datafile, 'r')
@@ -74,8 +77,8 @@ function main()
    printv("Testing on validation set...", 2)
    local validation_accuracy = validateLinearModel(W, b, validation_input, validation_output)
    printv("Done", 2)
-   printv("Accuracy:", 1)
-   printv(validation_accuracy, 1)
+   printoptions(opt)
+   print("Accuracy:", validation_accuracy)
 
    if (opt.test_file ~= '') then
    	    local test_input = f:read('test_input'):all():long()
