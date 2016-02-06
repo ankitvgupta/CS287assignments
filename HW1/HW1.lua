@@ -18,12 +18,29 @@ cmd:option('-lambda', 1, 'regularization penalty')
 cmd:option('-minibatch', 500, 'Minibatch size')
 cmd:option('-epochs', 50, 'Number of epochs of SGD')
 cmd:option('-min_sentence_length', 0, 'Minimum length of sentence to be included in training set')
+cmd:option('-test_file', '', 'File to put results from test set. Leave nil if not wanted')
+
+
+-- NOTE: THIS DOESNT WORK YET
+function crossValidation(Xs, Ys, K, options)
+	-- Generates a random ordering of rows
+	local order = torch.randperm(Xs:size()[1]):long()
+
+	-- Order the rows according to that new ordering
+	local X = Xs:index(1, order)
+	local Y = Ys:index(1, order)
+
+	local set_size = math.floor(X:size()[1]/K)
+	for loc = 1, 1 + (K-1)*set_size, set_size do
+		X_wanted = X:narrow(1,loc,set_size)
+	end
+
+end
 
 
 function main() 
    	-- Parse input params
    	opt = cmd:parse(arg)
-    print("Parameters are:\n")
     print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
    	print("Note that not all parameters may apply to all classifiers")
     -- Load datafiles
@@ -60,8 +77,17 @@ function main()
    printv("Accuracy:", 1)
    printv(validation_accuracy, 1)
 
+   if (opt.test_file ~= '') then
+   	    local test_input = f:read('test_input'):all():long()
+        local results = torch.squeeze(getLinearModelPredictions(W, b, test_input))
+        print(results)
+        file = io.open(opt.test_file, 'a')
+        io.output(file)
+        for test_i = 1, results:size()[1] do
+            io.write(test_i, ',', results[test_i], '\n')
+        end
+   end
    return validation_accuracy
-
 end
 
 main()

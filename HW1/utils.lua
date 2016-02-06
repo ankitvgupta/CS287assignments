@@ -65,13 +65,24 @@ function sparseMultiply(A,B)
 	return output
 end
 
--- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
-function validateLinearModel(W, b, x, y)
-    local Ans = sparseMultiply(x, W:t())
+function getLinearModelPredictions(W, b, X)
+    local Ans = sparseMultiply(X, W:t())
     for r = 1, Ans:size(1) do
     	Ans[r]:add(b)
     end
-    a, c = torch.max(Ans, 2)
+    local a, c = torch.max(Ans, 2)
+    return c
+end    
+
+
+-- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
+function validateLinearModel(W, b, x, y)
+    --local Ans = sparseMultiply(x, W:t())
+    --for r = 1, Ans:size(1) do
+    -- 	Ans[r]:add(b)
+    --end
+    --a, c = torch.max(Ans, 2)
+    local c = getLinearModelPredictions(W, b, x)
     equality = torch.eq(c, y)
 
     score = equality:sum()/equality:size()[1]
