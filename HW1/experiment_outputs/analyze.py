@@ -27,7 +27,18 @@ alldata = np.append(sets, accuracies[:, np.newaxis], axis=1)
 df = pd.DataFrame(alldata)
 df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'MinimumSentenceLength', 'Accuracy']
 
-print df.sort(columns='Accuracy', ascending=False)
+df.sort(columns='Accuracy', ascending=False, inplace=True)
+print df
+print ""
+print "Best nb ones"
+print df[df['Classifier'] == 'nb']
 
+print ""
+print "Best lr ones"
+print df[df['Classifier'] == 'lr']
+
+print ""
+print "Best hinge ones"
+print df[df['Classifier'] == 'hinge']
 
 
