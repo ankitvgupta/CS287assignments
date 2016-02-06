@@ -1,5 +1,5 @@
 # USAGE: python analysis.py < SUMMARY_FILE
-
+# To create summary file, do tail -n 2 * > SUMMARY_FILE in the directory being summarized
 import numpy as np 
 import pandas as pd 
 import csv 
@@ -18,7 +18,7 @@ for line in sys.stdin:
 		accuracies.append(line.split('\t')[1])
 	if line[0] == 'D':
 		splitted = line.split('\t')
-		sets.append([splitted[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15]])
+		sets.append([splitted[1].split("HW1/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15]])
 
 sets = np.array(sets)
 accuracies = np.array(accuracies)
