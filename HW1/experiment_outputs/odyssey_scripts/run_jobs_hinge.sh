@@ -7,8 +7,8 @@
 #SBATCH -t 12:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue               #Partition to submit to
 
-#SBATCH -o /n/home09/ankitgupta/CS287/HW1/outputs/out/feb5/setup_%A_%a.out            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/HW1/outputs/err/feb5/setup_%A_%a.err             #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/HW1/outputs/out/exp2/setup_%A_%a.out            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/HW1/outputs/err/exp2/setup_%A_%a.err             #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
@@ -25,6 +25,7 @@ minibatch=${selected_config[4]}
 epochs=${selected_config[5]}
 minlength=${selected_config[6]}
 alpha=${selected_config[7]}
+gen_validation_set=${selected_config[8]}
 
 cd /scratch
 source new-modules.sh
@@ -40,5 +41,6 @@ th /n/home09/ankitgupta/CS287/HW1/HW1.lua \
  -minibatch $minibatch \
  -epochs $epochs \
  -min_sentence_length $minlength \
- -alpha $alpha
+ -alpha $alpha \
+ -generate_validation_set $gen_validation_set
 
