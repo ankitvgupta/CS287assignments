@@ -10,8 +10,8 @@ dofile("utils.lua")
 cmd = torch.CmdLine()
 
 -- Cmd Args
-cmd:option('-datafile', '', 'data file')
-cmd:option('-classifier', 'nb', 'classifier to use')
+cmd:option('-datafile', '', 'path to data file')
+cmd:option('-classifier', 'nb', 'classifier to use - choose from nb, lr, hinge')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
 cmd:option('-eta', .5, 'Learning rate')
 cmd:option('-lambda', 1, 'regularization penalty')
