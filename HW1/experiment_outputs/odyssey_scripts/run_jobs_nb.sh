@@ -4,7 +4,7 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=2000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 0:45:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 0:20:00              #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/HW1/outputs/out/exp2/setup_%A_%a.out            #File to which standard out will be written
