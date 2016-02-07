@@ -44,6 +44,7 @@ function crossEntropy(X, W, b, Y)
 	end
 	-- z has numEntries rows and numClasses columns
 	-- zc is a vector of length numEntries
+
 	local zc = torch.Tensor(numEntries)
 	for i = 1, numEntries do
 		zc[i] = z[i][Y[i]]

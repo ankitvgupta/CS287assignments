@@ -131,7 +131,6 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			local size = end_index - start_index + 1
-
 			local W_grad, b_grad = hingeGradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - (b_grad + torch.mul(b,lambda/N)):mul(learning_rate)

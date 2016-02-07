@@ -133,7 +133,6 @@ def main(arguments):
     dataset = args.dataset
     train, valid, test = FILE_PATHS[dataset]
 
-
     feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature]
     prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)

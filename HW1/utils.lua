@@ -22,9 +22,6 @@ end
 function createCountsMatrix(training_input, training_output, nfeatures, nclasses)
 
 	local F = torch.zeros(nfeatures, nclasses)
-function createCountsMatrix(training_input, training_output, nfeatures, nclasses)
-
-	local F = torch.zeros(nfeatures, nclasses)
 	printv("     CreateCountsMatrix: Loaded training data", 3)
 	local train_size = training_input:size()
 	for n = 1, train_size[1] do

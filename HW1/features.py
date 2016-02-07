@@ -5,7 +5,6 @@
 from textblob import Blobber, TextBlob, Word
 from textblob.taggers import PatternTagger
 
-
 class SentenceFeature(object):
 
 	def __init__(self, index_offset=2):
@@ -162,3 +161,4 @@ class SynFeature(SentenceFeature):
 
 	def maxFeatureLength(self):
 		return self.max_feat_len
+		
