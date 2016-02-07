@@ -1,0 +1,4412 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/HW1/SST1-uni-bi-sent.hdf5	Classifier:	lr	Alpha:	0	Eta:	1	Lambda:	1	Minibatch size:	500	Num Epochs:	50	Minimum Sentence Length:	5	
+Note that not all parameters may apply to all classifiers	
+Loading datafiles...	
+Number of training samples before removing small sentences	156817	
+Number of training samples after removing small sentences	117621	
+Done.	
+Training classifier...	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+784693.79163501	
+SGD: crossEntropyLoss is	
+784693.79163501	
+SGD: Validation Accuracy is:	
+0.18346957311535	
+SGD: Magnitude of W:	
+382474.63804192	
+SGD: Magnitude of b:	
+3.5453248648603	
+    Current index:	9501	
+    Magnitude of W_grad:	16.682098837506	
+    Magnitude of W:	382353.71698884	
+    Magnitude of B_grad:	0.15911070431202	
+    Magnitude of b:	7.7204543343948	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	15.10941517812	
+    Magnitude of W:	382244.72266612	
+    Magnitude of B_grad:	0.10500943650214	
+    Magnitude of b:	8.0743616412174	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	16.79666480777	
+    Magnitude of W:	382133.15099241	
+    Magnitude of B_grad:	0.19912926451978	
+    Magnitude of b:	8.2821220562866	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	15.537481392979	
+    Magnitude of W:	382024.68675147	
+    Magnitude of B_grad:	0.15090777695015	
+    Magnitude of b:	8.8194266818841	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	17.320391611428	
+    Magnitude of W:	381913.24605373	
+    Magnitude of B_grad:	0.1882217485752	
+    Magnitude of b:	9.093185639583	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	19.036826394918	
+    Magnitude of W:	381805.17184663	
+    Magnitude of B_grad:	0.52055603170316	
+    Magnitude of b:	8.3724514395987	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	14.574330575819	
+    Magnitude of W:	381688.74615921	
+    Magnitude of B_grad:	0.17187228978534	
+    Magnitude of b:	6.8508811632989	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	15.561656306415	
+    Magnitude of W:	381576.0341044	
+    Magnitude of B_grad:	0.21313869327625	
+    Magnitude of b:	7.963236104906	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	15.350483247944	
+    Magnitude of W:	381463.18276381	
+    Magnitude of B_grad:	0.12423235466229	
+    Magnitude of b:	8.1907123070494	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	16.900816833338	
+    Magnitude of W:	381352.99354629	
+    Magnitude of B_grad:	0.12811780358456	
+    Magnitude of b:	7.9724371199314	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	16.170409462894	
+    Magnitude of W:	381246.5186162	
+    Magnitude of B_grad:	0.15333973675688	
+    Magnitude of b:	8.4051841440402	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+679018.31931221	
+SGD: crossEntropyLoss is	
+679018.31931221	
+SGD: Validation Accuracy is:	
+0.23524069028156	
+SGD: Magnitude of W:	
+381161.92469261	
+SGD: Magnitude of b:	
+7.0655618257709	
+    Current index:	9501	
+    Magnitude of W_grad:	15.315117948515	
+    Magnitude of W:	381054.66830101	
+    Magnitude of B_grad:	0.20617723973955	
+    Magnitude of b:	8.0844626930128	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	13.989731843511	
+    Magnitude of W:	380953.09097622	
+    Magnitude of B_grad:	0.072041923106868	
+    Magnitude of b:	8.3845962873208	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	14.706264284088	
+    Magnitude of W:	380849.50972725	
+    Magnitude of B_grad:	0.17255265709487	
+    Magnitude of b:	8.5641982025493	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	15.14378029373	
+    Magnitude of W:	380747.57854178	
+    Magnitude of B_grad:	0.16297813221732	
+    Magnitude of b:	9.0642754207045	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	16.692211240895	
+    Magnitude of W:	380642.10026208	
+    Magnitude of B_grad:	0.17553721308374	
+    Magnitude of b:	9.2902316475787	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	18.481679086118	
+    Magnitude of W:	380538.44797828	
+    Magnitude of B_grad:	0.52657765851817	
+    Magnitude of b:	8.508986840135	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	14.033856280706	
+    Magnitude of W:	380426.81817366	
+    Magnitude of B_grad:	0.1942761168012	
+    Magnitude of b:	7.504390797796	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	14.721310099079	
+    Magnitude of W:	380320.54787298	
+    Magnitude of B_grad:	0.18345819051378	
+    Magnitude of b:	8.537212761289	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	14.984195307487	
+    Magnitude of W:	380213.11624846	
+    Magnitude of B_grad:	0.10629015279971	
+    Magnitude of b:	8.7210222211776	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	15.857816508804	
+    Magnitude of W:	380109.71445142	
+    Magnitude of B_grad:	0.10514611176572	
+    Magnitude of b:	8.4563294782133	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	14.878208374461	
+    Magnitude of W:	380007.42333187	
+    Magnitude of B_grad:	0.16815169876459	
+    Magnitude of b:	8.7870306930963	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+643684.41770769	
+SGD: crossEntropyLoss is	
+643684.41770769	
+SGD: Validation Accuracy is:	
+0.23796548592189	
+SGD: Magnitude of W:	
+379927.40123176	
+SGD: Magnitude of b:	
+7.5190515791584	
+    Current index:	9501	
+    Magnitude of W_grad:	14.213921527674	
+    Magnitude of W:	379823.21085554	
+    Magnitude of B_grad:	0.20419723224132	
+    Magnitude of b:	8.3705976518448	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	13.136932355281	
+    Magnitude of W:	379725.51703277	
+    Magnitude of B_grad:	0.054924635300426	
+    Magnitude of b:	8.6449087705431	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	13.926299392604	
+    Magnitude of W:	379625.60680108	
+    Magnitude of B_grad:	0.17334183257617	
+    Magnitude of b:	8.8145458616352	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	14.492815431219	
+    Magnitude of W:	379526.95002409	
+    Magnitude of B_grad:	0.15605655870411	
+    Magnitude of b:	9.2531499432277	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	16.275159228899	
+    Magnitude of W:	379424.8346161	
+    Magnitude of B_grad:	0.17764307412613	
+    Magnitude of b:	9.4267934221983	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	17.844608129569	
+    Magnitude of W:	379324.65852179	
+    Magnitude of B_grad:	0.51639572646795	
+    Magnitude of b:	8.6218297115467	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	13.875685071387	
+    Magnitude of W:	379218.22160592	
+    Magnitude of B_grad:	0.19998750606329	
+    Magnitude of b:	7.7155302030467	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	14.097317657023	
+    Magnitude of W:	379116.08829864	
+    Magnitude of B_grad:	0.17197152926864	
+    Magnitude of b:	8.7004405138668	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	14.724608320657	
+    Magnitude of W:	379011.98559647	
+    Magnitude of B_grad:	0.088234249012544	
+    Magnitude of b:	8.8410533190607	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	15.327344169956	
+    Magnitude of W:	378912.37395645	
+    Magnitude of B_grad:	0.087135081181763	
+    Magnitude of b:	8.5632574860508	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	14.036588526893	
+    Magnitude of W:	378812.07076658	
+    Magnitude of B_grad:	0.17574820641826	
+    Magnitude of b:	8.8523697982645	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+618747.93361565	
+SGD: crossEntropyLoss is	
+618747.93361565	
+SGD: Validation Accuracy is:	
+0.24432334241599	
+SGD: Magnitude of W:	
+378733.8655455	
+SGD: Magnitude of b:	
+7.6701815808446	
+    Current index:	9501	
+    Magnitude of W_grad:	13.981945057669	
+    Magnitude of W:	378632.67525881	
+    Magnitude of B_grad:	0.19662378033763	
+    Magnitude of b:	8.4706220143623	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	12.736763011106	
+    Magnitude of W:	378537.73262625	
+    Magnitude of B_grad:	0.046651569979726	
+    Magnitude of b:	8.7310449028974	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	13.465347915364	
+    Magnitude of W:	378440.22590772	
+    Magnitude of B_grad:	0.1684515914759	
+    Magnitude of b:	8.9094819669413	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	13.89899326484	
+    Magnitude of W:	378344.25160289	
+    Magnitude of B_grad:	0.14708760789591	
+    Magnitude of b:	9.3123649054179	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	15.842072416388	
+    Magnitude of W:	378244.27897604	
+    Magnitude of B_grad:	0.18179282346558	
+    Magnitude of b:	9.454779883318	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	17.031962156461	
+    Magnitude of W:	378146.52836714	
+    Magnitude of B_grad:	0.49464564440914	
+    Magnitude of b:	8.6505069578611	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	13.665688442418	
+    Magnitude of W:	378042.93318313	
+    Magnitude of B_grad:	0.20191190782201	
+    Magnitude of b:	7.7533270073368	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	13.57262688999	
+    Magnitude of W:	377943.25808962	
+    Magnitude of B_grad:	0.1691161631984	
+    Magnitude of b:	8.7121278433489	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	14.452693254071	
+    Magnitude of W:	377843.05955394	
+    Magnitude of B_grad:	0.079640577564803	
+    Magnitude of b:	8.8240177463446	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	15.085363546464	
+    Magnitude of W:	377745.93174269	
+    Magnitude of B_grad:	0.076680635961206	
+    Magnitude of b:	8.5598218872435	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	13.41672040949	
+    Magnitude of W:	377647.86410294	
+    Magnitude of B_grad:	0.17950125157684	
+    Magnitude of b:	8.8135542501774	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+598315.55142861	
+SGD: crossEntropyLoss is	
+598315.55142861	
+SGD: Validation Accuracy is:	
+0.2488646684832	
+SGD: Magnitude of W:	
+377571.29286537	
+SGD: Magnitude of b:	
+7.6939938859686	
+    Current index:	9501	
+    Magnitude of W_grad:	13.694985837006	
+    Magnitude of W:	377473.27991228	
+    Magnitude of B_grad:	0.19005273540832	
+    Magnitude of b:	8.4754691004055	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	12.394822028662	
+    Magnitude of W:	377380.49568336	
+    Magnitude of B_grad:	0.043285990577007	
+    Magnitude of b:	8.7252168315559	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	13.093945608414	
+    Magnitude of W:	377285.90953244	
+    Magnitude of B_grad:	0.16456099416412	
+    Magnitude of b:	8.9127619483399	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	13.408367788164	
+    Magnitude of W:	377192.38396309	
+    Magnitude of B_grad:	0.14033152813928	
+    Magnitude of b:	9.3027182936236	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	14.976370944233	
+    Magnitude of W:	377095.1176194	
+    Magnitude of B_grad:	0.17646456480515	
+    Magnitude of b:	9.418967112686	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	16.234147162142	
+    Magnitude of W:	376999.7132139	
+    Magnitude of B_grad:	0.46979785713268	
+    Magnitude of b:	8.6354649392006	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	13.460775277529	
+    Magnitude of W:	376898.65155498	
+    Magnitude of B_grad:	0.20373280345584	
+    Magnitude of b:	7.7346825128954	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	13.137666355293	
+    Magnitude of W:	376801.50396811	
+    Magnitude of B_grad:	0.16918035980872	
+    Magnitude of b:	8.6797258345682	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	14.160648580133	
+    Magnitude of W:	376704.12789112	
+    Magnitude of B_grad:	0.083846318606905	
+    Magnitude of b:	8.7815369448234	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	14.887410011903	
+    Magnitude of W:	376608.81162138	
+    Magnitude of B_grad:	0.069732404622582	
+    Magnitude of b:	8.5427197358629	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	12.887677244943	
+    Magnitude of W:	376513.39089697	
+    Magnitude of B_grad:	0.17935699379313	
+    Magnitude of b:	8.7596767753431	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+580967.17511758	
+SGD: crossEntropyLoss is	
+580967.17511758	
+SGD: Validation Accuracy is:	
+0.25431425976385	
+SGD: Magnitude of W:	
+376438.69820326	
+SGD: Magnitude of b:	
+7.6930375750749	
+    Current index:	9501	
+    Magnitude of W_grad:	13.385253070193	
+    Magnitude of W:	376342.89587231	
+    Magnitude of B_grad:	0.19171573943543	
+    Magnitude of b:	8.4470327921559	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	12.039604692423	
+    Magnitude of W:	376252.02054039	
+    Magnitude of B_grad:	0.041998335703039	
+    Magnitude of b:	8.6885022058089	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	12.80695597408	
+    Magnitude of W:	376159.66348095	
+    Magnitude of B_grad:	0.1607145293553	
+    Magnitude of b:	8.8821221883593	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	12.960032396087	
+    Magnitude of W:	376068.38191784	
+    Magnitude of B_grad:	0.13501109358729	
+    Magnitude of b:	9.2709854137128	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	13.729710435261	
+    Magnitude of W:	375973.34747028	
+    Magnitude of B_grad:	0.16177040773745	
+    Magnitude of b:	9.3599098033771	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	15.515409872715	
+    Magnitude of W:	375880.03193452	
+    Magnitude of B_grad:	0.446232041202	
+    Magnitude of b:	8.6088886332494	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	13.273039764483	
+    Magnitude of W:	375781.22187733	
+    Magnitude of B_grad:	0.20611566817068	
+    Magnitude of b:	7.7011463072672	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	12.781117373035	
+    Magnitude of W:	375686.62919875	
+    Magnitude of B_grad:	0.17021018673992	
+    Magnitude of b:	8.6411343312256	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	13.86284287356	
+    Magnitude of W:	375591.30779265	
+    Magnitude of B_grad:	0.086277115420884	
+    Magnitude of b:	8.7361576453076	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	14.679548304839	
+    Magnitude of W:	375498.49106713	
+    Magnitude of B_grad:	0.06377264989021	
+    Magnitude of b:	8.5236745531381	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	12.432142227879	
+    Magnitude of W:	375405.13833527	
+    Magnitude of B_grad:	0.1772364485367	
+    Magnitude of b:	8.7094862642228	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+565895.39753505	
+SGD: crossEntropyLoss is	
+565895.39753505	
+SGD: Validation Accuracy is:	
+0.25794732061762	
+SGD: Magnitude of W:	
+375332.1968238	
+SGD: Magnitude of b:	
+7.6862530413267	
+    Current index:	9501	
+    Magnitude of W_grad:	13.080921482008	
+    Magnitude of W:	375238.35860336	
+    Magnitude of B_grad:	0.19269115547533	
+    Magnitude of b:	8.411091839849	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	11.691708085956	
+    Magnitude of W:	375149.43121341	
+    Magnitude of B_grad:	0.04475049221256	
+    Magnitude of b:	8.6456310861256	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	12.532176433395	
+    Magnitude of W:	375058.95707596	
+    Magnitude of B_grad:	0.15686589677574	
+    Magnitude of b:	8.8420980768555	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	12.522872522949	
+    Magnitude of W:	374969.68482594	
+    Magnitude of B_grad:	0.13005381156511	
+    Magnitude of b:	9.2348173049241	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	12.773816741827	
+    Magnitude of W:	374877.10096132	
+    Magnitude of B_grad:	0.15025064536411	
+    Magnitude of b:	9.306147322578	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	14.917043605624	
+    Magnitude of W:	374785.73591568	
+    Magnitude of B_grad:	0.42489037152144	
+    Magnitude of b:	8.5807890943182	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	13.096738985721	
+    Magnitude of W:	374689.25319274	
+    Magnitude of B_grad:	0.20896901327135	
+    Magnitude of b:	7.6635577292153	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	12.483398902672	
+    Magnitude of W:	374597.00628643	
+    Magnitude of B_grad:	0.17225713378395	
+    Magnitude of b:	8.6040908221898	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	13.550375976028	
+    Magnitude of W:	374503.69811335	
+    Magnitude of B_grad:	0.087285147964803	
+    Magnitude of b:	8.6932353595744	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	14.448234650807	
+    Magnitude of W:	374412.8771445	
+    Magnitude of B_grad:	0.058032466674812	
+    Magnitude of b:	8.5055386391859	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	12.03957888398	
+    Magnitude of W:	374321.37145564	
+    Magnitude of B_grad:	0.17443558758371	
+    Magnitude of b:	8.6674062431254	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+552535.50911666	
+SGD: crossEntropyLoss is	
+552535.50911666	
+SGD: Validation Accuracy is:	
+0.25976385104451	
+SGD: Magnitude of W:	
+374249.62231238	
+SGD: Magnitude of b:	
+7.6798989776434	
+    Current index:	9501	
+    Magnitude of W_grad:	12.781745680657	
+    Magnitude of W:	374157.49512413	
+    Magnitude of B_grad:	0.19291688016021	
+    Magnitude of b:	8.3796233658478	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	11.33860437047	
+    Magnitude of W:	374070.16705086	
+    Magnitude of B_grad:	0.046874439484319	
+    Magnitude of b:	8.6073673717642	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	12.257966889799	
+    Magnitude of W:	373981.61314031	
+    Magnitude of B_grad:	0.15285192565777	
+    Magnitude of b:	8.8021205432463	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	12.084400100213	
+    Magnitude of W:	373894.11935642	
+    Magnitude of B_grad:	0.12484618960883	
+    Magnitude of b:	9.2004554303799	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	12.310793978298	
+    Magnitude of W:	373803.46471643	
+    Magnitude of B_grad:	0.14416406760959	
+    Magnitude of b:	9.2657619505163	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	14.432226288772	
+    Magnitude of W:	373713.79137921	
+    Magnitude of B_grad:	0.40574041324002	
+    Magnitude of b:	8.5557033490087	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.928418660529	
+    Magnitude of W:	373619.23679287	
+    Magnitude of B_grad:	0.21200479502368	
+    Magnitude of b:	7.6283909911687	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	12.220908875604	
+    Magnitude of W:	373528.71061403	
+    Magnitude of B_grad:	0.17496036089385	
+    Magnitude of b:	8.5715056860203	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	13.228299240488	
+    Magnitude of W:	373437.29846016	
+    Magnitude of B_grad:	0.087606359273768	
+    Magnitude of b:	8.657161537513	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	14.162941826505	
+    Magnitude of W:	373347.83648016	
+    Magnitude of B_grad:	0.056319097917073	
+    Magnitude of b:	8.4895407101988	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	11.681663099814	
+    Magnitude of W:	373258.06834339	
+    Magnitude of B_grad:	0.1715220837936	
+    Magnitude of b:	8.6344883183437	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+540476.65287466	
+SGD: crossEntropyLoss is	
+540476.65287466	
+SGD: Validation Accuracy is:	
+0.26158038147139	
+SGD: Magnitude of W:	
+373187.4508848	
+SGD: Magnitude of b:	
+7.6766165447867	
+    Current index:	9501	
+    Magnitude of W_grad:	12.485978433808	
+    Magnitude of W:	373097.1017099	
+    Magnitude of B_grad:	0.19249515195939	
+    Magnitude of b:	8.3546582491936	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	11.002678659254	
+    Magnitude of W:	373011.19636359	
+    Magnitude of B_grad:	0.047788645547048	
+    Magnitude of b:	8.5762140770434	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	11.981335253278	
+    Magnitude of W:	372923.98172344	
+    Magnitude of B_grad:	0.14875945892026	
+    Magnitude of b:	8.7656145107843	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	11.655680305618	
+    Magnitude of W:	372838.06157836	
+    Magnitude of B_grad:	0.11946615719817	
+    Magnitude of b:	9.1694962408518	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	11.902368377394	
+    Magnitude of W:	372748.96215545	
+    Magnitude of B_grad:	0.13978594014701	
+    Magnitude of b:	9.2354978953442	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	14.011631346499	
+    Magnitude of W:	372660.80098172	
+    Magnitude of B_grad:	0.38845721338264	
+    Magnitude of b:	8.5367781170815	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.764631047065	
+    Magnitude of W:	372567.82937816	
+    Magnitude of B_grad:	0.21483660678834	
+    Magnitude of b:	7.5971058355242	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	11.949373297065	
+    Magnitude of W:	372478.88818877	
+    Magnitude of B_grad:	0.17730746109723	
+    Magnitude of b:	8.5430421188717	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	12.910462573289	
+    Magnitude of W:	372389.16615341	
+    Magnitude of B_grad:	0.087889935976646	
+    Magnitude of b:	8.6277257389378	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	13.82198044728	
+    Magnitude of W:	372301.22978732	
+    Magnitude of B_grad:	0.059768300116994	
+    Magnitude of b:	8.4753458292626	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	11.342188047967	
+    Magnitude of W:	372212.87829922	
+    Magnitude of B_grad:	0.16879804858487	
+    Magnitude of b:	8.6097058522928	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+529439.55414453	
+SGD: crossEntropyLoss is	
+529439.55414453	
+SGD: Validation Accuracy is:	
+0.26521344232516	
+SGD: Magnitude of W:	
+372143.31641792	
+SGD: Magnitude of b:	
+7.675727835921	
+    Current index:	9501	
+    Magnitude of W_grad:	12.19484099273	
+    Magnitude of W:	372054.35528529	
+    Magnitude of B_grad:	0.19155743374201	
+    Magnitude of b:	8.3350692193743	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	10.672588703237	
+    Magnitude of W:	371969.6892496	
+    Magnitude of B_grad:	0.047424343713815	
+    Magnitude of b:	8.5517527097978	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	11.700167386157	
+    Magnitude of W:	371884.12005871	
+    Magnitude of B_grad:	0.14480175418622	
+    Magnitude of b:	8.7348675114791	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	11.256744572504	
+    Magnitude of W:	371799.68408512	
+    Magnitude of B_grad:	0.11431470868751	
+    Magnitude of b:	9.1422582546601	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	11.510239197593	
+    Magnitude of W:	371711.98574986	
+    Magnitude of B_grad:	0.13600471285797	
+    Magnitude of b:	9.2119505434035	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	13.638266458859	
+    Magnitude of W:	371625.23544066	
+    Magnitude of B_grad:	0.37274893407707	
+    Magnitude of b:	8.524291004718	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.609097002443	
+    Magnitude of W:	371533.61751721	
+    Magnitude of B_grad:	0.21714177036872	
+    Magnitude of b:	7.5696788677828	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	11.66958267479	
+    Magnitude of W:	371445.98130116	
+    Magnitude of B_grad:	0.17860207119991	
+    Magnitude of b:	8.5166888408487	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	12.597794937319	
+    Magnitude of W:	371358.01639663	
+    Magnitude of B_grad:	0.088319665221721	
+    Magnitude of b:	8.6015180668818	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	13.451759241647	
+    Magnitude of W:	371271.30318409	
+    Magnitude of B_grad:	0.064331256507936	
+    Magnitude of b:	8.4617225039715	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	11.025897126083	
+    Magnitude of W:	371184.19643158	
+    Magnitude of B_grad:	0.16633222457545	
+    Magnitude of b:	8.5905953328172	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+519246.68198132	
+SGD: crossEntropyLoss is	
+519246.68198132	
+SGD: Validation Accuracy is:	
+0.26884650317893	
+SGD: Magnitude of W:	
+371115.85787098	
+SGD: Magnitude of b:	
+7.6762211442674	
+    Current index:	9501	
+    Magnitude of W_grad:	11.900590028464	
+    Magnitude of W:	371028.55885098	
+    Magnitude of B_grad:	0.19019373556068	
+    Magnitude of b:	8.3190200648113	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	10.355075674689	
+    Magnitude of W:	370944.96862485	
+    Magnitude of B_grad:	0.04620445249081	
+    Magnitude of b:	8.5324755989923	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	11.401050320935	
+    Magnitude of W:	370860.68564978	
+    Magnitude of B_grad:	0.14106840753847	
+    Magnitude of b:	8.709277443793	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	10.894373530285	
+    Magnitude of W:	370777.92491891	
+    Magnitude of B_grad:	0.10956449040091	
+    Magnitude of b:	9.117433332158	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	11.175281603581	
+    Magnitude of W:	370691.72163323	
+    Magnitude of B_grad:	0.13308367290318	
+    Magnitude of b:	9.1924955042262	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	13.285050629534	
+    Magnitude of W:	370606.30131806	
+    Magnitude of B_grad:	0.35852507076908	
+    Magnitude of b:	8.51649328843	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.458761320116	
+    Magnitude of W:	370515.82171536	
+    Magnitude of B_grad:	0.2187569328768	
+    Magnitude of b:	7.5456304450521	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	11.37784017339	
+    Magnitude of W:	370429.40770364	
+    Magnitude of B_grad:	0.17873585187583	
+    Magnitude of b:	8.491853493522	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	12.312867674683	
+    Magnitude of W:	370343.02095941	
+    Magnitude of B_grad:	0.088902285398782	
+    Magnitude of b:	8.5762852481046	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	13.081671864365	
+    Magnitude of W:	370257.5268106	
+    Magnitude of B_grad:	0.067913899698179	
+    Magnitude of b:	8.4482489104787	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	10.808145503192	
+    Magnitude of W:	370171.74463056	
+    Magnitude of B_grad:	0.16402696065834	
+    Magnitude of b:	8.5747966090082	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+509781.63388569	
+SGD: crossEntropyLoss is	
+509781.63388569	
+SGD: Validation Accuracy is:	
+0.27157129881926	
+SGD: Magnitude of W:	
+370104.22055026	
+SGD: Magnitude of b:	
+7.6778072072043	
+    Current index:	9501	
+    Magnitude of W_grad:	11.611773644534	
+    Magnitude of W:	370018.25049332	
+    Magnitude of B_grad:	0.18849200876325	
+    Magnitude of b:	8.3038967405013	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	10.036789537802	
+    Magnitude of W:	369935.68574545	
+    Magnitude of B_grad:	0.044608262981422	
+    Magnitude of b:	8.5161017024539	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	11.088764240267	
+    Magnitude of W:	369852.77311307	
+    Magnitude of B_grad:	0.13752483930145	
+    Magnitude of b:	8.6870653131708	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	10.56541748726	
+    Magnitude of W:	369771.30370404	
+    Magnitude of B_grad:	0.10503389552618	
+    Magnitude of b:	9.0936077225643	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.899804749853	
+    Magnitude of W:	369686.24456491	
+    Magnitude of B_grad:	0.13100381602783	
+    Magnitude of b:	9.1756876677045	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	12.954418859494	
+    Magnitude of W:	369601.71234377	
+    Magnitude of B_grad:	0.34574864687475	
+    Magnitude of b:	8.5113776865781	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.313605236361	
+    Magnitude of W:	369512.3596978	
+    Magnitude of B_grad:	0.21966035500359	
+    Magnitude of b:	7.5244852818202	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	11.076209458823	
+    Magnitude of W:	369427.31936991	
+    Magnitude of B_grad:	0.17793437787124	
+    Magnitude of b:	8.4688938333627	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	12.052139759782	
+    Magnitude of W:	369342.39709819	
+    Magnitude of B_grad:	0.089649792580168	
+    Magnitude of b:	8.5515992802851	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	12.729632050591	
+    Magnitude of W:	369258.27133242	
+    Magnitude of B_grad:	0.070630938174714	
+    Magnitude of b:	8.435344381642	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	10.596297068193	
+    Magnitude of W:	369173.49612739	
+    Magnitude of B_grad:	0.16159419175067	
+    Magnitude of b:	8.561000380524	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+500954.71208057	
+SGD: crossEntropyLoss is	
+500954.71208057	
+SGD: Validation Accuracy is:	
+0.27429609445958	
+SGD: Magnitude of W:	
+369106.75532327	
+SGD: Magnitude of b:	
+7.6803122633594	
+    Current index:	9501	
+    Magnitude of W_grad:	11.330159732248	
+    Magnitude of W:	369021.88012554	
+    Magnitude of B_grad:	0.1865519608671	
+    Magnitude of b:	8.2870233555525	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	9.7301235427715	
+    Magnitude of W:	368940.20743035	
+    Magnitude of B_grad:	0.043668323001627	
+    Magnitude of b:	8.500383303046	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	10.769607594993	
+    Magnitude of W:	368858.3488087	
+    Magnitude of B_grad:	0.13410627808889	
+    Magnitude of b:	8.6669733312628	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	10.263459367459	
+    Magnitude of W:	368777.87914617	
+    Magnitude of B_grad:	0.10044422425564	
+    Magnitude of b:	9.0701279468603	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.675091317349	
+    Magnitude of W:	368693.91590551	
+    Magnitude of B_grad:	0.12958378100256	
+    Magnitude of b:	9.1605666861326	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	12.648406898776	
+    Magnitude of W:	368610.44966698	
+    Magnitude of B_grad:	0.33429011781205	
+    Magnitude of b:	8.507452040338	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.168410586216	
+    Magnitude of W:	368522.46581702	
+    Magnitude of B_grad:	0.21982933912332	
+    Magnitude of b:	7.506081723418	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	10.774429501251	
+    Magnitude of W:	368438.54336311	
+    Magnitude of B_grad:	0.17647152772323	
+    Magnitude of b:	8.4478969103799	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	11.800863100136	
+    Magnitude of W:	368354.77049993	
+    Magnitude of B_grad:	0.090571577015116	
+    Magnitude of b:	8.5274374660602	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	12.407432791949	
+    Magnitude of W:	368271.86218557	
+    Magnitude of B_grad:	0.072535312419882	
+    Magnitude of b:	8.4229765747641	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	10.373600493239	
+    Magnitude of W:	368188.15867173	
+    Magnitude of B_grad:	0.15873275506276	
+    Magnitude of b:	8.5483396470233	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+492692.20580237	
+SGD: crossEntropyLoss is	
+492692.20580237	
+SGD: Validation Accuracy is:	
+0.27702089009991	
+SGD: Magnitude of W:	
+368122.18932904	
+SGD: Magnitude of b:	
+7.6832302958787	
+    Current index:	9501	
+    Magnitude of W_grad:	11.05440572122	
+    Magnitude of W:	368038.56271663	
+    Magnitude of B_grad:	0.18440686324928	
+    Magnitude of b:	8.2675824144875	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	9.4421566703191	
+    Magnitude of W:	367957.79446517	
+    Magnitude of B_grad:	0.045658613635965	
+    Magnitude of b:	8.4842886135729	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	10.456769211342	
+    Magnitude of W:	367877.08465172	
+    Magnitude of B_grad:	0.13076667735388	
+    Magnitude of b:	8.6483866492956	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	9.9696228525951	
+    Magnitude of W:	367797.55619904	
+    Magnitude of B_grad:	0.095672567954255	
+    Magnitude of b:	9.04679217952	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.485148354695	
+    Magnitude of W:	367714.57039864	
+    Magnitude of B_grad:	0.12862295112578	
+    Magnitude of b:	9.1465562709662	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	12.367096233176	
+    Magnitude of W:	367632.18215097	
+    Magnitude of B_grad:	0.32395732726547	
+    Magnitude of b:	8.5038959352325	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	12.0180519576	
+    Magnitude of W:	367545.18582501	
+    Magnitude of B_grad:	0.21921494378686	
+    Magnitude of b:	7.4901909728205	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	10.480899468946	
+    Magnitude of W:	367462.41435977	
+    Magnitude of B_grad:	0.17457802218609	
+    Magnitude of b:	8.4286131360517	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	11.554662860195	
+    Magnitude of W:	367379.80551691	
+    Magnitude of B_grad:	0.091680366855208	
+    Magnitude of b:	8.5040402703875	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	12.112563619335	
+    Magnitude of W:	367297.8127533	
+    Magnitude of B_grad:	0.073680599620256	
+    Magnitude of b:	8.4105519448711	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	10.143591519225	
+    Magnitude of W:	367215.17774965	
+    Magnitude of B_grad:	0.15549377699673	
+    Magnitude of b:	8.5359805573981	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+484933.9051731	
+SGD: crossEntropyLoss is	
+484933.9051731	
+SGD: Validation Accuracy is:	
+0.28247048138056	
+SGD: Magnitude of W:	
+367150.06748446	
+SGD: Magnitude of b:	
+7.6859766426218	
+    Current index:	9501	
+    Magnitude of W_grad:	10.783189485191	
+    Magnitude of W:	367067.7176614	
+    Magnitude of B_grad:	0.18186444127719	
+    Magnitude of b:	8.2481123377434	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	9.1760660995859	
+    Magnitude of W:	366987.73854702	
+    Magnitude of B_grad:	0.04973455762712	
+    Magnitude of b:	8.4685918282923	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	10.16223878282	
+    Magnitude of W:	366907.7802118	
+    Magnitude of B_grad:	0.12749961451649	
+    Magnitude of b:	8.6310242800551	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	9.6704960776956	
+    Magnitude of W:	366829.0290011	
+    Magnitude of B_grad:	0.090752317514971	
+    Magnitude of b:	9.0235582519823	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.313812435017	
+    Magnitude of W:	366747.21105979	
+    Magnitude of B_grad:	0.12879048789743	
+    Magnitude of b:	9.1333391538508	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	12.104407010316	
+    Magnitude of W:	366665.72484139	
+    Magnitude of B_grad:	0.3145225182146	
+    Magnitude of b:	8.5003296160108	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.862640006219	
+    Magnitude of W:	366579.7408585	
+    Magnitude of B_grad:	0.21786909406601	
+    Magnitude of b:	7.4760834970795	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	10.208436174906	
+    Magnitude of W:	366498.05572808	
+    Magnitude of B_grad:	0.17237340511162	
+    Magnitude of b:	8.4106854266856	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	11.312193164683	
+    Magnitude of W:	366416.36496118	
+    Magnitude of B_grad:	0.092970406146903	
+    Magnitude of b:	8.4820344496079	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	11.831977454322	
+    Magnitude of W:	366335.38825422	
+    Magnitude of B_grad:	0.074168217996269	
+    Magnitude of b:	8.3976834374063	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	9.9108269803998	
+    Magnitude of W:	366253.44717405	
+    Magnitude of B_grad:	0.15214517903057	
+    Magnitude of b:	8.5234918742853	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+477626.49866756	
+SGD: crossEntropyLoss is	
+477626.49866756	
+SGD: Validation Accuracy is:	
+0.28882833787466	
+SGD: Magnitude of W:	
+366189.27456235	
+SGD: Magnitude of b:	
+7.6882910252586	
+    Current index:	9501	
+    Magnitude of W_grad:	10.519280754513	
+    Magnitude of W:	366107.80612222	
+    Magnitude of B_grad:	0.17890281144835	
+    Magnitude of b:	8.2299745354086	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.9404719682569	
+    Magnitude of W:	366028.47040351	
+    Magnitude of B_grad:	0.053601903864642	
+    Magnitude of b:	8.4536742042454	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	9.8991627755069	
+    Magnitude of W:	365949.32730972	
+    Magnitude of B_grad:	0.12428022458769	
+    Magnitude of b:	8.6145527335263	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	9.3673228182683	
+    Magnitude of W:	365871.2634529	
+    Magnitude of B_grad:	0.085794789412728	
+    Magnitude of b:	9.0005429654495	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.155431248867	
+    Magnitude of W:	365790.42177481	
+    Magnitude of B_grad:	0.12939135858526	
+    Magnitude of b:	9.1207834388234	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	11.848611860709	
+    Magnitude of W:	365709.84686035	
+    Magnitude of B_grad:	0.30576398947447	
+    Magnitude of b:	8.4967233720177	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.703132187965	
+    Magnitude of W:	365624.80786458	
+    Magnitude of B_grad:	0.21593058113088	
+    Magnitude of b:	7.4631125074753	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	9.9530087030439	
+    Magnitude of W:	365544.1600223	
+    Magnitude of B_grad:	0.16990986236141	
+    Magnitude of b:	8.3938561460152	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	11.068815607623	
+    Magnitude of W:	365463.50373071	
+    Magnitude of B_grad:	0.094378822650973	
+    Magnitude of b:	8.4620601287484	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	11.561550102975	
+    Magnitude of W:	365383.64939607	
+    Magnitude of B_grad:	0.074117858112299	
+    Magnitude of b:	8.3845125097926	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	9.6874856351992	
+    Magnitude of W:	365302.59559668	
+    Magnitude of B_grad:	0.14883807098581	
+    Magnitude of b:	8.510970629932	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+470720.74575239	
+SGD: crossEntropyLoss is	
+470720.74575239	
+SGD: Validation Accuracy is:	
+0.28701180744777	
+SGD: Magnitude of W:	
+365239.0786844	
+SGD: Magnitude of b:	
+7.6902703626472	
+    Current index:	9501	
+    Magnitude of W_grad:	10.266272382199	
+    Magnitude of W:	365158.52850222	
+    Magnitude of B_grad:	0.1756929545211	
+    Magnitude of b:	8.2127268486948	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.7254100676478	
+    Magnitude of W:	365079.99774702	
+    Magnitude of B_grad:	0.056716984698574	
+    Magnitude of b:	8.4391662629833	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	9.6608687616904	
+    Magnitude of W:	365001.6190402	
+    Magnitude of B_grad:	0.12109720919232	
+    Magnitude of b:	8.5986605519263	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	9.0707723242049	
+    Magnitude of W:	364924.29858041	
+    Magnitude of B_grad:	0.080936382850386	
+    Magnitude of b:	8.9779723020694	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	10.00309454845	
+    Magnitude of W:	364844.34129406	
+    Magnitude of B_grad:	0.12969685473077	
+    Magnitude of b:	9.1088753096212	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	11.593796279131	
+    Magnitude of W:	364764.5548308	
+    Magnitude of B_grad:	0.29752508998001	
+    Magnitude of b:	8.4932111314826	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.54083797462	
+    Magnitude of W:	364680.45045449	
+    Magnitude of B_grad:	0.21354168913851	
+    Magnitude of b:	7.4510125002787	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	9.7213582882962	
+    Magnitude of W:	364600.59894313	
+    Magnitude of B_grad:	0.16723542403533	
+    Magnitude of b:	8.3779440016457	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	10.825698904699	
+    Magnitude of W:	364520.81780636	
+    Magnitude of B_grad:	0.095782905493182	
+    Magnitude of b:	8.4441903006931	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	11.29650298994	
+    Magnitude of W:	364441.76979081	
+    Magnitude of B_grad:	0.073635485808071	
+    Magnitude of b:	8.3713926718775	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	9.4720974676912	
+    Magnitude of W:	364361.76768284	
+    Magnitude of B_grad:	0.14566540205534	
+    Magnitude of b:	8.4986705833376	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+464174.50668428	
+SGD: crossEntropyLoss is	
+464174.50668428	
+SGD: Validation Accuracy is:	
+0.28792007266122	
+SGD: Magnitude of W:	
+364298.94205895	
+SGD: Magnitude of b:	
+7.6920944688593	
+    Current index:	9501	
+    Magnitude of W_grad:	10.02208908346	
+    Magnitude of W:	364219.1471855	
+    Magnitude of B_grad:	0.17236690024459	
+    Magnitude of b:	8.1961544642785	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.5297520217535	
+    Magnitude of W:	364141.16054116	
+    Magnitude of B_grad:	0.059150240073721	
+    Magnitude of b:	8.4248753808236	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	9.4498173313844	
+    Magnitude of W:	364063.66899357	
+    Magnitude of B_grad:	0.11798278100488	
+    Magnitude of b:	8.5832101844823	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	8.7894403507039	
+    Magnitude of W:	363987.12842251	
+    Magnitude of B_grad:	0.076279248296415	
+    Magnitude of b:	8.9560259896774	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.8525373522713	
+    Magnitude of W:	363907.88294802	
+    Magnitude of B_grad:	0.12970547738959	
+    Magnitude of b:	9.0976049156168	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	11.341282131998	
+    Magnitude of W:	363828.76785544	
+    Magnitude of B_grad:	0.29173246404158	
+    Magnitude of b:	8.4899020940931	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.379647758257	
+    Magnitude of W:	363745.50221644	
+    Magnitude of B_grad:	0.21079820370192	
+    Magnitude of b:	7.4397243500785	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	9.5055269363571	
+    Magnitude of W:	363666.55694402	
+    Magnitude of B_grad:	0.16440904219294	
+    Magnitude of b:	8.3627840144658	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	10.583399203556	
+    Magnitude of W:	363587.54100539	
+    Magnitude of B_grad:	0.097049324525452	
+    Magnitude of b:	8.4279988082664	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	11.03762476717	
+    Magnitude of W:	363509.45546971	
+    Magnitude of B_grad:	0.072816443583483	
+    Magnitude of b:	8.3585971733959	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	9.26943348255	
+    Magnitude of W:	363430.35522127	
+    Magnitude of B_grad:	0.1427372634745	
+    Magnitude of b:	8.4866980149304	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+457953.81010835	
+SGD: crossEntropyLoss is	
+457953.81010835	
+SGD: Validation Accuracy is:	
+0.2897366030881	
+SGD: Magnitude of W:	
+363368.24768122	
+SGD: Magnitude of b:	
+7.6938126639207	
+    Current index:	9501	
+    Magnitude of W_grad:	9.7834484053544	
+    Magnitude of W:	363289.48188136	
+    Magnitude of B_grad:	0.16901202574405	
+    Magnitude of b:	8.1803415978473	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.3557788812466	
+    Magnitude of W:	363212.32754041	
+    Magnitude of B_grad:	0.06098861615436	
+    Magnitude of b:	8.4108662722498	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	9.2585633337711	
+    Magnitude of W:	363135.7348658	
+    Magnitude of B_grad:	0.11498134539478	
+    Magnitude of b:	8.5681974799014	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	8.5254482771801	
+    Magnitude of W:	363059.91043855	
+    Magnitude of B_grad:	0.071868973585629	
+    Magnitude of b:	8.9347778962639	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.7012924496603	
+    Magnitude of W:	362981.58158658	
+    Magnitude of B_grad:	0.12940120273293	
+    Magnitude of b:	9.0869650291981	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	11.096953265585	
+    Magnitude of W:	362903.1984616	
+    Magnitude of B_grad:	0.28755569448274	
+    Magnitude of b:	8.4868781340668	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.218523875649	
+    Magnitude of W:	362820.9794894	
+    Magnitude of B_grad:	0.20776074397889	
+    Magnitude of b:	7.4291835882454	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	9.3067664010366	
+    Magnitude of W:	362742.86426857	
+    Magnitude of B_grad:	0.16149883914812	
+    Magnitude of b:	8.3481657903753	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	10.346045397723	
+    Magnitude of W:	362664.70365762	
+    Magnitude of B_grad:	0.098090524656252	
+    Magnitude of b:	8.4129628660253	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	10.784601297084	
+    Magnitude of W:	362587.39035815	
+    Magnitude of B_grad:	0.071752322283704	
+    Magnitude of b:	8.3462352103037	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	9.084588087037	
+    Magnitude of W:	362509.10658466	
+    Magnitude of B_grad:	0.14011533024922	
+    Magnitude of b:	8.4749790175967	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+452029.5543683	
+SGD: crossEntropyLoss is	
+452029.5543683	
+SGD: Validation Accuracy is:	
+0.29155313351499	
+SGD: Magnitude of W:	
+362447.63106748	
+SGD: Magnitude of b:	
+7.6953247542484	
+    Current index:	9501	
+    Magnitude of W_grad:	9.5522832327557	
+    Magnitude of W:	362369.63972389	
+    Magnitude of B_grad:	0.1656977875843	
+    Magnitude of b:	8.1654274766466	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.194581084194	
+    Magnitude of W:	362293.13865898	
+    Magnitude of B_grad:	0.062319516000363	
+    Magnitude of b:	8.3972801334732	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	9.0792410360734	
+    Magnitude of W:	362217.21543334	
+    Magnitude of B_grad:	0.11212709833435	
+    Magnitude of b:	8.5536418034348	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	8.2782915099946	
+    Magnitude of W:	362142.11046583	
+    Magnitude of B_grad:	0.067710932395961	
+    Magnitude of b:	8.9141833925588	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.5492002100502	
+    Magnitude of W:	362064.36478079	
+    Magnitude of B_grad:	0.12877043155801	
+    Magnitude of b:	9.0768908622723	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	10.858202864994	
+    Magnitude of W:	361986.83924604	
+    Magnitude of B_grad:	0.28342454716619	
+    Magnitude of b:	8.4841344624086	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	11.058362347271	
+    Magnitude of W:	361905.61033356	
+    Magnitude of B_grad:	0.20448623508851	
+    Magnitude of b:	7.4192171409481	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	9.1220078734991	
+    Magnitude of W:	361828.22651824	
+    Magnitude of B_grad:	0.15857182599711	
+    Magnitude of b:	8.3338256507726	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	10.116483127066	
+    Magnitude of W:	361750.85622773	
+    Magnitude of B_grad:	0.098875710710233	
+    Magnitude of b:	8.398662519204	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	10.536406813961	
+    Magnitude of W:	361674.190778	
+    Magnitude of B_grad:	0.070527501570534	
+    Magnitude of b:	8.3342929923875	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.9113526025216	
+    Magnitude of W:	361596.75407492	
+    Magnitude of B_grad:	0.13779698464657	
+    Magnitude of b:	8.4633572559541	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+446375.56312803	
+SGD: crossEntropyLoss is	
+446375.56312803	
+SGD: Validation Accuracy is:	
+0.29155313351499	
+SGD: Magnitude of W:	
+361535.8150236	
+SGD: Magnitude of b:	
+7.6964770563311	
+    Current index:	9501	
+    Magnitude of W_grad:	9.3308647586862	
+    Magnitude of W:	361458.61329842	
+    Magnitude of B_grad:	0.16248167896458	
+    Magnitude of b:	8.1514610155429	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	8.0446627806497	
+    Magnitude of W:	361382.62819613	
+    Magnitude of B_grad:	0.063221695815286	
+    Magnitude of b:	8.3841852972357	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.9092096060987	
+    Magnitude of W:	361307.3909923	
+    Magnitude of B_grad:	0.10944316517997	
+    Magnitude of b:	8.5395715089087	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	8.0479415066066	
+    Magnitude of W:	361232.90998707	
+    Magnitude of B_grad:	0.063792534941766	
+    Magnitude of b:	8.8941372274026	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.3943291881448	
+    Magnitude of W:	361155.82371102	
+    Magnitude of B_grad:	0.12781093981323	
+    Magnitude of b:	9.0672346709948	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	10.629051747049	
+    Magnitude of W:	361079.02549897	
+    Magnitude of B_grad:	0.27934461803172	
+    Magnitude of b:	8.4815645516935	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.900964054872	
+    Magnitude of W:	360998.73455523	
+    Magnitude of B_grad:	0.20102973536483	
+    Magnitude of b:	7.4096061861392	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.9527723095142	
+    Magnitude of W:	360922.09145991	
+    Magnitude of B_grad:	0.15568402859581	
+    Magnitude of b:	8.319515923369	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	9.9002085706121	
+    Magnitude of W:	360845.44244655	
+    Magnitude of B_grad:	0.099412222044643	
+    Magnitude of b:	8.384806123364	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	10.297890866647	
+    Magnitude of W:	360769.59963505	
+    Magnitude of B_grad:	0.069209285931989	
+    Magnitude of b:	8.3227070787765	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.7525918691908	
+    Magnitude of W:	360692.83511346	
+    Magnitude of B_grad:	0.13575172078601	
+    Magnitude of b:	8.4516855563127	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+440969.18567864	
+SGD: crossEntropyLoss is	
+440969.18567864	
+SGD: Validation Accuracy is:	
+0.29246139872843	
+SGD: Magnitude of W:	
+360632.45050506	
+SGD: Magnitude of b:	
+7.6971493325326	
+    Current index:	9501	
+    Magnitude of W_grad:	9.1211977297795	
+    Magnitude of W:	360555.97828965	
+    Magnitude of B_grad:	0.15939879403079	
+    Magnitude of b:	8.1383785880826	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.9059050391582	
+    Magnitude of W:	360480.47084904	
+    Magnitude of B_grad:	0.063765015804762	
+    Magnitude of b:	8.3715397643983	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.7464947278375	
+    Magnitude of W:	360405.77328707	
+    Magnitude of B_grad:	0.10694573451575	
+    Magnitude of b:	8.5260644032435	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.8361556300669	
+    Magnitude of W:	360331.77999682	
+    Magnitude of B_grad:	0.060347676764792	
+    Magnitude of b:	8.8745578263297	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.2359280180522	
+    Magnitude of W:	360255.24894801	
+    Magnitude of B_grad:	0.12653501525773	
+    Magnitude of b:	9.0578196689343	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	10.412700873351	
+    Magnitude of W:	360179.28381271	
+    Magnitude of B_grad:	0.27531754762722	
+    Magnitude of b:	8.4790328423249	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.745356781344	
+    Magnitude of W:	360100.04022895	
+    Magnitude of B_grad:	0.19743756751537	
+    Magnitude of b:	7.4001854121319	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.7963452044447	
+    Magnitude of W:	360024.1004896	
+    Magnitude of B_grad:	0.15287832002703	
+    Magnitude of b:	8.305064997471	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	9.6909947139514	
+    Magnitude of W:	359948.08443471	
+    Magnitude of B_grad:	0.099725763490665	
+    Magnitude of b:	8.3711932699771	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	10.072174601974	
+    Magnitude of W:	359872.95562594	
+    Magnitude of B_grad:	0.067838163399612	
+    Magnitude of b:	8.3113960511241	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.6077461169368	
+    Magnitude of W:	359796.85024747	
+    Magnitude of B_grad:	0.13394492666655	
+    Magnitude of b:	8.4398559662802	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+435791.96300655	
+SGD: crossEntropyLoss is	
+435791.96300655	
+SGD: Validation Accuracy is:	
+0.29155313351499	
+SGD: Magnitude of W:	
+359737.06128557	
+SGD: Magnitude of b:	
+7.6972814172117	
+    Current index:	9501	
+    Magnitude of W_grad:	8.9237422871241	
+    Magnitude of W:	359661.22928882	
+    Magnitude of B_grad:	0.15645540094423	
+    Magnitude of b:	8.1260287613207	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.7756864683516	
+    Magnitude of W:	359586.34095101	
+    Magnitude of B_grad:	0.064015244387775	
+    Magnitude of b:	8.3592135916794	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.5889729698681	
+    Magnitude of W:	359512.12429189	
+    Magnitude of B_grad:	0.10463713376263	
+    Magnitude of b:	8.5131764509867	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.6381397068325	
+    Magnitude of W:	359438.62493454	
+    Magnitude of B_grad:	0.058928575699824	
+    Magnitude of b:	8.8553900655068	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	9.0736000721204	
+    Magnitude of W:	359362.6792017	
+    Magnitude of B_grad:	0.12496794987558	
+    Magnitude of b:	9.0484890283622	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	10.204202226933	
+    Magnitude of W:	359287.39666698	
+    Magnitude of B_grad:	0.27134244380519	
+    Magnitude of b:	8.4764419846774	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.589519251293	
+    Magnitude of W:	359208.83197355	
+    Magnitude of B_grad:	0.19374743767752	
+    Magnitude of b:	7.3908653112045	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.6524946884713	
+    Magnitude of W:	359133.64134587	
+    Magnitude of B_grad:	0.15018499217187	
+    Magnitude of b:	8.2903794150915	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	9.4887010285701	
+    Magnitude of W:	359058.15136281	
+    Magnitude of B_grad:	0.099848790627901	
+    Magnitude of b:	8.3576624685359	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	9.8581252681849	
+    Magnitude of W:	358983.83647268	
+    Magnitude of B_grad:	0.066423027671214	
+    Magnitude of b:	8.3002585138369	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.473095564493	
+    Magnitude of W:	358908.4183141	
+    Magnitude of B_grad:	0.13234297802959	
+    Magnitude of b:	8.4277935691362	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+430829.37094591	
+SGD: crossEntropyLoss is	
+430829.37094591	
+SGD: Validation Accuracy is:	
+0.2960944595822	
+SGD: Magnitude of W:	
+358849.165834	
+SGD: Magnitude of b:	
+7.6968623637562	
+    Current index:	9501	
+    Magnitude of W_grad:	8.7357130761843	
+    Magnitude of W:	358774.00001328	
+    Magnitude of B_grad:	0.15363882218042	
+    Magnitude of b:	8.1142255934354	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.6526593052786	
+    Magnitude of W:	358699.61532349	
+    Magnitude of B_grad:	0.064034405061669	
+    Magnitude of b:	8.347053873324	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.4376040771394	
+    Magnitude of W:	358625.91897952	
+    Magnitude of B_grad:	0.10249799814473	
+    Magnitude of b:	8.500870853731	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.4556765689372	
+    Magnitude of W:	358552.94567089	
+    Magnitude of B_grad:	0.057630059487975	
+    Magnitude of b:	8.8365856319733	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.9089119883802	
+    Magnitude of W:	358477.56171497	
+    Magnitude of B_grad:	0.12314280132465	
+    Magnitude of b:	9.0391310893395	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	10.001173893363	
+    Magnitude of W:	358402.93452223	
+    Magnitude of B_grad:	0.26741726118844	
+    Magnitude of b:	8.4737613592752	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.433734234616	
+    Magnitude of W:	358324.93360169	
+    Magnitude of B_grad:	0.18999193045274	
+    Magnitude of b:	7.38160532837	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.5154260688975	
+    Magnitude of W:	358250.44064081	
+    Magnitude of B_grad:	0.14762184945011	
+    Magnitude of b:	8.2754190686897	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	9.2976782237034	
+    Magnitude of W:	358175.5582451	
+    Magnitude of B_grad:	0.099815422740747	
+    Magnitude of b:	8.3440754011047	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	9.6485195084682	
+    Magnitude of W:	358101.81228845	
+    Magnitude of B_grad:	0.064948636653956	
+    Magnitude of b:	8.2891844427277	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.345862002741	
+    Magnitude of W:	358027.04047388	
+    Magnitude of B_grad:	0.13091232729759	
+    Magnitude of b:	8.4154514380392	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+426069.16630617	
+SGD: crossEntropyLoss is	
+426069.16630617	
+SGD: Validation Accuracy is:	
+0.29881925522253	
+SGD: Magnitude of W:	
+357968.20745762	
+SGD: Magnitude of b:	
+7.6959115114513	
+    Current index:	9501	
+    Magnitude of W_grad:	8.5570340216114	
+    Magnitude of W:	357893.7267173	
+    Magnitude of B_grad:	0.15093400275393	
+    Magnitude of b:	8.1028107774426	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.5363594713479	
+    Magnitude of W:	357819.9034855	
+    Magnitude of B_grad:	0.063874685757471	
+    Magnitude of b:	8.3349508858721	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.2913000620847	
+    Magnitude of W:	357746.70457783	
+    Magnitude of B_grad:	0.10049278349941	
+    Magnitude of b:	8.4890551004662	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.2868858592875	
+    Magnitude of W:	357674.38970567	
+    Magnitude of B_grad:	0.05725124661452	
+    Magnitude of b:	8.8181178034595	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.7399510649623	
+    Magnitude of W:	357599.76119748	
+    Magnitude of B_grad:	0.12109506057067	
+    Magnitude of b:	9.029688790347	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	9.8032370293632	
+    Magnitude of W:	357525.70701769	
+    Magnitude of B_grad:	0.26353992298951	
+    Magnitude of b:	8.4710212283343	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.279427525979	
+    Magnitude of W:	357448.33289913	
+    Magnitude of B_grad:	0.18620078126634	
+    Magnitude of b:	7.3723894004318	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.3864871724525	
+    Magnitude of W:	357374.57564475	
+    Magnitude of B_grad:	0.14519487422189	
+    Magnitude of b:	8.2601765880581	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	9.1182175817795	
+    Magnitude of W:	357300.19073664	
+    Magnitude of B_grad:	0.09965873975273	
+    Magnitude of b:	8.3303359672189	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	9.4440920700628	
+    Magnitude of W:	357227.04057523	
+    Magnitude of B_grad:	0.063395342055461	
+    Magnitude of b:	8.2780838859088	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.2281625484802	
+    Magnitude of W:	357152.82394698	
+    Magnitude of B_grad:	0.12961923422725	
+    Magnitude of b:	8.402810433975	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+421499.54196105	
+SGD: crossEntropyLoss is	
+421499.54196105	
+SGD: Validation Accuracy is:	
+0.30245231607629	
+SGD: Magnitude of W:	
+357094.47643872	
+SGD: Magnitude of b:	
+7.6944668587075	
+    Current index:	9501	
+    Magnitude of W_grad:	8.3872728460645	
+    Magnitude of W:	357020.74424815	
+    Magnitude of B_grad:	0.14833313116671	
+    Magnitude of b:	8.0916708271715	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.4247394762629	
+    Magnitude of W:	356947.47533092	
+    Magnitude of B_grad:	0.063574514279666	
+    Magnitude of b:	8.3228516238786	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.1501256093963	
+    Magnitude of W:	356874.76601814	
+    Magnitude of B_grad:	0.098583663283606	
+    Magnitude of b:	8.4776305805455	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.1370997488834	
+    Magnitude of W:	356802.99866809	
+    Magnitude of B_grad:	0.057436507970301	
+    Magnitude of b:	8.7999888516469	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.5676533604588	
+    Magnitude of W:	356728.89535027	
+    Magnitude of B_grad:	0.11885944986992	
+    Magnitude of b:	9.0201447172069	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	9.6152585130813	
+    Magnitude of W:	356655.33899859	
+    Magnitude of B_grad:	0.25970993188995	
+    Magnitude of b:	8.4682779705975	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	10.127354735784	
+    Magnitude of W:	356578.733964	
+    Magnitude of B_grad:	0.18240084666285	
+    Magnitude of b:	7.363214429701	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.2636718039688	
+    Magnitude of W:	356505.50360062	
+    Magnitude of B_grad:	0.14290050830681	
+    Magnitude of b:	8.2446662034955	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.9487253875217	
+    Magnitude of W:	356431.72310327	
+    Magnitude of B_grad:	0.099408784040559	
+    Magnitude of b:	8.3164009078628	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	9.2448985617786	
+    Magnitude of W:	356359.07721529	
+    Magnitude of B_grad:	0.061756067742389	
+    Magnitude of b:	8.2669058155162	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.1170647943511	
+    Magnitude of W:	356285.44561017	
+    Magnitude of B_grad:	0.12843091195561	
+    Magnitude of b:	8.3898766573139	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+417108.71003368	
+SGD: crossEntropyLoss is	
+417108.71003368	
+SGD: Validation Accuracy is:	
+0.30245231607629	
+SGD: Magnitude of W:	
+356227.62177909	
+SGD: Magnitude of b:	
+7.6925826348892	
+    Current index:	9501	
+    Magnitude of W_grad:	8.225877743235	
+    Magnitude of W:	356154.55090172	
+    Magnitude of B_grad:	0.14583632033919	
+    Magnitude of b:	8.0807185524605	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.3180591541292	
+    Magnitude of W:	356081.78450705	
+    Magnitude of B_grad:	0.063160591302576	
+    Magnitude of b:	8.3107378276954	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	8.0174991063743	
+    Magnitude of W:	356009.52588876	
+    Magnitude of B_grad:	0.096742017172414	
+    Magnitude of b:	8.4665079378022	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	7.0021113911644	
+    Magnitude of W:	355938.35592415	
+    Magnitude of B_grad:	0.05769177383107	
+    Magnitude of b:	8.7822197947322	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.3924910405654	
+    Magnitude of W:	355864.75004642	
+    Magnitude of B_grad:	0.11646853262982	
+    Magnitude of b:	9.0104980119012	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	9.4380727809816	
+    Magnitude of W:	355791.82096534	
+    Magnitude of B_grad:	0.25592971968931	
+    Magnitude of b:	8.4655776044594	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.9773001372513	
+    Magnitude of W:	355715.77178269	
+    Magnitude of B_grad:	0.17861517757716	
+    Magnitude of b:	7.3540891605507	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.1456429661634	
+    Magnitude of W:	355643.02200966	
+    Magnitude of B_grad:	0.14072877068405	
+    Magnitude of b:	8.2289210818095	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.7897947094217	
+    Magnitude of W:	355569.84468834	
+    Magnitude of B_grad:	0.099091498914286	
+    Magnitude of b:	8.3022724487327	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	9.0530804361807	
+    Magnitude of W:	355497.81065957	
+    Magnitude of B_grad:	0.060041055000731	
+    Magnitude of b:	8.2556407283615	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	8.0102032411084	
+    Magnitude of W:	355424.77846232	
+    Magnitude of B_grad:	0.12731659120124	
+    Magnitude of b:	8.3766779700912	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+412885.39986228	
+SGD: crossEntropyLoss is	
+412885.39986228	
+SGD: Validation Accuracy is:	
+0.30336058128974	
+SGD: Magnitude of W:	
+355367.44079196	
+SGD: Magnitude of b:	
+7.6903278597048	
+    Current index:	9501	
+    Magnitude of W_grad:	8.0739214042087	
+    Magnitude of W:	355294.89771093	
+    Magnitude of B_grad:	0.14344890195515	
+    Magnitude of b:	8.0698806406704	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.2156656186113	
+    Magnitude of W:	355222.75417937	
+    Magnitude of B_grad:	0.062652139818312	
+    Magnitude of b:	8.2986083655669	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.8888103653419	
+    Magnitude of W:	355150.81707479	
+    Magnitude of B_grad:	0.094952330332364	
+    Magnitude of b:	8.4556125649189	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.8808050569037	
+    Magnitude of W:	355080.12896585	
+    Magnitude of B_grad:	0.058006247126921	
+    Magnitude of b:	8.7648368352542	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.2178982735524	
+    Magnitude of W:	355007.05307973	
+    Magnitude of B_grad:	0.1139525139521	
+    Magnitude of b:	9.0007511358438	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	9.2696434829919	
+    Magnitude of W:	354934.7657699	
+    Magnitude of B_grad:	0.25220473519444	
+    Magnitude of b:	8.4629390279042	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.8283947201861	
+    Magnitude of W:	354859.36263126	
+    Magnitude of B_grad:	0.17486272951262	
+    Magnitude of b:	7.345032820422	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	8.0326063262356	
+    Magnitude of W:	354787.09233299	
+    Magnitude of B_grad:	0.13866590013863	
+    Magnitude of b:	8.2129911459624	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.6376859515749	
+    Magnitude of W:	354714.43012605	
+    Magnitude of B_grad:	0.098728176527617	
+    Magnitude of b:	8.2879825089589	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.8680450046606	
+    Magnitude of W:	354642.87004914	
+    Magnitude of B_grad:	0.058275275640545	
+    Magnitude of b:	8.2443117695677	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.9090755597835	
+    Magnitude of W:	354570.45845593	
+    Magnitude of B_grad:	0.12624803081938	
+    Magnitude of b:	8.3632580236746	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+408819.209786	
+SGD: crossEntropyLoss is	
+408819.209786	
+SGD: Validation Accuracy is:	
+0.30608537693006	
+SGD: Magnitude of W:	
+354513.59868652	
+SGD: Magnitude of b:	
+7.6877786665036	
+    Current index:	9501	
+    Magnitude of W_grad:	7.932536989542	
+    Magnitude of W:	354441.66204291	
+    Magnitude of B_grad:	0.14117912089415	
+    Magnitude of b:	8.0590940695028	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.1182805181974	
+    Magnitude of W:	354370.00048068	
+    Magnitude of B_grad:	0.062064424468547	
+    Magnitude of b:	8.2864704928494	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.7650500496124	
+    Magnitude of W:	354298.56470616	
+    Magnitude of B_grad:	0.093209697302532	
+    Magnitude of b:	8.4448876273686	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.7686349262497	
+    Magnitude of W:	354228.34277442	
+    Magnitude of B_grad:	0.058369696759738	
+    Magnitude of b:	8.7478563415328	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	8.045577974692	
+    Magnitude of W:	354155.80069089	
+    Magnitude of B_grad:	0.11133972070602	
+    Magnitude of b:	8.9909044153601	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	9.1054862432518	
+    Magnitude of W:	354084.04432028	
+    Magnitude of B_grad:	0.24854192395261	
+    Magnitude of b:	8.460353825515	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.6804531239927	
+    Magnitude of W:	354009.46445168	
+    Magnitude of B_grad:	0.17115878580668	
+    Magnitude of b:	7.3360659695116	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.9242430022986	
+    Magnitude of W:	353937.62928621	
+    Magnitude of B_grad:	0.13669606207043	
+    Magnitude of b:	8.1969346853916	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.4927378816379	
+    Magnitude of W:	353865.51328072	
+    Magnitude of B_grad:	0.0983348954705	
+    Magnitude of b:	8.2735741798702	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.6890603551947	
+    Magnitude of W:	353794.44035858	
+    Magnitude of B_grad:	0.056494041057689	
+    Magnitude of b:	8.2329575540524	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.8128341302088	
+    Magnitude of W:	353722.60539166	
+    Magnitude of B_grad:	0.12520006677325	
+    Magnitude of b:	8.349666901019	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+404900.58956933	
+SGD: crossEntropyLoss is	
+404900.58956933	
+SGD: Validation Accuracy is:	
+0.30517711171662	
+SGD: Magnitude of W:	
+353666.13639372	
+SGD: Magnitude of b:	
+7.685006340776	
+    Current index:	9501	
+    Magnitude of W_grad:	7.7980871954477	
+    Magnitude of W:	353594.6817422	
+    Magnitude of B_grad:	0.13903625838674	
+    Magnitude of b:	8.0483021819597	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	7.0252612306102	
+    Magnitude of W:	353523.54041472	
+    Magnitude of B_grad:	0.06141113177815	
+    Magnitude of b:	8.2743335723488	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.6436723394867	
+    Magnitude of W:	353452.7064478	
+    Magnitude of B_grad:	0.091514839618328	
+    Magnitude of b:	8.4342926586055	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.6640322478477	
+    Magnitude of W:	353382.95787103	
+    Magnitude of B_grad:	0.058772357817178	
+    Magnitude of b:	8.7312757716356	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.8745587754884	
+    Magnitude of W:	353310.93985769	
+    Magnitude of B_grad:	0.10865711184539	
+    Magnitude of b:	8.9809556723219	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.9542265852925	
+    Magnitude of W:	353239.62447483	
+    Magnitude of B_grad:	0.2449471056148	
+    Magnitude of b:	8.4577943983509	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.5352019039251	
+    Magnitude of W:	353165.74829816	
+    Magnitude of B_grad:	0.16751553850965	
+    Magnitude of b:	7.3271997210594	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.8179298205387	
+    Magnitude of W:	353094.34874856	
+    Magnitude of B_grad:	0.13480239384104	
+    Magnitude of b:	8.1808075761802	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.3537215998898	
+    Magnitude of W:	353022.68438203	
+    Magnitude of B_grad:	0.097922133459403	
+    Magnitude of b:	8.259087000359	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.5160661756898	
+    Magnitude of W:	352952.10127959	
+    Magnitude of B_grad:	0.05473820378611	
+    Magnitude of b:	8.2216138263428	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.7192197276928	
+    Magnitude of W:	352880.81170693	
+    Magnitude of B_grad:	0.12415137879314	
+    Magnitude of b:	8.335953111119	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+401120.6299362	
+SGD: crossEntropyLoss is	
+401120.6299362	
+SGD: Validation Accuracy is:	
+0.30881017257039	
+SGD: Magnitude of W:	
+352824.77288213	
+SGD: Magnitude of b:	
+7.682068632936	
+    Current index:	9501	
+    Magnitude of W_grad:	7.6696192084485	
+    Magnitude of W:	352753.86944821	
+    Magnitude of B_grad:	0.13702818296957	
+    Magnitude of b:	8.0374519105522	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.9369711738949	
+    Magnitude of W:	352683.24559206	
+    Magnitude of B_grad:	0.060705821735414	
+    Magnitude of b:	8.2622056999965	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.5250693246811	
+    Magnitude of W:	352612.79588562	
+    Magnitude of B_grad:	0.089869732562714	
+    Magnitude of b:	8.4238008284231	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.565291774913	
+    Magnitude of W:	352543.42973619	
+    Magnitude of B_grad:	0.059204903281771	
+    Magnitude of b:	8.7150773257506	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.7063388396891	
+    Magnitude of W:	352471.8755136	
+    Magnitude of B_grad:	0.10593039265395	
+    Magnitude of b:	8.9709048465529	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.8067355305361	
+    Magnitude of W:	352401.12368641	
+    Magnitude of B_grad:	0.24142241302731	
+    Magnitude of b:	8.4552253669376	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.3926757512082	
+    Magnitude of W:	352327.85098204	
+    Magnitude of B_grad:	0.16394265380564	
+    Magnitude of b:	7.3184323900359	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.7135448643179	
+    Magnitude of W:	352256.90161549	
+    Magnitude of B_grad:	0.13296785493478	
+    Magnitude of b:	8.1646573086023	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.2187903105941	
+    Magnitude of W:	352185.72363037	
+    Magnitude of B_grad:	0.097495043751802	
+    Magnitude of b:	8.2445515485759	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.3487866784772	
+    Magnitude of W:	352115.59888795	
+    Magnitude of B_grad:	0.053049217017467	
+    Magnitude of b:	8.2103030571555	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.627842435308	
+    Magnitude of W:	352044.84255662	
+    Magnitude of B_grad:	0.12308496720013	
+    Magnitude of b:	8.3221617954043	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+397470.81686871	
+SGD: crossEntropyLoss is	
+397470.81686871	
+SGD: Validation Accuracy is:	
+0.30971843778383	
+SGD: Magnitude of W:	
+351989.16457938	
+SGD: Magnitude of b:	
+7.6790097162485	
+    Current index:	9501	
+    Magnitude of W_grad:	7.5471602460084	
+    Magnitude of W:	351918.7832145	
+    Magnitude of B_grad:	0.13515812055607	
+    Magnitude of b:	8.0264964444517	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.8538657225737	
+    Magnitude of W:	351848.65650217	
+    Magnitude of B_grad:	0.059962489625524	
+    Magnitude of b:	8.2500945080037	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.4106920895104	
+    Magnitude of W:	351778.61131159	
+    Magnitude of B_grad:	0.088275113799509	
+    Magnitude of b:	8.4133979297818	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.4720534163898	
+    Magnitude of W:	351709.72191125	
+    Magnitude of B_grad:	0.059658683003093	
+    Magnitude of b:	8.6992389359832	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.543304881409	
+    Magnitude of W:	351638.6874578	
+    Magnitude of B_grad:	0.10318371056191	
+    Magnitude of b:	8.9607600908746	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.6623662959666	
+    Magnitude of W:	351568.44109525	
+    Magnitude of B_grad:	0.23796476768085	
+    Magnitude of b:	8.4526142877347	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.2511285837652	
+    Magnitude of W:	351495.73832199	
+    Magnitude of B_grad:	0.16044791192561	
+    Magnitude of b:	7.3097547592676	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.6115558919515	
+    Magnitude of W:	351425.3035796	
+    Magnitude of B_grad:	0.13117615990001	
+    Magnitude of b:	8.1485238086306	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	8.0874106817064	
+    Magnitude of W:	351354.65833041	
+    Magnitude of B_grad:	0.09705462370285	
+    Magnitude of b:	8.2299927256723	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.1876225133162	
+    Magnitude of W:	351284.99629805	
+    Magnitude of B_grad:	0.051464566378216	
+    Magnitude of b:	8.1990350774097	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.5399211067446	
+    Magnitude of W:	351214.65826127	
+    Magnitude of B_grad:	0.1219879735412	
+    Magnitude of b:	8.3083389961395	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+393942.8495676	
+SGD: crossEntropyLoss is	
+393942.8495676	
+SGD: Validation Accuracy is:	
+0.30881017257039	
+SGD: Magnitude of W:	
+351159.30924431	
+SGD: Magnitude of b:	
+7.6758677702866	
+    Current index:	9501	
+    Magnitude of W_grad:	7.4275450806437	
+    Magnitude of W:	351089.42772616	
+    Magnitude of B_grad:	0.13342147241106	
+    Magnitude of b:	8.0154032249329	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.7732988542607	
+    Magnitude of W:	351019.86766688	
+    Magnitude of B_grad:	0.059195160612061	
+    Magnitude of b:	8.2380101170559	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.2986925102406	
+    Magnitude of W:	350950.22042314	
+    Magnitude of B_grad:	0.08672979605279	
+    Magnitude of b:	8.4030826236986	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.3832024072259	
+    Magnitude of W:	350881.79113628	
+    Magnitude of B_grad:	0.060126277136805	
+    Magnitude of b:	8.6837429977018	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.3838415009871	
+    Magnitude of W:	350811.2024273	
+    Magnitude of B_grad:	0.10043913891519	
+    Magnitude of b:	8.9505407600559	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.5203169200085	
+    Magnitude of W:	350741.42359221	
+    Magnitude of B_grad:	0.23456585139294	
+    Magnitude of b:	8.4499386342799	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	9.1107859547475	
+    Magnitude of W:	350669.17837044	
+    Magnitude of B_grad:	0.15703788751619	
+    Magnitude of b:	7.301159437644	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.5121637524023	
+    Magnitude of W:	350599.23267578	
+    Magnitude of B_grad:	0.12941276777211	
+    Magnitude of b:	8.1324442860972	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.9595840292442	
+    Magnitude of W:	350529.08259935	
+    Magnitude of B_grad:	0.096599593821743	
+    Magnitude of b:	8.2154367937695	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	8.0318381436927	
+    Magnitude of W:	350459.88281707	
+    Magnitude of B_grad:	0.050014189001588	
+    Magnitude of b:	8.1878146144626	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.4549514169338	
+    Magnitude of W:	350389.96013227	
+    Magnitude of B_grad:	0.12085103420779	
+    Magnitude of b:	8.2945377406144	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+390528.57704994	
+SGD: crossEntropyLoss is	
+390528.57704994	
+SGD: Validation Accuracy is:	
+0.30790190735695	
+SGD: Magnitude of W:	
+350335.03021373	
+SGD: Magnitude of b:	
+7.6726839969205	
+    Current index:	9501	
+    Magnitude of W_grad:	7.3097921583051	
+    Magnitude of W:	350265.7981525	
+    Magnitude of B_grad:	0.13180415912361	
+    Magnitude of b:	8.0041624930334	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.6954739158997	
+    Magnitude of W:	350196.69297339	
+    Magnitude of B_grad:	0.05841663235491	
+    Magnitude of b:	8.2259669212492	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.1902215835356	
+    Magnitude of W:	350127.45207872	
+    Magnitude of B_grad:	0.085231007170453	
+    Magnitude of b:	8.3928654986348	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.299938410565	
+    Magnitude of W:	350059.49564279	
+    Magnitude of B_grad:	0.060602034588799	
+    Magnitude of b:	8.6685783385444	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.2314005903294	
+    Magnitude of W:	349989.38353687	
+    Magnitude of B_grad:	0.097716185913676	
+    Magnitude of b:	8.9402754504177	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.3802215002109	
+    Magnitude of W:	349920.07356927	
+    Magnitude of B_grad:	0.23121363068275	
+    Magnitude of b:	8.4471876111789	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.9740119674784	
+    Magnitude of W:	349848.36176495	
+    Magnitude of B_grad:	0.15371842121554	
+    Magnitude of b:	7.2926497244962	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.4138830409604	
+    Magnitude of W:	349778.87636827	
+    Magnitude of B_grad:	0.12766576450016	
+    Magnitude of b:	8.1164583147899	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.835606555678	
+    Magnitude of W:	349709.13692687	
+    Magnitude of B_grad:	0.096128605036776	
+    Magnitude of b:	8.2009172398042	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.8824167886614	
+    Magnitude of W:	349640.38558367	
+    Magnitude of B_grad:	0.048718388105675	
+    Magnitude of b:	8.1766491524578	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.3708929635708	
+    Magnitude of W:	349570.97331577	
+    Magnitude of B_grad:	0.1196675348811	
+    Magnitude of b:	8.2808209550885	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+387220.04471831	
+SGD: crossEntropyLoss is	
+387220.04471831	
+SGD: Validation Accuracy is:	
+0.31062670299728	
+SGD: Magnitude of W:	
+349516.34994192	
+SGD: Magnitude of b:	
+7.6695056078472	
+    Current index:	9501	
+    Magnitude of W_grad:	7.195335268305	
+    Magnitude of W:	349447.59105629	
+    Magnitude of B_grad:	0.1302837820986	
+    Magnitude of b:	7.9927900620371	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.6199001973146	
+    Magnitude of W:	349378.9235043	
+    Magnitude of B_grad:	0.057636954240756	
+    Magnitude of b:	8.2139823593985	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	7.0846564315338	
+    Magnitude of W:	349310.06920612	
+    Magnitude of B_grad:	0.083774829320548	
+    Magnitude of b:	8.3827651554943	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.2217030541299	
+    Magnitude of W:	349242.53067343	
+    Magnitude of B_grad:	0.061082165058074	
+    Magnitude of b:	8.6537369855012	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	7.0855537216464	
+    Magnitude of W:	349172.91727576	
+    Magnitude of B_grad:	0.095031467086231	
+    Magnitude of b:	8.929996393398	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.2422401094273	
+    Magnitude of W:	349104.04879049	
+    Magnitude of B_grad:	0.22789501151982	
+    Magnitude of b:	8.4443595457729	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.8404218651832	
+    Magnitude of W:	349032.77012528	
+    Magnitude of B_grad:	0.15049458902596	
+    Magnitude of b:	7.2842444684942	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.3160673269093	
+    Magnitude of W:	348963.66331865	
+    Magnitude of B_grad:	0.12592651481564	
+    Magnitude of b:	8.1006097375993	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.7143976851428	
+    Magnitude of W:	348894.34268812	
+    Magnitude of B_grad:	0.095642366380164	
+    Magnitude of b:	8.1864762099437	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.7391192456667	
+    Magnitude of W:	348826.03723759	
+    Magnitude of B_grad:	0.047587469351059	
+    Magnitude of b:	8.1655520302182	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.2877111752029	
+    Magnitude of W:	348757.13876229	
+    Magnitude of B_grad:	0.11843296374691	
+    Magnitude of b:	8.2672579229637	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+384009.59419503	
+SGD: crossEntropyLoss is	
+384009.59419503	
+SGD: Validation Accuracy is:	
+0.31244323342416	
+SGD: Magnitude of W:	
+348702.83179973	
+SGD: Magnitude of b:	
+7.6663787309269	
+    Current index:	9501	
+    Magnitude of W_grad:	7.0828294263066	
+    Magnitude of W:	348634.48965256	
+    Magnitude of B_grad:	0.1288335654265	
+    Magnitude of b:	7.981321497144	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.5458137168973	
+    Magnitude of W:	348566.23608675	
+    Magnitude of B_grad:	0.056862511543992	
+    Magnitude of b:	8.2020733452412	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.9820438213473	
+    Magnitude of W:	348497.76978883	
+    Magnitude of B_grad:	0.082356218880717	
+    Magnitude of b:	8.3728018926031	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.1481012430793	
+    Magnitude of W:	348430.75237172	
+    Magnitude of B_grad:	0.061564244511078	
+    Magnitude of b:	8.6392098421976	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.9450807301485	
+    Magnitude of W:	348361.5504439	
+    Magnitude of B_grad:	0.092398565076581	
+    Magnitude of b:	8.9197331572532	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	8.1071824498738	
+    Magnitude of W:	348293.10950233	
+    Magnitude of B_grad:	0.22459875049652	
+    Magnitude of b:	8.4414574203556	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.7103455687806	
+    Magnitude of W:	348222.27398357	
+    Magnitude of B_grad:	0.14737018073379	
+    Magnitude of b:	7.275976359277	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.218430157131	
+    Magnitude of W:	348153.45399043	
+    Magnitude of B_grad:	0.12418995877069	
+    Magnitude of b:	8.0849436140542	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.5972720882378	
+    Magnitude of W:	348084.53301241	
+    Magnitude of B_grad:	0.095145194387514	
+    Magnitude of b:	8.1721607236913	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.6006498365215	
+    Magnitude of W:	348016.68388811	
+    Magnitude of B_grad:	0.046622829794398	
+    Magnitude of b:	8.1545395500223	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.2061573410065	
+    Magnitude of W:	347948.32406851	
+    Magnitude of B_grad:	0.11714441466065	
+    Magnitude of b:	8.2539148870143	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+380889.97715171	
+SGD: crossEntropyLoss is	
+380889.97715171	
+SGD: Validation Accuracy is:	
+0.31425976385104	
+SGD: Magnitude of W:	
+347894.33793785	
+SGD: Magnitude of b:	
+7.663334910966	
+    Current index:	9501	
+    Magnitude of W_grad:	6.9718506526856	
+    Magnitude of W:	347826.47278446	
+    Magnitude of B_grad:	0.12742738713846	
+    Magnitude of b:	7.9698013788715	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.4736598762932	
+    Magnitude of W:	347758.59605654	
+    Magnitude of B_grad:	0.056096195706391	
+    Magnitude of b:	8.1902529106176	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.883686536981	
+    Magnitude of W:	347690.5194186	
+    Magnitude of B_grad:	0.080968806154288	
+    Magnitude of b:	8.3629916756789	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.0770133778785	
+    Magnitude of W:	347623.86016899	
+    Magnitude of B_grad:	0.062046422660118	
+    Magnitude of b:	8.6249842995872	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.8096000954028	
+    Magnitude of W:	347555.09309546	
+    Magnitude of B_grad:	0.089828064032842	
+    Magnitude of b:	8.9095083518208	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.9749643220777	
+    Magnitude of W:	347487.07300858	
+    Magnitude of B_grad:	0.22131765564861	
+    Magnitude of b:	8.4384852648102	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.5830630661036	
+    Magnitude of W:	347416.68118353	
+    Magnitude of B_grad:	0.14434713615159	
+    Magnitude of b:	7.267883720513	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.1210664833145	
+    Magnitude of W:	347348.24651214	
+    Magnitude of B_grad:	0.12245437760337	
+    Magnitude of b:	8.0694996237257	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.4846674881193	
+    Magnitude of W:	347279.72752868	
+    Magnitude of B_grad:	0.094645393932686	
+    Magnitude of b:	8.1580158818548	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.466515056776	
+    Magnitude of W:	347212.28271325	
+    Magnitude of B_grad:	0.045818784214353	
+    Magnitude of b:	8.1436252451133	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.1252106535351	
+    Magnitude of W:	347144.24685943	
+    Magnitude of B_grad:	0.11580025873397	
+    Magnitude of b:	8.240844611878	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+377854.49034439	
+SGD: crossEntropyLoss is	
+377854.49034439	
+SGD: Validation Accuracy is:	
+0.31607629427793	
+SGD: Magnitude of W:	
+347090.54236971	
+SGD: Magnitude of b:	
+7.6603812044932	
+    Current index:	9501	
+    Magnitude of W_grad:	6.862563730245	
+    Magnitude of W:	347023.19479504	
+    Magnitude of B_grad:	0.12604375341592	
+    Magnitude of b:	7.9582740204295	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.4033307789381	
+    Magnitude of W:	346955.69954972	
+    Magnitude of B_grad:	0.055338394048304	
+    Magnitude of b:	8.1785293499742	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.7890970082194	
+    Magnitude of W:	346888.02771615	
+    Magnitude of B_grad:	0.07960498591172	
+    Magnitude of b:	8.3533428779656	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	6.0088117955219	
+    Magnitude of W:	346821.73316972	
+    Magnitude of B_grad:	0.062526761462955	
+    Magnitude of b:	8.6110444030001	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.6804134564255	
+    Magnitude of W:	346753.43605439	
+    Magnitude of B_grad:	0.087327754294567	
+    Magnitude of b:	8.899336448237	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.8457128345174	
+    Magnitude of W:	346685.7944466	
+    Magnitude of B_grad:	0.21804948166919	
+    Magnitude of b:	8.4354466212556	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.4587598392954	
+    Magnitude of W:	346615.74568375	
+    Magnitude of B_grad:	0.14142539827093	
+    Magnitude of b:	7.259999975707	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	7.0236826345499	
+    Magnitude of W:	346547.72808723	
+    Magnitude of B_grad:	0.12072061907522	
+    Magnitude of b:	8.0543057925502	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.3764057531958	
+    Magnitude of W:	346479.59296016	
+    Magnitude of B_grad:	0.094154141748611	
+    Magnitude of b:	8.1440787394878	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.3370339542443	
+    Magnitude of W:	346412.52255266	
+    Magnitude of B_grad:	0.045164409981569	
+    Magnitude of b:	8.1328157599425	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	7.043686223775	
+    Magnitude of W:	346344.89242912	
+    Magnitude of B_grad:	0.11439998147711	
+    Magnitude of b:	8.2280801409851	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+374897.12326732	
+SGD: crossEntropyLoss is	
+374897.12326732	
+SGD: Validation Accuracy is:	
+0.31516802906449	
+SGD: Magnitude of W:	
+346291.45592085	
+SGD: Magnitude of b:	
+7.6575008514773	
+    Current index:	9501	
+    Magnitude of W_grad:	6.7561343632584	
+    Magnitude of W:	346224.49106229	
+    Magnitude of B_grad:	0.12466758457775	
+    Magnitude of b:	7.9467789648264	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.3344488507737	
+    Magnitude of W:	346157.39329043	
+    Magnitude of B_grad:	0.054588158196532	
+    Magnitude of b:	8.1669080721059	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.6967042876457	
+    Magnitude of W:	346090.10467466	
+    Magnitude of B_grad:	0.078256508350345	
+    Magnitude of b:	8.3438562245494	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.9437761249123	
+    Magnitude of W:	346024.16132086	
+    Magnitude of B_grad:	0.063002915385686	
+    Magnitude of b:	8.5973726296803	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.5573000414412	
+    Magnitude of W:	345956.29319129	
+    Magnitude of B_grad:	0.084902981598155	
+    Magnitude of b:	8.8892251809561	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.720318815473	
+    Magnitude of W:	345889.05176928	
+    Magnitude of B_grad:	0.21479651662742	
+    Magnitude of b:	8.4323447187562	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.3386799303544	
+    Magnitude of W:	345819.48994239	
+    Magnitude of B_grad:	0.13860318560428	
+    Magnitude of b:	7.2523467932136	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.9269171279379	
+    Magnitude of W:	345751.87742903	
+    Magnitude of B_grad:	0.11899111990502	
+    Magnitude of b:	8.0393760055533	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.2709769978973	
+    Magnitude of W:	345684.12511149	
+    Magnitude of B_grad:	0.093683228851595	
+    Magnitude of b:	8.1303753946124	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.2118035324493	
+    Magnitude of W:	345617.48245374	
+    Magnitude of B_grad:	0.044645061596418	
+    Magnitude of b:	8.1221104929953	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.9615303538674	
+    Magnitude of W:	345550.24897408	
+    Magnitude of B_grad:	0.11294413510858	
+    Magnitude of b:	8.2156345111107	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+372012.64998909	
+SGD: crossEntropyLoss is	
+372012.64998909	
+SGD: Validation Accuracy is:	
+0.3133514986376	
+SGD: Magnitude of W:	
+345497.15513559	
+SGD: Magnitude of b:	
+7.6546622011216	
+    Current index:	9501	
+    Magnitude of W_grad:	6.651911062686	
+    Magnitude of W:	345430.55893034	
+    Magnitude of B_grad:	0.12329002224819	
+    Magnitude of b:	7.9353506430169	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.2676315574061	
+    Magnitude of W:	345363.82701513	
+    Magnitude of B_grad:	0.053844080284249	
+    Magnitude of b:	8.1553946423598	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.6068535294549	
+    Magnitude of W:	345296.87007936	
+    Magnitude of B_grad:	0.076915392284295	
+    Magnitude of b:	8.3345267235668	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.8818756336822	
+    Magnitude of W:	345231.23471184	
+    Magnitude of B_grad:	0.063472119161285	
+    Magnitude of b:	8.5839519614066	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.4406743287604	
+    Magnitude of W:	345163.76030085	
+    Magnitude of B_grad:	0.08255706819883	
+    Magnitude of b:	8.8791781545331	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.5989846420062	
+    Magnitude of W:	345096.84730513	
+    Magnitude of B_grad:	0.21156430774998	
+    Magnitude of b:	8.4291834391429	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.2229257872614	
+    Magnitude of W:	345027.69376738	
+    Magnitude of B_grad:	0.13587736660072	
+    Magnitude of b:	7.2449335445474	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.8310357277394	
+    Magnitude of W:	344960.45626534	
+    Magnitude of B_grad:	0.11726914521246	
+    Magnitude of b:	8.0247118862863	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.1677104585041	
+    Magnitude of W:	344893.08229871	
+    Magnitude of B_grad:	0.093242639152542	
+    Magnitude of b:	8.1169213656757	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	7.0930820711987	
+    Magnitude of W:	344826.78196486	
+    Magnitude of B_grad:	0.044243554699527	
+    Magnitude of b:	8.1115041643711	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.8786301126998	
+    Magnitude of W:	344759.92656069	
+    Magnitude of B_grad:	0.11143433484798	
+    Magnitude of b:	8.2035047369978	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+369196.6093916	
+SGD: crossEntropyLoss is	
+369196.6093916	
+SGD: Validation Accuracy is:	
+0.31516802906449	
+SGD: Magnitude of W:	
+344707.13560979	
+SGD: Magnitude of b:	
+7.6518290165023	
+    Current index:	9501	
+    Magnitude of W_grad:	6.5498186980286	
+    Magnitude of W:	344640.94922298	
+    Magnitude of B_grad:	0.12190714863363	
+    Magnitude of b:	7.9240197942298	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.2017651776923	
+    Magnitude of W:	344574.57239127	
+    Magnitude of B_grad:	0.053104769295025	
+    Magnitude of b:	8.1439971991431	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.5184257771446	
+    Magnitude of W:	344507.97181976	
+    Magnitude of B_grad:	0.075574851714004	
+    Magnitude of b:	8.3253460221208	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.8221289442396	
+    Magnitude of W:	344442.64438197	
+    Magnitude of B_grad:	0.063931372137872	
+    Magnitude of b:	8.5707671688536	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.3304263414394	
+    Magnitude of W:	344375.5904569	
+    Magnitude of B_grad:	0.080291715362933	
+    Magnitude of b:	8.8691972237519	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.4818462111589	
+    Magnitude of W:	344309.02534152	
+    Magnitude of B_grad:	0.2083601009991	
+    Magnitude of b:	8.4259682018245	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	8.1103288871535	
+    Magnitude of W:	344240.2054712	
+    Magnitude of B_grad:	0.13324371134158	
+    Magnitude of b:	7.2377608563681	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.7354228511931	
+    Magnitude of W:	344173.29004506	
+    Magnitude of B_grad:	0.1155583649196	
+    Magnitude of b:	8.0103070227312	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	7.0665159550014	
+    Magnitude of W:	344106.28561983	
+    Magnitude of B_grad:	0.092838939243422	
+    Magnitude of b:	8.1037236573856	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.9767245543833	
+    Magnitude of W:	344040.37080506	
+    Magnitude of B_grad:	0.043941160932042	
+    Magnitude of b:	8.1009901212178	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.7957541858704	
+    Magnitude of W:	343973.84790762	
+    Magnitude of B_grad:	0.10987324306757	
+    Magnitude of b:	8.1916772868106	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+366445.19859446	
+SGD: crossEntropyLoss is	
+366445.19859446	
+SGD: Validation Accuracy is:	
+0.31516802906449	
+SGD: Magnitude of W:	
+343921.32599365	
+SGD: Magnitude of b:	
+7.6489679084626	
+    Current index:	9501	
+    Magnitude of W_grad:	6.450955801433	
+    Magnitude of W:	343855.60843686	
+    Magnitude of B_grad:	0.12051845452209	
+    Magnitude of b:	7.9128143623903	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.137066293925	
+    Magnitude of W:	343789.6050229	
+    Magnitude of B_grad:	0.052369069159411	
+    Magnitude of b:	8.1327271083141	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.432010274135	
+    Magnitude of W:	343723.33882882	
+    Magnitude of B_grad:	0.074229987237919	
+    Magnitude of b:	8.3163041258709	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.7636904434462	
+    Magnitude of W:	343658.35126656	
+    Magnitude of B_grad:	0.06437772577359	
+    Magnitude of b:	8.5578047726712	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.2250547356757	
+    Magnitude of W:	343591.67025909	
+    Magnitude of B_grad:	0.078107327092416	
+    Magnitude of b:	8.8592837263963	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.3694173944139	
+    Magnitude of W:	343525.55885282	
+    Magnitude of B_grad:	0.20519143563614	
+    Magnitude of b:	8.4227061407876	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.9999532578928	
+    Magnitude of W:	343457.11564779	
+    Magnitude of B_grad:	0.13069701616722	
+    Magnitude of b:	7.2308245936678	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.6414383086624	
+    Magnitude of W:	343390.52557702	
+    Magnitude of B_grad:	0.11386259752561	
+    Magnitude of b:	7.9961511537759	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.9688260993882	
+    Magnitude of W:	343323.85955883	
+    Magnitude of B_grad:	0.092474861241184	
+    Magnitude of b:	8.09078295859	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.8639331274859	
+    Magnitude of W:	343258.27649967	
+    Magnitude of B_grad:	0.043718537182303	
+    Magnitude of b:	8.090562655071	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.7128482015671	
+    Magnitude of W:	343192.10771291	
+    Magnitude of B_grad:	0.10826449983495	
+    Magnitude of b:	8.1801330334776	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+363755.14359739	
+SGD: crossEntropyLoss is	
+363755.14359739	
+SGD: Validation Accuracy is:	
+0.31607629427793	
+SGD: Magnitude of W:	
+343139.87995882	
+SGD: Magnitude of b:	
+7.6460523000559	
+    Current index:	9501	
+    Magnitude of W_grad:	6.3553702390478	
+    Magnitude of W:	343074.51538239	
+    Magnitude of B_grad:	0.11912552919515	
+    Magnitude of b:	7.901758841602	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.0736934969947	
+    Magnitude of W:	343008.82857416	
+    Magnitude of B_grad:	0.051636193987081	
+    Magnitude of b:	8.1215977647777	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.3470030778912	
+    Magnitude of W:	342942.89295252	
+    Magnitude of B_grad:	0.072878117097381	
+    Magnitude of b:	8.3073901745131	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.706929700521	
+    Magnitude of W:	342878.19001423	
+    Magnitude of B_grad:	0.064808595139684	
+    Magnitude of b:	8.5450519342092	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.1243559950841	
+    Magnitude of W:	342811.86377786	
+    Magnitude of B_grad:	0.076003249630283	
+    Magnitude of b:	8.8494384598379	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.2606334079635	
+    Magnitude of W:	342746.03618423	
+    Magnitude of B_grad:	0.20206511592732	
+    Magnitude of b:	8.4194054136717	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.8920029498026	
+    Magnitude of W:	342677.94697958	
+    Magnitude of B_grad:	0.12823119734625	
+    Magnitude of b:	7.2241181841472	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.5496004087735	
+    Magnitude of W:	342611.68131074	
+    Magnitude of B_grad:	0.11218553899945	
+    Magnitude of b:	7.9822330279509	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.8744623133253	
+    Magnitude of W:	342545.34353588	
+    Magnitude of B_grad:	0.09214982564277	
+    Magnitude of b:	8.078095262045	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.754460692979	
+    Magnitude of W:	342480.03866858	
+    Magnitude of B_grad:	0.043556626781011	
+    Magnitude of b:	8.0802177791989	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.6299598727709	
+    Magnitude of W:	342414.22612873	
+    Magnitude of B_grad:	0.10661257384901	
+    Magnitude of b:	8.1688508677308	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+361123.58644986	
+SGD: crossEntropyLoss is	
+361123.58644986	
+SGD: Validation Accuracy is:	
+0.31425976385104	
+SGD: Magnitude of W:	
+342362.33382245	
+SGD: Magnitude of b:	
+7.6430636489268	
+    Current index:	9501	
+    Magnitude of W_grad:	6.2625013596347	
+    Magnitude of W:	342297.32456933	
+    Magnitude of B_grad:	0.11773112146616	
+    Magnitude of b:	7.8908725311697	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	6.0112888945481	
+    Magnitude of W:	342231.97794172	
+    Magnitude of B_grad:	0.05107017618589	
+    Magnitude of b:	8.1106223408696	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.2632704797793	
+    Magnitude of W:	342166.36221571	
+    Magnitude of B_grad:	0.071518738996965	
+    Magnitude of b:	8.2985925646562	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.6521262077635	
+    Magnitude of W:	342101.93617058	
+    Magnitude of B_grad:	0.065222011779228	
+    Magnitude of b:	8.5324951796142	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	6.0279772658072	
+    Magnitude of W:	342036.00709723	
+    Magnitude of B_grad:	0.073977963854616	
+    Magnitude of b:	8.8396609848355	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.1562583001558	
+    Magnitude of W:	341970.53243057	
+    Magnitude of B_grad:	0.1989866058193	
+    Magnitude of b:	8.4160740048341	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.7863841858718	
+    Magnitude of W:	341902.84102269	
+    Magnitude of B_grad:	0.12583944010965	
+    Magnitude of b:	7.2176331649618	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.4582958975688	
+    Magnitude of W:	341836.88164763	
+    Magnitude of B_grad:	0.11053044745009	
+    Magnitude of b:	7.9685418278788	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.7823052782007	
+    Magnitude of W:	341770.85548432	
+    Magnitude of B_grad:	0.091860884856495	
+    Magnitude of b:	8.0656529254554	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.6472941227828	
+    Magnitude of W:	341705.83220191	
+    Magnitude of B_grad:	0.043437488225176	
+    Magnitude of b:	8.0699528733319	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.5468857856345	
+    Magnitude of W:	341640.39087772	
+    Magnitude of B_grad:	0.10492254272394	
+    Magnitude of b:	8.1578099950431	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+358547.99511833	
+SGD: crossEntropyLoss is	
+358547.99511833	
+SGD: Validation Accuracy is:	
+0.31425976385104	
+SGD: Magnitude of W:	
+341588.77883603	
+SGD: Magnitude of b:	
+7.6399908075287	
+    Current index:	9501	
+    Magnitude of W_grad:	6.1724414536966	
+    Magnitude of W:	341524.13093539	
+    Magnitude of B_grad:	0.11634711712099	
+    Magnitude of b:	7.8801679196421	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.9500644127827	
+    Magnitude of W:	341459.11736553	
+    Magnitude of B_grad:	0.051217423291633	
+    Magnitude of b:	8.0998116077856	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.18105184575	
+    Magnitude of W:	341393.82554519	
+    Magnitude of B_grad:	0.070153189270278	
+    Magnitude of b:	8.2898989585422	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.5986995820657	
+    Magnitude of W:	341329.81105358	
+    Magnitude of B_grad:	0.065616746077478	
+    Magnitude of b:	8.5201198977022	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.935784711417	
+    Magnitude of W:	341264.17244374	
+    Magnitude of B_grad:	0.072029273625821	
+    Magnitude of b:	8.8299490467854	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	7.0556610495134	
+    Magnitude of W:	341199.00291417	
+    Magnitude of B_grad:	0.19595979061653	
+    Magnitude of b:	8.4127186183801	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.6837258069175	
+    Magnitude of W:	341131.63647779	
+    Magnitude of B_grad:	0.12351445056894	
+    Magnitude of b:	7.2113588966953	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.3677267437569	
+    Magnitude of W:	341066.05616041	
+    Magnitude of B_grad:	0.10889987320905	
+    Magnitude of b:	7.9550677277457	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.6923542648655	
+    Magnitude of W:	341000.37084809	
+    Magnitude of B_grad:	0.091603650779256	
+    Magnitude of b:	8.0534455671389	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.5427239695384	
+    Magnitude of W:	340935.58713056	
+    Magnitude of B_grad:	0.043673504152576	
+    Magnitude of b:	8.0597660068847	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.4643812979854	
+    Magnitude of W:	340870.43158588	
+    Magnitude of B_grad:	0.10319984974445	
+    Magnitude of b:	8.1469912952172	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+356026.09066347	
+SGD: crossEntropyLoss is	
+356026.09066347	
+SGD: Validation Accuracy is:	
+0.31244323342416	
+SGD: Magnitude of W:	
+340819.1077248	
+SGD: Magnitude of b:	
+7.6368284846696	
+    Current index:	9501	
+    Magnitude of W_grad:	6.0860388453465	
+    Magnitude of W:	340754.88242249	
+    Magnitude of B_grad:	0.11560075496296	
+    Magnitude of b:	7.8696501717092	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.8898127907502	
+    Magnitude of W:	340690.22092923	
+    Magnitude of B_grad:	0.051356458882517	
+    Magnitude of b:	8.0891726572241	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.1013684600683	
+    Magnitude of W:	340625.27471266	
+    Magnitude of B_grad:	0.068784102723433	
+    Magnitude of b:	8.2812966017621	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.5465054679274	
+    Magnitude of W:	340561.62299864	
+    Magnitude of B_grad:	0.065992276777239	
+    Magnitude of b:	8.5079109267516	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.8481600650754	
+    Magnitude of W:	340496.28593969	
+    Magnitude of B_grad:	0.070154506390409	
+    Magnitude of b:	8.8202985807264	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	6.9584378604506	
+    Magnitude of W:	340431.42991793	
+    Magnitude of B_grad:	0.19298700647415	
+    Magnitude of b:	8.409344064609	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.5831175064158	
+    Magnitude of W:	340364.35690892	
+    Magnitude of B_grad:	0.12124882186324	
+    Magnitude of b:	7.2052824395115	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.2782572827852	
+    Magnitude of W:	340299.08419941	
+    Magnitude of B_grad:	0.10729553242757	
+    Magnitude of b:	7.9418022112236	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.6048784708156	
+    Magnitude of W:	340233.67396425	
+    Magnitude of B_grad:	0.09137298551942	
+    Magnitude of b:	8.0414611595048	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.4405661577345	
+    Magnitude of W:	340169.16356478	
+    Magnitude of B_grad:	0.044008255867556	
+    Magnitude of b:	8.0496555893265	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.3818416213888	
+    Magnitude of W:	340104.303318	
+    Magnitude of B_grad:	0.10145009412322	
+    Magnitude of b:	8.1363781091367	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+353555.78842209	
+SGD: crossEntropyLoss is	
+353555.78842209	
+SGD: Validation Accuracy is:	
+0.31153496821072	
+SGD: Magnitude of W:	
+340053.21301246	
+SGD: Magnitude of b:	
+7.633575664899	
+    Current index:	9501	
+    Magnitude of W_grad:	6.0023650716335	
+    Magnitude of W:	339989.39804756	
+    Magnitude of B_grad:	0.11486185813973	
+    Magnitude of b:	7.8593179138545	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.8302309235742	
+    Magnitude of W:	339925.14754358	
+    Magnitude of B_grad:	0.051487524107158	
+    Magnitude of b:	8.0787087351603	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	6.0237100100407	
+    Magnitude of W:	339860.52102014	
+    Magnitude of B_grad:	0.067414796118434	
+    Magnitude of b:	8.2727730420106	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.4955538430801	
+    Magnitude of W:	339797.23698458	
+    Magnitude of B_grad:	0.066348650038363	
+    Magnitude of b:	8.495853811003	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.7644353677541	
+    Magnitude of W:	339732.20221588	
+    Magnitude of B_grad:	0.068350711710756	
+    Magnitude of b:	8.810704262714	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	6.8646201631638	
+    Magnitude of W:	339667.72284645	
+    Magnitude of B_grad:	0.19006923430097	
+    Magnitude of b:	8.4059531663553	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.4858905805522	
+    Magnitude of W:	339600.99625876	
+    Magnitude of B_grad:	0.11903549072318	
+    Magnitude of b:	7.1993890313762	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.1908161543969	
+    Magnitude of W:	339536.02648707	
+    Magnitude of B_grad:	0.10571835517245	
+    Magnitude of b:	7.9287384322581	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.5198963911685	
+    Magnitude of W:	339470.9057522	
+    Magnitude of B_grad:	0.091163420595212	
+    Magnitude of b:	8.0296873624316	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.3406496062341	
+    Magnitude of W:	339406.75242565	
+    Magnitude of B_grad:	0.044295516197883	
+    Magnitude of b:	8.0396205216918	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.2994316347058	
+    Magnitude of W:	339342.21574072	
+    Magnitude of B_grad:	0.099678889962507	
+    Magnitude of b:	8.1259566303989	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+351135.15285581	
+SGD: crossEntropyLoss is	
+351135.15285581	
+SGD: Validation Accuracy is:	
+0.31062670299728	
+SGD: Magnitude of W:	
+339291.35719679	
+SGD: Magnitude of b:	
+7.630234427435	
+    Current index:	9501	
+    Magnitude of W_grad:	5.9215956868691	
+    Magnitude of W:	339227.91901104	
+    Magnitude of B_grad:	0.11412984606845	
+    Magnitude of b:	7.8491648683969	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.7718009274997	
+    Magnitude of W:	339163.99867181	
+    Magnitude of B_grad:	0.051610916419536	
+    Magnitude of b:	8.068419890356	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	5.9489909422928	
+    Magnitude of W:	339099.64155989	
+    Magnitude of B_grad:	0.066148772389158	
+    Magnitude of b:	8.2643170367049	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.4457309355778	
+    Magnitude of W:	339036.6403708	
+    Magnitude of B_grad:	0.066686301608135	
+    Magnitude of b:	8.4839360588254	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.6844380645749	
+    Magnitude of W:	338971.91935894	
+    Magnitude of B_grad:	0.066614834239996	
+    Magnitude of b:	8.8011603066102	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	6.7733494569968	
+    Magnitude of W:	338907.80282039	
+    Magnitude of B_grad:	0.18720637391197	
+    Magnitude of b:	8.4025470009585	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.3910051366799	
+    Magnitude of W:	338841.44533004	
+    Magnitude of B_grad:	0.11686822625295	
+    Magnitude of b:	7.1936630360754	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.1058724551802	
+    Magnitude of W:	338776.71218727	
+    Magnitude of B_grad:	0.10416866522556	
+    Magnitude of b:	7.9158715608882	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.436743459072	
+    Magnitude of W:	338711.87030352	
+    Magnitude of B_grad:	0.090969370537459	
+    Magnitude of b:	8.0181128469158	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.2429722825424	
+    Magnitude of W:	338648.04184972	
+    Magnitude of B_grad:	0.04452973769938	
+    Magnitude of b:	8.0296606325393	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.2174404918648	
+    Magnitude of W:	338583.76536178	
+    Magnitude of B_grad:	0.097891797518626	
+    Magnitude of b:	8.11571594697	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+348762.36564614	
+SGD: crossEntropyLoss is	
+348762.36564614	
+SGD: Validation Accuracy is:	
+0.31062670299728	
+SGD: Magnitude of W:	
+338533.08171856	
+SGD: Magnitude of b:	
+7.6268091765087	
+    Current index:	9501	
+    Magnitude of W_grad:	5.8435887532079	
+    Magnitude of W:	338470.02029143	
+    Magnitude of B_grad:	0.11340470014918	
+    Magnitude of b:	7.8391817059351	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.7148181927521	
+    Magnitude of W:	338406.38954751	
+    Magnitude of B_grad:	0.051726955200168	
+    Magnitude of b:	8.0583039676125	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	5.8761848128779	
+    Magnitude of W:	338342.33003609	
+    Magnitude of B_grad:	0.065692021767513	
+    Magnitude of b:	8.2559193422752	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.3968715583781	
+    Magnitude of W:	338279.63727002	
+    Magnitude of B_grad:	0.067005899047527	
+    Magnitude of b:	8.4721479834815	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.6078055344344	
+    Magnitude of W:	338215.17403671	
+    Magnitude of B_grad:	0.064943848655947	
+    Magnitude of b:	8.791661253424	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	6.6861945899778	
+    Magnitude of W:	338151.40148246	
+    Magnitude of B_grad:	0.18439754222326	
+    Magnitude of b:	8.3991253192021	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.2989637480036	
+    Magnitude of W:	338085.45061894	
+    Magnitude of B_grad:	0.11474206837329	
+    Magnitude of b:	7.1889224546972	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	6.0227707195299	
+    Magnitude of W:	338021.03779698	
+    Magnitude of B_grad:	0.10264641357537	
+    Magnitude of b:	7.9031989610649	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.3557443642178	
+    Magnitude of W:	337956.4672461	
+    Magnitude of B_grad:	0.09078523311942	
+    Magnitude of b:	8.006728309502	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.1479927274736	
+    Magnitude of W:	337892.95066789	
+    Magnitude of B_grad:	0.044707868585151	
+    Magnitude of b:	8.0197770846142	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.136246998887	
+    Magnitude of W:	337828.98675125	
+    Magnitude of B_grad:	0.09609430786006	
+    Magnitude of b:	8.1056477837723	
+
+	
+SGD: Loss is	
+	LOSS:Calculated softmax res	
+346435.7049868	
+SGD: crossEntropyLoss is	
+346435.7049868	
+SGD: Validation Accuracy is:	
+0.30971843778383	
+SGD: Magnitude of W:	
+337778.46501642	
+SGD: Magnitude of b:	
+7.623306104789	
+    Current index:	9501	
+    Magnitude of W_grad:	5.767763113803	
+    Magnitude of W:	337715.7586206	
+    Magnitude of B_grad:	0.11268680082363	
+    Magnitude of b:	7.8293576712565	
+
+	
+    Current index:	19501	
+    Magnitude of W_grad:	5.6589262929724	
+    Magnitude of W:	337652.46371579	
+    Magnitude of B_grad:	0.051835970316295	
+    Magnitude of b:	8.0483575802085	
+
+	
+    Current index:	29501	
+    Magnitude of W_grad:	5.8053501586062	
+    Magnitude of W:	337588.69822176	
+    Magnitude of B_grad:	0.065221412142184	
+    Magnitude of b:	8.2475731806546	
+
+	
+    Current index:	39501	
+    Magnitude of W_grad:	5.3487575410402	
+    Magnitude of W:	337526.33673312	
+    Magnitude of B_grad:	0.067308225307792	
+    Magnitude of b:	8.4604830550324	
+
+	
+    Current index:	49501	
+    Magnitude of W_grad:	5.5348679892741	
+    Magnitude of W:	337462.09320514	
+    Magnitude of B_grad:	0.063334857543013	
+    Magnitude of b:	8.7822026433314	
+
+	
+    Current index:	59501	
+    Magnitude of W_grad:	6.6015740992826	
+    Magnitude of W:	337398.60905467	
+    Magnitude of B_grad:	0.18164136392405	
+    Magnitude of b:	8.395687067896	
+
+	
+    Current index:	69501	
+    Magnitude of W_grad:	7.2093531626239	
+    Magnitude of W:	337332.97054315	
+    Magnitude of B_grad:	0.11265362993112	
+    Magnitude of b:	7.1858171876351	
+
+	
+    Current index:	79501	
+    Magnitude of W_grad:	5.9415112805196	
+    Magnitude of W:	337268.92299279	
+    Magnitude of B_grad:	0.10115139549839	
+    Magnitude of b:	7.8907201287509	
+
+	
+    Current index:	89501	
+    Magnitude of W_grad:	6.2766974377862	
+    Magnitude of W:	337204.67326709	
+    Magnitude of B_grad:	0.090605453973896	
+    Magnitude of b:	7.9955270084541	
+
+	
+    Current index:	99501	
+    Magnitude of W_grad:	6.0549971093446	
+    Magnitude of W:	337141.43096953	
+    Magnitude of B_grad:	0.044828958830643	
+    Magnitude of b:	8.0099725517848	
+
+	
+    Current index:	109501	
+    Magnitude of W_grad:	6.0558226555598	
+    Magnitude of W:	337077.7980127	
+    Magnitude of B_grad:	0.094408363201955	
+    Magnitude of b:	8.0957460590503	
+
+	
+Done.	
+Testing on validation set...	
+Done	
+Datafile:	/n/home09/ankitgupta/CS287/HW1/SST1-uni-bi-sent.hdf5	Classifier:	lr	Alpha:	0	Eta:	1	Lambda:	1	Minibatch size:	500	Num Epochs:	50	Minimum Sentence Length:	5	
+Accuracy:	0.30881017257039	
