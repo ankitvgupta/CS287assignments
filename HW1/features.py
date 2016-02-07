@@ -53,6 +53,7 @@ class NgramFeature(SentenceFeature):
 				feat.append(self.word_to_idx[gram])
 			except KeyError:
 				continue
+
 		return list(set(feat))
 
 	def totalFeatureCount(self):
@@ -161,7 +162,3 @@ class SynFeature(SentenceFeature):
 
 	def maxFeatureLength(self):
 		return self.max_feat_len
-
-
-
-

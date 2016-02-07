@@ -133,7 +133,8 @@ def main(arguments):
     dataset = args.dataset
     train, valid, test = FILE_PATHS[dataset]
 
-    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature, features.SynFeature]
+
+    feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature]
     prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)
     train_input, train_output = convert_data(train, prepared_features, max_features, dataset)
 
@@ -143,7 +144,6 @@ def main(arguments):
         test_input, _ = convert_data(test, prepared_features, max_features, dataset)
 
     V = total_features-2
-
 
     print "Loaded "+str(V)+" features."
     C = np.max(train_output)

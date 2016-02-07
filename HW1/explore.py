@@ -79,13 +79,13 @@ def plot_sentiment_distribution(sentences, labels, outfile=None):
 		else:
 			plt.show()	
 
-
 def plot_gram_count_distribution(sentences, grams=1, outfile=None):
 	gram_dict = gram_count(sentences, grams)
 	gram_name = str(grams)+"-Gram"
 	x = np.log(gram_dict.values())
 	fig = plt.figure()
 	n, bins, patches = plt.hist(x, 100/grams, facecolor='green', alpha=0.75)
+
 	plt.xlabel("Log("+gram_name+" Count)")
 	plt.ylabel("Count Frequency")
 	plt.title(gram_name+" Count Distribution (Log scale)")
@@ -118,9 +118,9 @@ def print_gram_dict(gram_dict, value_title="COUNT"):
 		print gram,
 		print "("+str(gram_dict[gram])+")"
 
+
 def file_list_to_sentences(file_list, dataset):
 	sentences = []
-	labels = []
 	for filename in file_list:
 		if filename:
 		    with open(filename, "r") as f:
@@ -140,6 +140,7 @@ def main(arguments):
     dataset = args.dataset
 
     train, valid, test = pp.FILE_PATHS[dataset]
+
     sentences, labels = file_list_to_sentences([train, valid, test], dataset)
 
     N = 10

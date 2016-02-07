@@ -6,7 +6,6 @@ import argparse
 import sys
 
 def print_class_confusion(f):
-	# class_confusion[class] = [#correct and guessed, #incorrect and guessed, #correct and not guessed]
 	class_confusion = dict([(i, [0 for _ in range(3)]) for i in range(1, 6)])
 	for line in f:
 		idx, y, yp = line.split(',')
