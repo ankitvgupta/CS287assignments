@@ -15,11 +15,13 @@ function printtest(s, result)
 	end
 end
 
+function printoptions(opt)
+    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
+end
+
 function createCountsMatrix(training_input, training_output, nfeatures, nclasses)
 
 	local F = torch.zeros(nfeatures, nclasses)
-	--local training_input = f:read(features_table):all():double()
-	--local training_output = f:read(classes_table):all():double()
 	printv("     CreateCountsMatrix: Loaded training data", 3)
 	local train_size = training_input:size()
 	for n = 1, train_size[1] do
@@ -86,11 +88,6 @@ end
 
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateLinearModel(W, b, x, y)
-    --local Ans = sparseMultiply(x, W:t())
-    --for r = 1, Ans:size(1) do
-    -- 	Ans[r]:add(b)
-    --end
-    --a, c = torch.max(Ans, 2)
     local c = getLinearModelPredictions(W, b, x)
     equality = torch.eq(c, y)
 
@@ -125,4 +122,15 @@ function tensorsEqual(A, B)
 			end
 		end
 	end
+end
+
+
+function split_test_train(X_vals, Y_vals, train_ratio)
+    local total_size = X_vals:size()[1]
+    local cutoff = total_size*train_ratio
+    local train_in = X_vals:index(1, torch.range(1, cutoff):long())
+    local train_out = Y_vals:index(1, torch.range(1, cutoff):long())
+    local test_in = X_vals:index(1, torch.range(cutoff+1, total_size):long())
+    local test_out = Y_vals:index(1, torch.range(cutoff+1, total_size):long())
+    return train_in, train_out, test_in, test_out
 end

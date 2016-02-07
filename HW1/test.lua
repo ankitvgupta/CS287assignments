@@ -69,46 +69,6 @@ function checkCrossEntropy(W, b, X, Y)
 	end
 end
 
-function checkGradient(W, b, X, Y)
-	local numEntries = X:size()[1]
-	local numFeatures = W:size()[2]
-	local numClasses = W:size()[1]
-
-	local denseX = torch.zeros(numEntries, numFeatures)
-
-	for i = 1, numEntries do
-		denseX[i] = convertSparseToReal(X[i], numFeatures)
-	end
-
-	local linLayer = nn.Linear(numFeatures,numClasses)
-	local softMaxLayer = nn.LogSoftMax()
-	local model = nn.Sequential()
-
-	model:add(linLayer)
-	model:add(softMaxLayer)
-
-	local criterion = nn.CrossEntropyCriterion()
-	
-	x, dl_dx = model:getParameters()
-	dl_dx:zero()
-	criterion:forward(model:forward(denseX), Y)
-   	model:backward(denseX, criterion:backward(model.output, Y))
-	local trueAnswer = dl_dx
-	trueAnswer = trueAnswer:view(numClasses, numFeatures+1)
-	trueAnswerW = trueAnswer:narrow(2, 1, numFeatures)
-	trueAnswerb = trueAnswer:narrow(2, numFeatures, 1):squeeze()
-
-	printv("Starting gradient...", 3)
-	local ourAnswerW, ourAnswerb = gradient(W, b, X, Y, 1, numEntries)
-	printv("Done.", 3)
-
-	local testResultW = tensorsEqual(ourAnswerW, trueAnswerW)
-	local testResultb = tensorsEqual(ourAnswerb, trueAnswerb)
-	local testResult = testResultW and testResultb
-	printtest("checkGradient", testResult)
-end
-
-
 -- tests
 local numEntries, numClasses, numFeatures = 1000, 5, 500
 local Y = torch.Tensor(numEntries):apply(function() return torch.random(1, 5) end)
@@ -119,4 +79,3 @@ local b = torch.randn(numClasses)
 checkSparseMultiply(X, W)
 checkSoftmax(X, W, b)
 checkCrossEntropy(W, b, X, Y)
-checkGradient(W, b, X, Y)

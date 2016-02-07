@@ -1,16 +1,6 @@
 dofile("utils.lua")
 
 function hingeLogisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
-	printv("Parameters are:", 2)
-	printv("Eta:", 2)
-	printv(eta, 2)
-	printv("Lambda:", 2)
-	printv(lambda, 2)
-	printv("Minibatch size:", 2)
-	printv(minibatch_size, 2)
-	printv("Number of Epochs", 2)
-	printv(num_epochs, 2)
-
 	return hingeSGD(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
 end
 
@@ -83,7 +73,6 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 		local cp = Yps[i]
 
 		if ypc[i] - ypp[i] <= 1 then
-			--print(c, cp, ypc[i], ypp[i])
 			dLdy[i][c] = -1.0
 			dLdy[i][cp] = 1.0
 		end
@@ -93,7 +82,6 @@ function hingeGradient(W, b, Xs, Ys, start_index, end_index)
 	local W_grad = torch.zeros(numClasses, numFeatures)
 	local b_grad = torch.div(dLdy:sum(1), num_rows_wanted)
 
-	--I think we can speed this up too
 	for i=1, num_rows_wanted do
 		for j=1, X:size()[2] do
 			feat = X[i][j]-1
@@ -114,7 +102,6 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 	local N = Xs:size()[1]
 	local W = torch.randn(nclasses, nfeatures)
 	local b = torch.randn(nclasses)
-	--local num_epochs = 10
 
 	if testmode == true then
 		N = 10000
@@ -144,7 +131,7 @@ function hingeSGD(Xs, Ys, validation_input, validation_output, nfeatures, nclass
 			-- don't let the end_index exceed N
 			local end_index = math.min(start_index + minibatch_size - 1, N)
 			local size = end_index - start_index + 1
-			--print(start_index, end_index)
+
 			local W_grad, b_grad = hingeGradient(W, b, Xs, Ys, start_index, end_index)
 			W = W - (W_grad + torch.mul(W,lambda/N)):mul(learning_rate)
 			b = b - (b_grad + torch.mul(b,lambda/N)):mul(learning_rate)

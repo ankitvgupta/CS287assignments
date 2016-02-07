@@ -29,51 +29,6 @@ def line_to_words(line, dataset, exclude_stops=False, exclude_aposts=False):
         words = [w for w in words if "'" not in w]
     return words
 
-# deprecated
-def get_vocab(file_list, dataset=''):
-    """
-    Construct index feature dictionary.
-    EXTENSION: Change to allow for other word features, or bigrams.
-    """
-    max_sent_len = 0
-    word_to_idx = {}
-    # Start at 2 (1 is padding)
-    idx = 2
-    for filename in file_list:
-        if filename:
-            with open(filename, "r") as f:
-                for line in f:
-                    words = line_to_words(line, dataset)
-                    max_sent_len = max(max_sent_len, len(words))
-                    for word in words:
-                        if word not in word_to_idx:
-                            word_to_idx[word] = idx
-                            idx += 1
-    return max_sent_len, word_to_idx
-
-# deprecated
-def old_convert_data(data_name, word_to_idx, max_sent_len, dataset, start_padding=0):
-    """
-    Convert data to padded word index features.
-    EXTENSION: Change to allow for other word features, or bigrams.
-    """
-    features = []
-    lbl = []
-    with open(data_name, 'r') as f:
-        for line in f:
-            words = line_to_words(line, dataset)
-            y = int(line[0]) + 1
-            sent = [word_to_idx[word] for word in words]
-            sent = list(set(sent))
-            # end padding
-            if len(sent) < max_sent_len + start_padding:
-                sent.extend([1] * (max_sent_len + start_padding - len(sent)))
-            # start padding
-            sent = [1]*start_padding + sent
-            features.append(sent)
-            lbl.append(y)
-    return np.array(features, dtype=np.int32), np.array(lbl, dtype=np.int32)
-
 def pad_sentence(sent, max_features, padder=1):
     if len(sent) < max_features:
         sent.extend([padder] * (max_features - len(sent)))
@@ -177,17 +132,6 @@ def main(arguments):
     args = parser.parse_args(arguments)
     dataset = args.dataset
     train, valid, test = FILE_PATHS[dataset]
-
-    # max_sent_len, word_to_idx = get_vocab([train, valid, test])
-    # train_input, train_output = old_convert_data(train, word_to_idx, max_sent_len, dataset)
-    
-    # if valid:
-    #     valid_input, valid_output = old_convert_data(valid, word_to_idx, max_sent_len, dataset)
-
-    # if test:
-    #     test_input, _ = old_convert_data(test, word_to_idx, max_sent_len, dataset)
-
-    # V = len(word_to_idx)
 
     feature_list = [(features.NgramFeature, {'N': 1}), features.SentimentFeature, features.SynFeature]
     prepared_features, max_features, total_features = prepare_features(train, feature_list, dataset)

@@ -1,16 +1,6 @@
 dofile("utils.lua")
 
 function logisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
-	--printv("Parameters are:", 2)
-	--printv("Eta:", 2)
-	--printv(eta, 2)
-	--printv("Lambda:", 2)
-	--printv(lambda, 2)
-	--printv("Minibatch size:", 2)
-	--printv(minibatch_size, 2)
-	--printv("Number of Epochs", 2)
-	--printv(num_epochs, 2)
-
 	return SGD(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
 end
 
@@ -28,9 +18,6 @@ function softmax(X, W, b)
 	for i = 1, Ans:size()[1] do
 		Ans[i]:add(b)
 	end
-	--local Ans = torch.Tensor(nclasses)
-	-- Perform the matrix multiplication
-	--Ans:mv(W,x)
 
 	-- exponentiate it
 	Ans:exp()
@@ -40,28 +27,10 @@ function softmax(X, W, b)
 
 	-- normalize it
 	for i = 1, X:size()[1] do
-		--print(Ans[i], row_sums[i][1])
 		Ans[i]:div(row_sums[i][1])
 	end
-	--Ans:div(Ans:sum())
-	return Ans
-end
 
-function loss(W, b, Xs, Ys, lambda)
-	local N = Xs:size()[1]
-	local K = W:size()[1]
-	local softmax_res = softmax(Xs, W, b)
-	printv("	LOSS:Calculated softmax res", 3)
-	local total = 0.0
-	for n = 1, N do
-		--print(n)
-		for k = 1, K do
-			local t = (Ys[n] == k) and 1 or 0
-			local y = softmax_res[n][k]
-			total = total + t*math.log(y)
-		end
-	end
-	return ((-1)*total) + .5*lambda*torch.pow(W,2):sum()
+	return Ans
 end
 
 function crossEntropy(X, W, b, Y)
@@ -75,7 +44,6 @@ function crossEntropy(X, W, b, Y)
 	end
 	-- z has numEntries rows and numClasses columns
 	-- zc is a vector of length numEntries
-	-- there must be a better way to do this!!!
 	local zc = torch.Tensor(numEntries)
 	for i = 1, numEntries do
 		zc[i] = z[i][Y[i]]
@@ -164,8 +132,6 @@ function SGD(Xs, Ys, validation_input, validation_output, nfeatures, nclasses, m
 
 	for rep = 1, num_epochs do
 		-- Calculate the loss and validation accuracy
-		printv("SGD: Loss is", 3)
-		printv(loss(W, b, Xs, Ys, lambda), 3)
 		printv("SGD: crossEntropyLoss is", 3)
 		printv(crossEntropyLoss(W, b, Xs, Ys, lambda), 3)
 		
