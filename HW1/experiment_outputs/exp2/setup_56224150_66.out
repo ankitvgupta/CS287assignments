@@ -1,0 +1,16 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/HW1/SST2-uni-sent.hdf5	Classifier:	nb	Alpha:	2	Eta:	0.5	Lambda:	0.1	Minibatch size:	500	Num Epochs:	50	Minimum Sentence Length:	5	
+Note that not all parameters may apply to all classifiers	
+Loading datafiles...	
+Number of training samples before removing small sentences	76961	
+Number of training samples after removing small sentences	55915	
+Done.	
+Training classifier...	
+     CreateCountsMatrix: Loaded training data	
+     CreateCountsMatrix: Calculated counts	
+     NaiveBayes: Calculated p(x|y)	
+     NaiveBayes: Calculated p(y)	
+Done.	
+Testing on validation set...	
+Done	
+Datafile:	/n/home09/ankitgupta/CS287/HW1/SST2-uni-sent.hdf5	Classifier:	nb	Alpha:	2	Eta:	0.5	Lambda:	0.1	Minibatch size:	500	Num Epochs:	50	Minimum Sentence Length:	5	
+Accuracy:	0.80021463065641	
