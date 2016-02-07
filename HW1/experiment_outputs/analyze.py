@@ -1,4 +1,6 @@
-# USAGE: python analysis.py < SUMMARY_FILE
+# USAGE: python analysis.py {all, SST1, SST2, TREC...} < SUMMARY_FILE
+#   Ex: python analysis.py all < SUMMARY_FILE
+#       python analysis.py TREC < SUMMARY_FILE
 # To create summary file, do tail -n 2 * > SUMMARY_FILE in the directory being summarized
 import numpy as np 
 import pandas as pd 
@@ -9,6 +11,9 @@ pd.set_option('expand_frame_repr', False)
 
 sets = []
 accuracies = []
+assert(len(sys.argv) == 2)
+print(sys.argv)
+
 
 for line in sys.stdin:
 
@@ -28,6 +33,9 @@ df = pd.DataFrame(alldata)
 df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'MinimumSentenceLength', 'Accuracy']
 
 df.sort(columns='Accuracy', ascending=False, inplace=True)
+if sys.argv[1] != "all":
+    df = df[df['Datafile'].str.startswith(sys.argv[1])]
+
 print df
 print ""
 print "Best nb ones"
