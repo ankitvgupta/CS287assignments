@@ -10,7 +10,7 @@ In this directory is our code for Homework 1. Note that the datafiles became too
 - [test.lua](test.lua): Contains various testing functions. To be clear, we use the nn library here ONLY to test that our softmax and other functions work as expected, as permitted by the instructors. No code that we wrote in any of the above implementations use nn library code.
 
 ## Experiment Results
-There were two major sets of experiments we conducted, and between them we tested around 800 hyperparameters. There is a summary file for each data set.
+There were two major sets of experiments we conducted, and between them we tested around 800 hyperparameter configurations, varying datasets, features, and parameters to the learning algorithms. There is a summary file listing the results of each experiment set.
 - [Experiment Set 1 Summary File](experiment_outputs/exp1/summary_file.txt)
 - [Experiment Set 2 Summary File](experiment_outputs/exp2/summary_exp2.txt)
 
