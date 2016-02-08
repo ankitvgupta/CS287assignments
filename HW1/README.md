@@ -1,5 +1,5 @@
 # Homework 1
-In this directory is our code for Homework 1. Note that the datafiles became too unwieldy for Github once we started adding new features, and so we decided to not push those, and instead just include a link to Google Drive where you can find them. Here is the link:
+In this directory is our code for Homework 1. Note that the datafiles became too unwieldy for Github once we started adding new features, and so we decided to not push those, and instead just include a link to Google Drive where you can find them. Here is the link: https://drive.google.com/folderview?id=0B4Il8nEIcKrvMy1NSnR4ZUZiSFE
 
 ## Important files
 - [HW1.lua](HW1.lua): This is the main controller file for the experiments we ran. The command line arguments for this specify all of the configurations that can be made.
@@ -7,4 +7,4 @@ In this directory is our code for Homework 1. Note that the datafiles became too
 - [nb.lua](nb.lua): This contains our implementation of Naive Bayes.
 - [hinge.lua](hinge.lua): This contains our implementation of Hinge Loss classification
 - [utils.lua](utils.lua): Contains shared utility functions that we use across the various implementations.
-- [test.lua](test.lua): Contains various testing functions.
+- [test.lua](test.lua): Contains various testing functions. To be clear, we use the nn library here ONLY to test that our softmax and other functions work as expected, as permitted by the instructors. No code that we wrote in any of the above implementations use nn library code.

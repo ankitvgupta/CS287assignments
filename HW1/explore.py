@@ -121,6 +121,7 @@ def print_gram_dict(gram_dict, value_title="COUNT"):
 
 def file_list_to_sentences(file_list, dataset):
 	sentences = []
+	labels = []
 	for filename in file_list:
 		if filename:
 		    with open(filename, "r") as f:
