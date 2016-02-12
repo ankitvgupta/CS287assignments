@@ -1,4 +1,5 @@
---Testing purposes only!
+--Testing purposes only. We do NOT use nn for anything other than to verify that our functions work as expected.
+--We specifically made sure that this would be ok with the course staff. None of our algorithm implementations in other files use this library, or import this file.
 require("nn")
 
 dofile("utils.lua")
