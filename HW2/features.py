@@ -43,12 +43,14 @@ class UnigramFeature(SentenceFeature):
 		feat = []
 		start = word_idx - self.dwin/2
 		end = word_idx + self.dwin/2
-		for i in range(start, end+1):
-			word = padded_sentence[i].lower()
+		for idx, i in enumerate(range(start, end+1)):
+			word = padded_sentence[i]
+			if word is not "PADDING":
+				word = word.lower()
 			try:
-				feat.append(self.word_to_idx[word]+i*self.numWords)
+				feat.append(self.word_to_idx[word]+idx*self.numWords)
 			except KeyError:
-				feat.append(self.word_to_idx["RARE"]+i*self.numWords)
+				feat.append(self.word_to_idx["RARE"]+idx*self.numWords)
 
 		return feat
 
@@ -73,4 +75,3 @@ class CapitalizationFeature(SentenceFeature):
 
 	def isSparse(self):
 		return False
-		
