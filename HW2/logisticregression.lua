@@ -35,7 +35,6 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 	for i = 1, nEpochs do
 	    -- zero out our gradients
 	    --gradParams:zero()
-
 	    model:zeroGradParameters()
 
 	    -- do forward pass

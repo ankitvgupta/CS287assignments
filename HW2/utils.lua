@@ -15,13 +15,16 @@
 -- end
 
 function createCountsMatrix(sparse_training_input, dense_training_input, training_output, n_sparse_features, nclasses)
+	print("Num items", sparse_training_input:size(1), dense_training_input:size(1))
 	local num_dense_features = dense_training_input:size(2)
 	local F = torch.zeros(n_sparse_features + dense_training_input:size(2), nclasses):long()
+	--print(F:size())
 	local train_size = sparse_training_input:size()
 	for n = 1, train_size[1] do
 		for j = 1, train_size[2] do
 			feat = sparse_training_input[n][j]
 			class = training_output[n]
+			--print(feat,class)
 			if feat > 0 then
 				F[feat][class] = F[feat][class] + 1
 			end
@@ -82,39 +85,53 @@ end
 -- -- A is a sparse tensor with 1-padding
 -- -- B is a dense tensor
 -- -- Matrix multiplication A*B in the straightforward way
--- function sparseMultiply(A,B)
--- 	local numRows = A:size()[1]
--- 	local numCols = B:size()[2]
+function sparseMultiply(A,B)
+	local numRows = A:size()[1]
+	local numCols = B:size()[2]
 
--- 	local output = torch.Tensor(numRows, numCols)
--- 	for r = 1, numRows do
--- 		-- Grab the indicies that are not padding
--- 		local indicies = (A[r] - 1)[(A[r] - 1):ge(1)]
--- 		if (indicies:size():size() > 0) then
--- 			output[r] = B:index(1, indicies):sum(1)
--- 		end
--- 	end
--- 	return output
--- end
+	local output = torch.Tensor(numRows, numCols)
+	for r = 1, numRows do
+		-- Grab the indicies that are not padding
+		local indicies = (A[r])[A[r]:ge(1)]
+		if (indicies:size():size() > 0) then
+			output[r] = B:index(1, indicies):sum(1)
+		end
+	end
+	return output
+end
 
--- function getLinearModelPredictions(W, b, X)
---     local Ans = sparseMultiply(X, W:t())
---     for r = 1, Ans:size(1) do
---     	Ans[r]:add(b)
---     end
---     local a, c = torch.max(Ans, 2)
---     return c
--- end    
+function getLinearModelPredictions(W, b, Xsparse, Xdense, num_sparse_features, num_dense_features)
+	-- Split W components for the sparse features and dense features
+	--print(W)
+	W_sparse = W:narrow(2, 1, num_sparse_features)
+	W_dense = W:narrow(2, W:size(2) - num_dense_features + 1, num_dense_features)
+
+	-- Sum the sparse and multiplication terms 
+    local Ans = sparseMultiply(Xsparse, W_sparse:t())
+    Ans:add(torch.mm(Xdense:double(), W_dense:t()))
+
+    --print(Ans)
+
+    -- Add the bias
+    for r = 1, Ans:size(1) do
+    	Ans[r]:add(b)
+    end
 
 
--- -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
--- function validateLinearModel(W, b, x, y)
---     local c = getLinearModelPredictions(W, b, x)
---     equality = torch.eq(c, y)
+    local a, c = torch.max(Ans, 2)
+    return c
+end    
 
---     score = equality:sum()/equality:size()[1]
---     return score
--- end   
+
+-- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
+function validateLinearModel(W, b, x_sparse, x_dense, y, num_sparse_features, num_dense_features)
+    local c = getLinearModelPredictions(W, b, x_sparse, x_dense, num_sparse_features, num_dense_features)
+    print("min and max predicted class", torch.min(c), torch.max(c))
+    equality = torch.eq(c, y)
+
+    score = equality:sum()/equality:size()[1]
+    return score
+end   
 
 -- -- Returns another tensor with only the rows of X that have sentences of length minlength
 
