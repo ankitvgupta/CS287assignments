@@ -1,7 +1,56 @@
+require('nn')
+
 dofile("utils.lua")
 
 function logisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
 	print("NOT IMPLEMENTED!!!")
+end
+
+function LogisticRegression(sparse_input, dense_input, training_output, validation_sparse_input, validation_dense_input, validation_output, num_sparse_features, nclasses, minibatch_size, eta, lambda_num_epochs)
+
+	D_o, D_d, D_h = num_sparse_features, dense_input:size(2), sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	--x_o = torch.LongTensor({2}) -- index equivalent of [0 1 0 0 0]
+	--x_d = torch.randn(1, D_d)
+
+	-- our first example of a Table layer/container
+	par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
+	par:add(nn.LookupTable(D_o, D_h)) -- first child
+	par:add(nn.Linear(D_d, D_h)) -- second child
+	
+	model = nn.Sequential()
+	model:add(par)
+	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
+
+	model:add(nn.LogSoftMax())
+
+	criterion = nn.ClassNLLCriterion()
+
+	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
+	params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
+	eta = 0.01
+
+	-- now that we have our parameters flattened, we'll train with very simple SGD
+	-- note that all operations are batched across all of X
+	nEpochs = 20
+	for i = 1, nEpochs do
+	    -- zero out our gradients
+	    --gradParams:zero()
+
+	    model:zeroGradParameters()
+
+	    -- do forward pass
+	    preds = model:forward({sparse_input, dense_input})
+	    -- get loss
+	    loss = criterion:forward(preds, training_output)
+	    print("epoch " .. i .. ", loss: " .. loss)
+	    -- backprop
+	    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
+	    model:backward(X, dLdpreds)
+	    -- update params with sgd step
+	    model:updateParameters(eta) 
+	end
+
+
 end
 
 -- -- Given W which is a matrix (nclasses x nfeatures) and
