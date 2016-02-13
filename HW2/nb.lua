@@ -5,8 +5,6 @@ dofile("utils.lua")
 -- 	b is log(p(y)).
 function naiveBayes(sparse_training_input, dense_training_input, training_output, nsparse_features, nclasses, alpha)
 
-	--print("NOT IMPLEMENTED!!!")
-
 	local F = createCountsMatrix(sparse_training_input, dense_training_input, training_output, nsparse_features, nclasses)
 
 	-- Add a small offset for smoothing
@@ -19,7 +17,7 @@ function naiveBayes(sparse_training_input, dense_training_input, training_output
 		p_x_given_y[n] = torch.cdiv(F[n] , sum_of_each_col)
 	end
 
-	printv("     NaiveBayes: Calculated p(x|y)", 3)
+	print("     NaiveBayes: Calculated p(x|y)", 3)
 	class_distribution = torch.zeros(nclasses)
 	for n=1, training_output:size()[1] do
 		class = training_output[n]
@@ -27,7 +25,7 @@ function naiveBayes(sparse_training_input, dense_training_input, training_output
 	end
 
 	p_y = torch.div(class_distribution, torch.sum(class_distribution, 1)[1])
-	printv("     NaiveBayes: Calculated p(y)", 3)
+	print("     NaiveBayes: Calculated p(y)", 3)
 
 	local W = torch.log(p_x_given_y)
 	local b = torch.log(p_y)
