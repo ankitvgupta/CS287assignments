@@ -14,23 +14,49 @@
 --     print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
 -- end
 
--- function createCountsMatrix(training_input, training_output, nfeatures, nclasses)
+function createCountsMatrix(sparse_training_input, dense_training_input, training_output, n_sparse_features, nclasses)
+	local num_dense_features = dense_training_input:size(2)
+	local F = torch.zeros(n_sparse_features + dense_training_input:size(2), nclasses):long()
+	local train_size = sparse_training_input:size()
+	for n = 1, train_size[1] do
+		for j = 1, train_size[2] do
+			feat = sparse_training_input[n][j]
+			class = training_output[n]
+			if feat > 0 then
+				F[feat][class] = F[feat][class] + 1
+			end
+		end
+	end
 
--- 	local F = torch.zeros(nfeatures, nclasses)
--- 	printv("     CreateCountsMatrix: Loaded training data", 3)
--- 	local train_size = training_input:size()
--- 	for n = 1, train_size[1] do
--- 		for j = 1, train_size[2] do
--- 			feat = training_input[n][j] - 1
--- 			class = training_output[n]
--- 			if feat > 0 then
--- 				F[feat][class] = F[feat][class] + 1
--- 			end
--- 		end
--- 	end
--- 	printv("     CreateCountsMatrix: Calculated counts", 3)
--- 	return F
--- end
+	-- Add the dense tensor to the last num_dense_features columns
+	local last_rows = F:narrow(1, F:size()[1]-num_dense_features+1, num_dense_features)
+
+	for class_val = 1,nclasses do
+		-- Gets the indices of the rows that are in this class
+		local indices_for_this_class = torch.range(1,training_output:size(1)):long()[torch.eq(training_output, class_val)]
+
+		-- Gets the rows at those indicies and sums them
+		local features_sum = dense_training_input:index(1, indices_for_this_class):sum(1):squeeze()
+
+		-- Adds those to the right class in last_rows
+		last_rows:select(2, class_val):add(features_sum)
+	end
+
+	return F
+end
+
+
+function testcountsmatrix()
+	local sparse = torch.LongTensor({{4,9,3},{2,9,6},{3,8,1}})
+	local num_sparse_features = 11
+
+	local dense = torch.LongTensor({{1,0,1,1,0,1},{1,1,0,0,1,1},{1,1,0,0,0,0}})
+	local output = torch.LongTensor{1,1,2}
+	print(createCountsMatrix(sparse, dense, output, num_sparse_features, 2))
+
+end
+
+--testcountsmatrix()
 
 -- -- returns a one-hot tensor of size n with a 1 the ith place.
 -- --    Note that this is 1-indexed
