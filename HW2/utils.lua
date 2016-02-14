@@ -15,7 +15,7 @@ function valueCounts(t)
 	max_val = torch.max(t)
 	vals = torch.zeros(max_val)
 	for i = 1, t:size(1) do
-		vals[t[i]:squeeze()] = vals[t[i]:squeeze()] + 1
+		vals[t[i]] = vals[t[i]] + 1
 	end
 	return vals
 end

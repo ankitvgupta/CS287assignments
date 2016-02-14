@@ -36,17 +36,21 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
 	local parameters, gradParameters = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
+	--print(training_output)
+	print(valueCounts(training_output))
 
 	for i = 1, num_epochs do
 		scores = model:forward({validation_sparse_input, validation_dense_input})
 		--print(scores)
 		local _, class_preds = torch.max(scores, 2)
 		--print(torch.min(class_preds), torch.max(class_preds))
-		print(valueCounts(class_preds))
+		print(valueCounts(class_preds:squeeze()))
 		local equality = torch.eq(class_preds, validation_output)
 		local score = equality:sum()/equality:size()[1]
 		print("Validation accuracy:", score)
 		--print("Grad norm", torch.abs(gradParams):sum())
+		print(torch.abs(parameters):sum())
+
 
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
@@ -62,9 +66,9 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 			local feval = function(x)
 				-- Inspired by this torch demo: https://github.com/andresy/torch-demos/blob/master/train-a-digit-classifier/train-on-mnist.lua
 				-- get new parameters
-				--if x ~= parameters then
-				--	parameters:copy(x)
-				--end
+				if x ~= parameters then
+					parameters:copy(x)
+				end
 				-- reset gradients
 				gradParameters:zero()
 
@@ -76,13 +80,16 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				model:backward({sparse_vals, dense_vals}, dLdpreds)
 
 				-- return f and df/dX
-				return f,gradParameters
+				return loss,gradParameters
 	    	end
-	    	config =  {learningRate = eta,
-	                     weightDecay = lambda,
-	                     learningRateDecay = 5e-7}
-	        parameters:add(-eta, gradParameters)
-	        --optim.sgd(feval, parameters, config)
+	    	 config =  {learningRate = eta,
+	                      weightDecay = lambda,
+	                      learningRateDecay = 5e-7}
+	        -- config = {eta0 = eta,
+	    			 --  lambda = lambda}
+	    	config = {}
+	        --parameters:add(-eta, gradParameters)
+	        optim.adagrad(feval, parameters, config)
 		end
 		print("Done")
 	end

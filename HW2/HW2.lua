@@ -5,7 +5,7 @@ require("optim")
 
 -- For local use, use these.
 dofile('nb.lua')
-dofile('logisticregression.lua')
+dofile('logisticregression2.lua')
 
 -- For Odyssey, uncomment these
 --dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
@@ -18,8 +18,8 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'lr', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
-cmd:option('-eta', .5, 'Learning rate')
-cmd:option('-lambda', 1., 'regularization penalty')
+cmd:option('-eta', 2.0, 'Learning rate')
+cmd:option('-lambda', .1, 'regularization penalty')
 cmd:option('-minibatch', 1000, 'Minibatch size')
 cmd:option('-epochs', 50, 'Number of epochs of SGD')
 
