@@ -3,8 +3,14 @@ require("hdf5")
 require("nn")
 require("optim")
 
+-- For local use, use these.
 dofile('nb.lua')
 dofile('logisticregression.lua')
+
+-- For Odyssey, uncomment these
+--dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
+--dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression.lua')
+
 
 cmd = torch.CmdLine()
 

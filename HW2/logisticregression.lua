@@ -1,6 +1,8 @@
 require('nn')
 
 dofile("utils.lua")
+-- For odyssey
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
