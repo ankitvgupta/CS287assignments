@@ -10,9 +10,8 @@
 -- 	end
 -- end
 
--- function printoptions(opt)
---     print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Minimum Sentence Length:", opt.min_sentence_length)
--- end
+function printoptions(opt)
+    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs)
 
 function createCountsMatrix(sparse_training_input, dense_training_input, training_output, n_sparse_features, nclasses)
 	print("Num items", sparse_training_input:size(1), dense_training_input:size(1))
