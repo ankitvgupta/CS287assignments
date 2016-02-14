@@ -23,6 +23,7 @@ eta=${selected_config[2]}
 minibatch=${selected_config[3]}
 epochs=${selected_config[4]}
 alpha=${selected_config[5]}
+lambda=${selected_config[6]}
 
 cd /scratch
 source new-modules.sh
@@ -36,7 +37,8 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW2/HW2.lua \
   -eta $eta \
   -minibatch $minibatch \
   -epochs $epochs \
-  -alpha $alpha
+  -alpha $alpha \
+  -lambda $lambda
 #th /n/home09/ankitgupta/CS287/HW1/HW1.lua \
 # -datafile /n/home09/ankitgupta/CS287/HW1/$datafile \
 # -classifier $classifier \
