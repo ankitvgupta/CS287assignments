@@ -4,13 +4,22 @@ dofile("utils.lua")
 -- For odyssey
 --dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
 
+function getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output)
+	scores = model:forward({validation_sparse_input, validation_dense_input})
+	local _, class_preds = torch.max(scores, 2)
+	--print(valueCounts(class_preds:squeeze()))
+	local equality = torch.eq(class_preds, validation_output)
+	local score = equality:sum()/equality:size()[1]
+	return score
+end
+
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
 	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda)
 
 	print("Began logistic regression")
 	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
-	print("Got parameters", D_o, D_d, D_h)
+	print("Got size parameters", D_o, D_d, D_h)
 
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
@@ -37,20 +46,12 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	local parameters, gradParameters = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
 	--print(training_output)
+	print("Counts of each of the classes in training set")
 	print(valueCounts(training_output))
+	print("Starting Validation accuracy", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 
 	for i = 1, num_epochs do
-		scores = model:forward({validation_sparse_input, validation_dense_input})
-		--print(scores)
-		local _, class_preds = torch.max(scores, 2)
-		--print(torch.min(class_preds), torch.max(class_preds))
-		print(valueCounts(class_preds:squeeze()))
-		local equality = torch.eq(class_preds, validation_output)
-		local score = equality:sum()/equality:size()[1]
-		print("Validation accuracy:", score)
-		--print("Grad norm", torch.abs(gradParams):sum())
-		print(torch.abs(parameters):sum())
-
+		print("L1 norm of params:", torch.abs(parameters):sum())
 
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
@@ -91,12 +92,11 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	    			 --  lambda = lambda}
 	    	config = {}
 	        --parameters:add(-eta, gradParameters)
-	        optim.sgd(feval, parameters, config)
+	        optim.adagrad(feval, parameters, config)
 		end
-		print("Done")
+		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	end
-
-
+	return model
 end
 
 -- -- Given W which is a matrix (nclasses x nfeatures) and
