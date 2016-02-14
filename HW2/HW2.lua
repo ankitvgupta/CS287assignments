@@ -23,7 +23,7 @@ cmd:option('-eta', .1, 'Learning rate')
 cmd:option('-lambda', 5, 'regularization penalty')
 cmd:option('-minibatch', 1000, 'Minibatch size')
 cmd:option('-epochs', 10, 'Number of epochs of SGD')
-
+cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
 -- Hyperparameters
 -- ...
 
