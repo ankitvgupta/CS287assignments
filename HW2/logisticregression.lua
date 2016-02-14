@@ -2,20 +2,25 @@ require('nn')
 
 dofile("utils.lua")
 
-function logisticRegression(training_input, training_output, validation_input, validation_output, nfeatures, nclasses, minibatch_size, eta, lambda, num_epochs)
-	print("NOT IMPLEMENTED!!!")
-end
-
 function LogisticRegression(sparse_input, dense_input, training_output, validation_sparse_input, validation_dense_input, validation_output, num_sparse_features, nclasses, minibatch_size, eta, lambda_num_epochs)
 
-	D_o, D_d, D_h = num_sparse_features, dense_input:size(2), sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	print("Began logistic regression")
+	--D_o, D_d, D_h = num_sparse_features, dense_input:size(2), sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
+	print("Got parameters", D_o, D_d, D_h)
 	--x_o = torch.LongTensor({2}) -- index equivalent of [0 1 0 0 0]
 	--x_d = torch.randn(1, D_d)
 
 	-- our first example of a Table layer/container
 	par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
-	par:add(nn.LookupTable(D_o, D_h)) -- first child
+	sparse_multiply = nn.Sequential()
+	sparse_multiply:add(nn.LookupTable(D_o, D_h))
+	sparse_multiply:add(nn.Sum(1,2))
+
+	par:add(sparse_multiply) -- first child
 	par:add(nn.Linear(D_d, D_h)) -- second child
+
+	print("Set up ParallelTable")
 	
 	model = nn.Sequential()
 	model:add(par)
@@ -23,10 +28,13 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 
 	model:add(nn.LogSoftMax())
 
-	criterion = nn.ClassNLLCriterion()
+	print("Set up model")
 
+	criterion = nn.ClassNLLCriterion()
+	print("Set up critereon")
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
 	params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
+	print("Got params and grads")
 	eta = 0.01
 
 	-- now that we have our parameters flattened, we'll train with very simple SGD
@@ -35,16 +43,21 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 	for i = 1, nEpochs do
 	    -- zero out our gradients
 	    --gradParams:zero()
+	    print("epoch" ..  i)
 	    model:zeroGradParameters()
+	    print("    Zeroed the parameters")
 
 	    -- do forward pass
+
 	    preds = model:forward({sparse_input, dense_input})
+	    print("    Got the predictions")
 	    -- get loss
 	    loss = criterion:forward(preds, training_output)
-	    print("epoch " .. i .. ", loss: " .. loss)
+	    print("    Got the loss")
+	    print("    epoch " .. i .. ", loss: " .. loss)
 	    -- backprop
 	    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
-	    model:backward(X, dLdpreds)
+	    model:backward({sparse_input, dense_input}, dLdpreds)
 	    -- update params with sgd step
 	    model:updateParameters(eta) 
 	end
