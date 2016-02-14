@@ -61,6 +61,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 		    -- get the minibatch
 		    sparse_vals = sparse_input:narrow(1, j, minibatch_size)
 		    dense_vals = dense_input:narrow(1, j, minibatch_size)
+		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
 
 		    -- Create a closure for optim
 			local feval = function(x)
@@ -73,10 +74,11 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				gradParameters:zero()
 
 				preds = model:forward({sparse_vals, dense_vals})
-				loss = criterion:forward(preds, training_output)
+				loss = criterion:forward(preds, minibatch_outputs)
+				--print(loss)
 
 				-- backprop
-				dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
+				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
 				model:backward({sparse_vals, dense_vals}, dLdpreds)
 
 				-- return f and df/dX
@@ -89,7 +91,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	    			 --  lambda = lambda}
 	    	config = {}
 	        --parameters:add(-eta, gradParameters)
-	        optim.adagrad(feval, parameters, config)
+	        optim.sgd(feval, parameters, config)
 		end
 		print("Done")
 	end
