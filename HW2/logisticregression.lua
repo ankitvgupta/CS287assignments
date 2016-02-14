@@ -2,7 +2,7 @@ require('nn')
 
 dofile("utils.lua")
 
-function LogisticRegression(sparse_input, dense_input, training_output, validation_sparse_input, validation_dense_input, validation_output, num_sparse_features, nclasses, minibatch_size, eta, lambda_num_epochs)
+function LogisticRegression(sparse_input, dense_input, training_output, validation_sparse_input, validation_dense_input, validation_output, num_sparse_features, nclasses, minibatch_size, eta, num_epochs)
 
 	print("Began logistic regression")
 	--D_o, D_d, D_h = num_sparse_features, dense_input:size(2), sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
@@ -31,16 +31,16 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 	print("Set up model")
 
 	local criterion = nn.ClassNLLCriterion()
-	print("Set up critereon")
+	print("Set up criterion")
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
 	local params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
 	--print(params:size())
-	local eta = 0.01
+	eta = 10.0
 
 	-- now that we have our parameters flattened, we'll train with very simple SGD
 	-- note that all operations are batched across all of X
-	local nEpochs = 1
+	local nEpochs = 20
 	for i = 1, nEpochs do
 		print("Epoch " .. i)
 		local _, class_preds = torch.max(model:forward({validation_sparse_input, validation_dense_input}), 2)
