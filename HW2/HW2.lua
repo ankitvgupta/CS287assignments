@@ -11,6 +11,14 @@ cmd = torch.CmdLine()
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'nb', 'classifier to use')
+cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
+cmd:option('-eta', 1.0, 'Learning rate')
+cmd:option('-lambda', 1, 'regularization penalty')
+cmd:option('-minibatch', 500, 'Minibatch size')
+cmd:option('-epochs', 50, 'Number of epochs of SGD')
+cmd:option('-min_sentence_length', 0, 'Minimum length of sentence to be included in training set')
+cmd:option('-test_file', '', 'File to put results from test set. Leave nil if not wanted')
+cmd:option('-generate_validation_set', 0, "Set to 1 if validation set needs to be self generated")
 
 -- Hyperparameters
 -- ...
@@ -43,7 +51,7 @@ function main()
    -- Train.
    --W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, 1)
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
-   LogisticRegression(sparse_training_input, dense_training_input, training_output, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, nclasses, 32, .1, 1)
+   LogisticRegression(sparse_training_input, dense_training_input, training_output, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, nclasses, 64, .1, 1)
 
    -- Test.
 end
