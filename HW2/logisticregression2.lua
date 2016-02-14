@@ -90,7 +90,6 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	                      learningRateDecay = 5e-7}
 	        -- config = {eta0 = eta,
 	    			 --  lambda = lambda}
-	    	config = {}
 	        --parameters:add(-eta, gradParameters)
 	        optim.adagrad(feval, parameters, config)
 		end

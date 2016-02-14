@@ -19,9 +19,9 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'lr', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
-cmd:option('-eta', .1, 'Learning rate')
+cmd:option('-eta', 1.0, 'Learning rate')
 cmd:option('-lambda', 5, 'regularization penalty')
-cmd:option('-minibatch', 1000, 'Minibatch size')
+cmd:option('-minibatch', 2000, 'Minibatch size')
 cmd:option('-epochs', 10, 'Number of epochs of SGD')
 cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
 -- Hyperparameters
@@ -58,7 +58,7 @@ function main()
    	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda)
    print("Options and accuracy")
    printoptions(opt)
-   print(getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
+   print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
 
 
    -- Test.
