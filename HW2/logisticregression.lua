@@ -41,25 +41,30 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 	-- note that all operations are batched across all of X
 	nEpochs = 20
 	for i = 1, nEpochs do
-	    -- zero out our gradients
-	    --gradParams:zero()
-	    print("epoch" ..  i)
-	    model:zeroGradParameters()
-	    print("    Zeroed the parameters")
+		print("Epoch " .. i)
+		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
 
-	    -- do forward pass
+		    -- zero out our gradients
+		    --gradParams:zero()
+		    model:zeroGradParameters()
 
-	    preds = model:forward({sparse_input, dense_input})
-	    print("    Got the predictions")
-	    -- get loss
-	    loss = criterion:forward(preds, training_output)
-	    print("    Got the loss")
-	    print("    epoch " .. i .. ", loss: " .. loss)
-	    -- backprop
-	    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
-	    model:backward({sparse_input, dense_input}, dLdpreds)
-	    -- update params with sgd step
-	    model:updateParameters(eta) 
+		    -- do forward pass
+		    sparse_vals = sparse_input:narrow(1, j, minibatch_size)
+		    dense_vals = dense_input:narrow(1, j, minibatch_size)
+		    preds = model:forward({sparse_vals, dense_vals})
+		    -- get loss
+		    loss = criterion:forward(preds, training_output)
+		    if (j-1) % (100*minibatch_size) == 0 then
+		    	print("    Loss "..loss)
+		    end
+
+
+		    -- backprop
+		    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
+		    model:backward({sparse_vals, dense_vals}, dLdpreds)
+		    -- update params with sgd step
+		    model:updateParameters(eta) 
+		end
 	end
 
 
