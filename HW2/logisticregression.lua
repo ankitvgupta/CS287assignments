@@ -6,14 +6,14 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 
 	print("Began logistic regression")
 	--D_o, D_d, D_h = num_sparse_features, dense_input:size(2), sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
-	D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
+	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 	print("Got parameters", D_o, D_d, D_h)
 	--x_o = torch.LongTensor({2}) -- index equivalent of [0 1 0 0 0]
 	--x_d = torch.randn(1, D_d)
 
 	-- our first example of a Table layer/container
-	par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
-	sparse_multiply = nn.Sequential()
+	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
+	local sparse_multiply = nn.Sequential()
 	sparse_multiply:add(nn.LookupTable(D_o, D_h))
 	sparse_multiply:add(nn.Sum(1,2))
 
@@ -22,7 +22,7 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 
 	print("Set up ParallelTable")
 	
-	model = nn.Sequential()
+	local model = nn.Sequential()
 	model:add(par)
 	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
 
@@ -30,42 +30,51 @@ function LogisticRegression(sparse_input, dense_input, training_output, validati
 
 	print("Set up model")
 
-	criterion = nn.ClassNLLCriterion()
+	local criterion = nn.ClassNLLCriterion()
 	print("Set up critereon")
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
-	params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
+	local params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
-	eta = 0.01
+	--print(params:size())
+	local eta = 0.01
 
 	-- now that we have our parameters flattened, we'll train with very simple SGD
 	-- note that all operations are batched across all of X
-	nEpochs = 20
+	local nEpochs = 1
 	for i = 1, nEpochs do
 		print("Epoch " .. i)
+		local _, class_preds = torch.max(model:forward({validation_sparse_input, validation_dense_input}), 2)
+		local equality = torch.eq(class_preds, validation_output)
+		local score = equality:sum()/equality:size()[1]
+		print("Validation accuracy:", score)
+
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
 
 		    -- zero out our gradients
 		    --gradParams:zero()
 		    model:zeroGradParameters()
 
-		    -- do forward pass
+		    -- get the minibatch
 		    sparse_vals = sparse_input:narrow(1, j, minibatch_size)
 		    dense_vals = dense_input:narrow(1, j, minibatch_size)
+
+		    -- do the forward pass
 		    preds = model:forward({sparse_vals, dense_vals})
-		    -- get loss
 		    loss = criterion:forward(preds, training_output)
+		    -- occasionally print the loss
 		    if (j-1) % (100*minibatch_size) == 0 then
 		    	print("    Loss "..loss)
 		    end
 
-
 		    -- backprop
 		    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
 		    model:backward({sparse_vals, dense_vals}, dLdpreds)
+		    
 		    -- update params with sgd step
 		    model:updateParameters(eta) 
 		end
 	end
+	print("Done")
 
 
 end
