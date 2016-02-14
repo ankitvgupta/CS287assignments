@@ -34,52 +34,58 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	local criterion = nn.ClassNLLCriterion()
 	print("Set up criterion")
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
-	local params, gradParams = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
+	local parameters, gradParameters = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
 
-	-- now that we have our parameters flattened, we'll train with very simple SGD
-	-- note that all operations are batched across all of X
 	for i = 1, num_epochs do
-		print("Epoch " .. i)
-		local _, class_preds = torch.max(model:forward({validation_sparse_input, validation_dense_input}), 2)
+		scores = model:forward({validation_sparse_input, validation_dense_input})
+		--print(scores)
+		local _, class_preds = torch.max(scores, 2)
 		--print(torch.min(class_preds), torch.max(class_preds))
 		print(valueCounts(class_preds))
 		local equality = torch.eq(class_preds, validation_output)
 		local score = equality:sum()/equality:size()[1]
 		print("Validation accuracy:", score)
-		print("Grad norm", torch.abs(gradParams):sum())
-		local num_minibatches = sparse_input:size(1)/minibatch_size
+		--print("Grad norm", torch.abs(gradParams):sum())
 
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
-
+			--print(j)
 		    -- zero out our gradients
-		    gradParams:zero()
+		    gradParameters:zero()
 		    model:zeroGradParameters()
 
 		    -- get the minibatch
 		    sparse_vals = sparse_input:narrow(1, j, minibatch_size)
 		    dense_vals = dense_input:narrow(1, j, minibatch_size)
 
-		    -- do the forward pass
-		    preds = model:forward({sparse_vals, dense_vals})
-		    loss = criterion:forward(preds, training_output) +  lambda*torch.norm(params,2)^2/2
-		    -- occasionally print the loss
-		    if (j-1) % (100*minibatch_size) == 0 then
-		    	print("    Loss "..loss)
-		    end
+		    -- Create a closure for optim
+			local feval = function(x)
+				-- Inspired by this torch demo: https://github.com/andresy/torch-demos/blob/master/train-a-digit-classifier/train-on-mnist.lua
+				-- get new parameters
+				--if x ~= parameters then
+				--	parameters:copy(x)
+				--end
+				-- reset gradients
+				gradParameters:zero()
 
-		    -- backprop
-		    dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
-		    model:backward({sparse_vals, dense_vals}, dLdpreds)
-		    
-		    -- update params with sgd step
-		    --model:updateParameters(eta) 
-		    params:add(-eta, gradParams:add(params:clone():mul(lambda):div(num_minibatches)))
-		    --params:add(-eta, gradParams)
+				preds = model:forward({sparse_vals, dense_vals})
+				loss = criterion:forward(preds, training_output)
 
+				-- backprop
+				dLdpreds = criterion:backward(preds, training_output) -- gradients of loss wrt preds
+				model:backward({sparse_vals, dense_vals}, dLdpreds)
+
+				-- return f and df/dX
+				return f,gradParameters
+	    	end
+	    	config =  {learningRate = eta,
+	                     weightDecay = lambda,
+	                     learningRateDecay = 5e-7}
+	        parameters:add(-eta, gradParameters)
+	        --optim.sgd(feval, parameters, config)
 		end
+		print("Done")
 	end
-	print("Done")
 
 
 end

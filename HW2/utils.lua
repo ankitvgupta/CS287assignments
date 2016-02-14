@@ -10,8 +10,20 @@
 -- 	end
 -- end
 
+-- inputs must be ints, 1 or greater
+function valueCounts(t)
+	max_val = torch.max(t)
+	vals = torch.zeros(max_val)
+	for i = 1, t:size(1) do
+		vals[t[i]:squeeze()] = vals[t[i]:squeeze()] + 1
+	end
+	return vals
+end
+
+
 function printoptions(opt)
     print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs)
+end
 
 function createCountsMatrix(sparse_training_input, dense_training_input, training_output, n_sparse_features, nclasses)
 	print("Num items", sparse_training_input:size(1), dense_training_input:size(1))

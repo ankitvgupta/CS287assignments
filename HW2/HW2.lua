@@ -16,11 +16,11 @@ cmd = torch.CmdLine()
 
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
-cmd:option('-classifier', 'nb', 'classifier to use')
+cmd:option('-classifier', 'lr', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
-cmd:option('-eta', 1.0, 'Learning rate')
-cmd:option('-lambda', 1, 'regularization penalty')
-cmd:option('-minibatch', 500, 'Minibatch size')
+cmd:option('-eta', .5, 'Learning rate')
+cmd:option('-lambda', 1., 'regularization penalty')
+cmd:option('-minibatch', 1000, 'Minibatch size')
 cmd:option('-epochs', 50, 'Number of epochs of SGD')
 
 -- Hyperparameters
@@ -57,7 +57,7 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	                  sparse_validation_input, dense_validation_input, validation_output, 
-   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs)
+   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda)
 
    -- Test.
 end
