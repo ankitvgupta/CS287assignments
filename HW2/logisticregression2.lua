@@ -49,6 +49,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	print("Counts of each of the classes in training set")
 	print(valueCounts(training_output))
 	print("Starting Validation accuracy", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
+	local num_minibatches = sparse_input:size(1)/minibatch_size
 
 	for i = 1, num_epochs do
 		print("L1 norm of params:", torch.abs(parameters):sum())
@@ -75,7 +76,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				gradParameters:zero()
 
 				preds = model:forward({sparse_vals, dense_vals})
-				loss = criterion:forward(preds, minibatch_outputs)
+				loss = criterion:forward(preds, minibatch_outputs) + lambda*torch.norm(parameters,2)^2/2
 				--print(loss)
 
 				-- backprop
@@ -83,15 +84,21 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				model:backward({sparse_vals, dense_vals}, dLdpreds)
 
 				-- return f and df/dX
-				return loss,gradParameters
+				--return loss,gradParameters
+				return loss,gradParameters:add(parameters:clone():mul(2*lambda):div(num_minibatches))
 	    	end
-	    	 config =  {learningRate = eta,
-	                      weightDecay = lambda,
-	                      learningRateDecay = 5e-7}
+	    	-- config =  {learningRate = eta,
+	     --                  weightDecay = lambda,
+	     --                  learningRateDecay = 5e-7}
+	     --    optim.adagrad(feval, parameters, config)
+	        config = {learningRate = eta, 
+	                  momentum=0, 
+	                  }
+	        optim.sgd(feval, parameters, config)
+
 	        -- config = {eta0 = eta,
 	    			 --  lambda = lambda}
 	        --parameters:add(-eta, gradParameters)
-	        optim.adagrad(feval, parameters, config)
 		end
 		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	end
