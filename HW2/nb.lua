@@ -1,7 +1,7 @@
---dofile("utils.lua")
+dofile("utils.lua")
 
 -- For odyssey
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
 
 -- Returns W, b. For Naive Bayes,
 -- 	W is log(p(x|y))

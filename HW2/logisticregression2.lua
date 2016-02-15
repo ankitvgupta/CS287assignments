@@ -1,8 +1,10 @@
 require('nn')
 
---dofile("utils.lua")
--- For odyssey
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+dofile("utils.lua")
+dofile("models.lua")
+-- -- For odyssey
+-- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+-- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
 
 function getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output)
 	scores = model:forward({validation_sparse_input, validation_dense_input})
@@ -21,22 +23,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 	print("Got size parameters", D_o, D_d, D_h)
 
-
-	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
-	local sparse_multiply = nn.Sequential()
-	sparse_multiply:add(nn.LookupTable(D_o, D_h))
-	sparse_multiply:add(nn.Sum(1,2))
-
-	par:add(sparse_multiply) -- first child
-	par:add(nn.Linear(D_d, D_h)) -- second child
-
-	print("Set up ParallelTable")
-	
-	local model = nn.Sequential()
-	model:add(par)
-	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
-
-	model:add(nn.LogSoftMax())
+	local model = makeLogisticRegressionModel(D_o, D_d, D_h)
 
 	print("Set up model")
 
