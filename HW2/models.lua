@@ -1,6 +1,7 @@
 -- This file contains the nn models used for training the various networks.
 require('nn')
 
+-- This function makes the logistic regression model
 function makeLogisticRegressionModel(D_o, D_d, D_h)
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
@@ -19,3 +20,5 @@ function makeLogisticRegressionModel(D_o, D_d, D_h)
 
 	return model
 end
+
+-- This function builds the neural network used in the paper
