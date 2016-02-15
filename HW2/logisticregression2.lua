@@ -85,20 +85,19 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 
 				-- return f and df/dX
 				--return loss,gradParameters
-				return loss,gradParameters:add(parameters:clone():mul(2*lambda):div(num_minibatches))
+				return loss,gradParameters:add(parameters:clone():mul(lambda):div(num_minibatches))
 	    	end
-	    	-- config =  {learningRate = eta,
-	     --                  weightDecay = lambda,
-	     --                  learningRateDecay = 5e-7}
-	     --    optim.adagrad(feval, parameters, config)
-	        config = {learningRate = eta, 
-	                  momentum=0, 
-	                  }
+	    	-- config =  {
+	    	--             learningRate = eta,
+        	--             weightDecay = lambda,
+        	--             learningRateDecay = 5e-7
+            --            }
+	        --    optim.adagrad(feval, parameters, config)
+	        config = {
+	        		   learningRate = eta, 
+	                 }
 	        optim.sgd(feval, parameters, config)
 
-	        -- config = {eta0 = eta,
-	    			 --  lambda = lambda}
-	        --parameters:add(-eta, gradParameters)
 		end
 		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	end

@@ -20,10 +20,10 @@ cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'lr', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
 cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd)')
-cmd:option('-lambda', 0, 'regularization penalty')
+cmd:option('-lambda', 0, 'regularization penalty (.0001 seems to work well for sgd)')
 cmd:option('-minibatch', 2000, 'Minibatch size')
-cmd:option('-epochs', 10, 'Number of epochs of SGD')
-cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
+cmd:option('-epochs', 20, 'Number of epochs of SGD')
+cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (not yet implemented)')
 -- Hyperparameters
 -- ...
 
