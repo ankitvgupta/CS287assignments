@@ -1,8 +1,8 @@
 require('nn')
 
-dofile("utils.lua")
+--dofile("utils.lua")
 -- For odyssey
---dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
 
 function getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output)
 	scores = model:forward({validation_sparse_input, validation_dense_input})
