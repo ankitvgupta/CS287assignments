@@ -75,7 +75,7 @@ def init_vocab_and_embeddings(file_path, top_n=100000):
     count = 2
     with open(file_path, 'rb') as f:
         for line in f:
-            if count > top_n:
+            if count >= top_n:
                 break
             split_line = line.split()
             word = split_line.pop(0)
