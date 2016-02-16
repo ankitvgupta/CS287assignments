@@ -7,14 +7,16 @@
 #SBATCH -t 10:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/feb14/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/feb14/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/feb16/setup_%A_%a_out.txt            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/feb16/setup_%A_%a_err.txt            #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
 # Read the config files and get the appropriate config
-readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/scripts/config.txt
+readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/scripts/config_nnet_sgd.txt
 selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
+
+#datafile, classifier, eta, minibatchsize, numepochs=20, alpha, lambda=0, optimizer, hiddenlayers, embeddingsize
 
 # Print the config variables
 datafile=${selected_config[0]}
@@ -24,6 +26,9 @@ minibatch=${selected_config[3]}
 epochs=${selected_config[4]}
 alpha=${selected_config[5]}
 lambda=${selected_config[6]}
+optimizer=${selected_config[7]}
+hiddenlayers=${selected_config[8]}
+embeddingsize=${selected_config[9]}
 
 cd /scratch
 source new-modules.sh
@@ -38,15 +43,10 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW2/HW2.lua \
   -minibatch $minibatch \
   -epochs $epochs \
   -alpha $alpha \
-  -lambda $lambda
-#th /n/home09/ankitgupta/CS287/HW1/HW1.lua \
-# -datafile /n/home09/ankitgupta/CS287/HW1/$datafile \
-# -classifier $classifier \
-# -eta $eta \
-# -lambda $lambda \
-# -minibatch $minibatch \
-# -epochs $epochs \
-# -min_sentence_length $minlength \
-# -alpha $alpha \
-# -generate_validation_set $gen_validation_set
+  -lambda $lambda \
+  -optimizer $optimizer \
+  -hiddenlayers $hiddenlayers \
+  -embedding_size $embeddingsize
+
+
 
