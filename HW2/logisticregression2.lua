@@ -8,7 +8,7 @@ dofile("models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
-	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers)
+	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers, optimizer)
 
 	print("Began logistic regression")
 	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
@@ -61,7 +61,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				gradParameters:zero()
 
 				preds = model:forward({sparse_vals, dense_vals})
-				loss = criterion:forward(preds, minibatch_outputs) + lambda*torch.norm(parameters,2)^2/2
+				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
 				--print(loss)
 
 				-- backprop
@@ -70,18 +70,24 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 
 				-- return f and df/dX
 				--return loss,gradParameters
-				return loss,gradParameters:add(parameters:clone():mul(lambda):div(num_minibatches))
+				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
 	    	end
-	    	-- config =  {
-	    	--             learningRate = eta,
-        	--             weightDecay = lambda,
-        	--             learningRateDecay = 5e-7
-            --            }
-	        --    optim.adagrad(feval, parameters, config)
-	        config = {
+	    	if optimizer == "adagrad" then
+		    	config =  {
+		    	            learningRate = eta,
+	        	            weightDecay = lambda,
+	        	            learningRateDecay = 5e-7
+	                       }
+	        optim.adagrad(feval, parameters, config)
+	    	elseif optimizer == "sgd" then
+	    		config = {
 	        		   learningRate = eta, 
 	                 }
-	        optim.sgd(feval, parameters, config)
+	            optim.sgd(feval, parameters, config)
+	    	else 
+	    		assert(false)
+	    	end
+	        
 
 		end
 		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
