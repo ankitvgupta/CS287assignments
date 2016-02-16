@@ -2,13 +2,20 @@
 require('nn')
 
 -- This function makes the logistic regression model
-function makeLogisticRegressionModel(D_o, D_d, D_h)
+function makeLogisticRegressionModel(D_o, D_d, D_h,  embedding_size, window_size)
 	print("Making lr model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local sparse_multiply = nn.Sequential()
-	sparse_multiply:add(nn.LookupTable(D_o, D_h))
-	sparse_multiply:add(nn.Sum(1,2))
+	--sparse_multiply:add(nn.LookupTable(D_o, D_h))
+	--sparse_multiply:add(nn.Sum(1,2))
+
+	sparse_multiply:add(nn.LookupTable(D_o, embedding_size))
+	-- Flatten those features into a single vector  
+	sparse_multiply:add(nn.View(-1):setNumInputDims(2))
+	-- Apply a linear layer to those.
+	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
+	sparse_multiply:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 	par:add(sparse_multiply) -- first child
 	par:add(nn.Linear(D_d, D_h)) -- second child
@@ -24,7 +31,7 @@ end
 
 -- This function builds the neural network used in the paper
 
-function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output, loss_function)
+function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output,  embedding_size, window_size)
 	print("Making neural network model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
@@ -34,12 +41,12 @@ function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output, loss_function)
 
 	-- I THINK this is now correct.
 	-- Get the word embeddings for each of the words
-	sparse_multiply:add(nn.LookupTable(D_o, 50))
+	sparse_multiply:add(nn.LookupTable(D_o, embedding_size))
 	-- Flatten those features into a single vector  
 	sparse_multiply:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
 	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
-	sparse_multiply:add(nn.Linear(50*3, D_hidden))
+	sparse_multiply:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 
 	par:add(sparse_multiply) -- first child
