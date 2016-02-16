@@ -18,16 +18,13 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
-cmd:option('-eta', 50, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
-cmd:option('-lambda', 0, 'regularization penalty (.0001 seems to work well for sgd)')
+cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
+cmd:option('-lambda', 0, 'regularization penalty (not implemented)')
 cmd:option('-minibatch', 2000, 'Minibatch size (500 for nn, 2000 for lr)')
 cmd:option('-epochs', 20, 'Number of epochs of SGD')
-cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
+cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (adagrad or sgd)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 cmd:option('-embedding_size', 50, 'Size of word embedding')
--- Hyperparameters
--- ...
-
 
 function main() 
    -- Parse input params

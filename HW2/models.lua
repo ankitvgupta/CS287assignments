@@ -7,15 +7,15 @@ function makeLogisticRegressionModel(D_sparse_in, D_dense, D_output,  embedding_
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local sparse_multiply = nn.Sequential()
-	--sparse_multiply:add(nn.LookupTable(D_sparse_in, D_output))
-	--sparse_multiply:add(nn.Sum(1,2))
+	sparse_multiply:add(nn.LookupTable(D_sparse_in, D_output))
+	sparse_multiply:add(nn.Sum(1,2))
 
-	sparse_multiply:add(nn.LookupTable(D_sparse_in, embedding_size))
+	--sparse_multiply:add(nn.LookupTable(D_sparse_in, embedding_size))
 	-- Flatten those features into a single vector  
-	sparse_multiply:add(nn.View(-1):setNumInputDims(2))
+	--sparse_multiply:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
 	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
-	sparse_multiply:add(nn.Linear(embedding_size*window_size, D_output))
+	--sparse_multiply:add(nn.Linear(embedding_size*window_size, D_output))
 
 	par:add(sparse_multiply) -- first child
 	par:add(nn.Linear(D_dense, D_output)) -- second child
@@ -25,8 +25,8 @@ function makeLogisticRegressionModel(D_sparse_in, D_dense, D_output,  embedding_
 	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
 
 	model:add(nn.LogSoftMax())
-
-	return model
+	criterion = nn.ClassNLLCriterion()
+	return model, criterion
 end
 
 -- This function builds the neural network used in the paper
@@ -35,21 +35,21 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	print("Making neural network model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
-	local sparse_multiply = nn.Sequential()
+	local get_embeddings = nn.Sequential()
 	--sparse_multiply:add(nn.LookupTable(D_sparse_in, D_hidden))
 	--sparse_multiply:add(nn.Sum(1,2))
 
 	-- I THINK this is now correct.
 	-- Get the word embeddings for each of the words
-	sparse_multiply:add(nn.LookupTable(D_sparse_in, embedding_size))
+	get_embeddings:add(nn.LookupTable(D_sparse_in, embedding_size))
 	-- Flatten those features into a single vector  
-	sparse_multiply:add(nn.View(-1):setNumInputDims(2))
+	get_embeddings:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
 	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
-	sparse_multiply:add(nn.Linear(embedding_size*window_size, D_hidden))
+	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 
-	par:add(sparse_multiply) -- first child
+	par:add(get_embeddings) -- first child
 	par:add(nn.Linear(D_dense, D_hidden)) -- second child
 	
 	local model = nn.Sequential()
@@ -70,8 +70,9 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 
 end
 
+-- TODO: Change this to use the new approach of having one embedding per word!
 function make_pretrained_NNmodel(D_o, D_d, D_hidden, D_output, D_win, word_embeddings)
-	print("Making neural network model")
+	print("Making neural network model pretrained")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local sparse_multiply = nn.Sequential()

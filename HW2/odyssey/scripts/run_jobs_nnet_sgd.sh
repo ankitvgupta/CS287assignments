@@ -2,7 +2,7 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=2000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=10000                  #Memory per cpu in MB (see also --mem)
 
 #SBATCH -t 10:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
@@ -16,9 +16,7 @@
 readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/scripts/config_nnet_sgd.txt
 selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
-#datafile, classifier, eta, minibatchsize, numepochs=20, alpha, lambda=0, optimizer, hiddenlayers, embeddingsize
 
-# Print the config variables
 datafile=${selected_config[0]}
 classifier=${selected_config[1]}
 eta=${selected_config[2]}

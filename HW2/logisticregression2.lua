@@ -4,13 +4,12 @@ dofile("utils.lua")
 dofile("models.lua")
 -- -- For odyssey
 -- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
--- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")D_output
+-- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
 	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size)
 
-	print("Began logistic regression")
 	local D_sparse_in, D_dense, D_output, D_win = num_sparse_features, dense_input:size(2), nclasses, sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
 
 	local model = nil
