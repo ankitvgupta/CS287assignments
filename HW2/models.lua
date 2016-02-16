@@ -38,6 +38,7 @@ function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output, loss_function)
 	-- Flatten those features into a single vector  
 	sparse_multiply:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
+	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
 	sparse_multiply:add(nn.Linear(50*3, D_hidden))
 
 

@@ -22,7 +22,7 @@ end
 
 
 function printoptions(opt)
-    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer", opt.optimizer, "Hidden Layers:", opt.hiddenlayers)
+    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers)
 end
 
 function createCountsMatrix(sparse_training_input, dense_training_input, training_output, n_sparse_features, nclasses)
