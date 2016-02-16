@@ -1,0 +1,27 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW2/PTB.hdf5	Classifier:	nnfig1	Alpha:	0	Eta:	1	Lambda:	0	Minibatch size:	256	Num Epochs:	20	Optimizer:	adagrad	Hidden Layers:	300	Embedding size:	20	
+nclasses:	45	nsparsefeatures:	40000	ndensefeatures:	12	
+Imported all data	
+Making neural network model	
+forward test	
+{
+  1 : DoubleTensor - size: 2x300
+  2 : DoubleTensor - size: 2x300
+}
+Set up model	
+Got params and grads	
+Starting Validation accuracy	0.025514384559359	
+L1 norm of params:	639536.59682839	
+Epoch 1 Validation accuracy:	0.60313486283078	
+L1 norm of params:	1518869.5431545	
+Epoch 2 Validation accuracy:	0.60632890264627	
+L1 norm of params:	1876531.7481496	
+Epoch 3 Validation accuracy:	0.62655529254673	
+L1 norm of params:	2249525.3726202	
+Epoch 4 Validation accuracy:	0.63166879096868	
+L1 norm of params:	2615272.4029623	
+Epoch 5 Validation accuracy:	0.62974933236222	
+L1 norm of params:	2903452.0736589	
+Epoch 6 Validation accuracy:	0.62836853605244	
+L1 norm of params:	3191343.2492939	
+Epoch 7 Validation accuracy:	0.63882313668366	
+L1 norm of params:	3445962.0283713	
