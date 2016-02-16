@@ -6,15 +6,6 @@ dofile("models.lua")
 -- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
 -- dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
 
-function getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output)
-	scores = model:forward({validation_sparse_input, validation_dense_input})
-	local _, class_preds = torch.max(scores, 2)
-	--print(valueCounts(class_preds:squeeze()))
-	local equality = torch.eq(class_preds, validation_output)
-	local score = equality:sum()/equality:size()[1]
-	return score
-end
-
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
 	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda)
