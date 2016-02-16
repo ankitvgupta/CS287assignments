@@ -48,6 +48,7 @@ function main()
    local sparse_validation_input = f:read('valid_sparse_input'):all():long()
    local dense_validation_input = f:read('valid_dense_input'):all():double()
    local validation_output = f:read('valid_output'):all():long()
+   local word_embeddings = f:read('word_embeddings'):all():double()
 
    print("Imported all data")
 
@@ -56,7 +57,7 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	                  sparse_validation_input, dense_validation_input, validation_output, 
-   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1", opt.hiddenlayers, opt.optimizer, opt.lossfunction)
+   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1", opt.hiddenlayers, opt.optimizer, opt.lossfunction, word_embeddings)
    print("Options and accuracy")
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))

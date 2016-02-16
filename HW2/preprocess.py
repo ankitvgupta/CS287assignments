@@ -30,8 +30,12 @@ import numpy as np
 import h5py
 import argparse
 import sys
+import random
 import re
 import codecs
+
+WORD_EMBEDDINGS_FILE = 'data/glove.6B.50d.txt'
+
 
 def load_tag_dict(file_path):
     tag_dict = {}
@@ -63,6 +67,30 @@ def init_vocab(file_path, top_n=100000):
 
     top_n_words = sorted(vocab_dict, key=vocab_dict.get, reverse=True)[:top_n]
     return top_n_words+['RARE', 'PADDING']
+
+def init_vocab_and_embeddings(file_path, top_n=100000):
+    vocab = ['RARE', 'PADDING']
+    embeddings = []
+
+    count = 2
+    with open(file_path, 'rb') as f:
+        for line in f:
+            if count >= top_n:
+                break
+            split_line = line.split()
+            word = split_line.pop(0)
+            embedding = np.array([float(x) for x in split_line])
+            clean_word = re.sub('\d', "NUMBER", word).lower()
+            vocab.append(clean_word)
+            embeddings.append(embedding)
+            count += 1
+
+    l = len(embeddings[0])
+    rare_embedding = np.array([random.random()*2-1 for _ in range(l)])
+    pad_embedding = np.array([random.random()*2-1 for _ in range(l)])
+    embeddings = [rare_embedding, pad_embedding] + embeddings
+
+    return vocab, np.array(embeddings)
 
 def init_features(feature_list):
     inited_features = []
@@ -173,8 +201,8 @@ def main(arguments):
     print "Loading tag dict..."
     tag_dict = load_tag_dict(tag_file)
     # Initialize vocabulary, a list of words
-    print "Initializing vocabulary..."
-    vocab = init_vocab(train)
+    print "Initializing vocabulary (and word embeddings)..."
+    vocab, word_embeddings = init_vocab_and_embeddings(WORD_EMBEDDINGS_FILE, 40000)
     # Initialize features
     print "Initializing features..."
     features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
@@ -212,6 +240,7 @@ def main(arguments):
             if data_name != 'test':
                 f[data_name+'_output'] = Ys[i]
 
+        f['word_embeddings'] = word_embeddings
         f['numSparseFeatures'] = np.array([numSparseFeatures], dtype=np.int32)
         f['numDenseFeatures'] = np.array([numDenseFeatures], dtype=np.int32)
         f['numClasses'] = np.array([numClasses], dtype=np.int32)

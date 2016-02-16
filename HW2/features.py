@@ -61,7 +61,7 @@ class UnigramFeature(SentenceFeature):
 		return True
 
 	def numFeats(self):
-		return len(self.word_to_idx)*self.dwin
+		return self.numWords*self.dwin
 
 
 class CapitalizationFeature(SentenceFeature):
