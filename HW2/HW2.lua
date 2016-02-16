@@ -25,7 +25,6 @@ cmd:option('-epochs', 20, 'Number of epochs of SGD')
 cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 cmd:option('-embedding_size', 50, 'Size of word embedding')
-cmd:option('-lossfunction', "nll", 'not implemented')
 -- Hyperparameters
 -- ...
 
@@ -59,7 +58,7 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	                  sparse_validation_input, dense_validation_input, validation_output, 
-   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, opt.hiddenlayers, opt.optimizer, opt.lossfunction, word_embeddings, opt.embedding_size, d_win)
+   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win)
    print("Options and accuracy")
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
