@@ -11,18 +11,18 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, loss_function, word_embeddings, embedding_size, window_size)
 
 	print("Began logistic regression")
-	local D_o, D_d, D_h, D_win = num_sparse_features, dense_input:size(2), nclasses, sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	local D_sparse_in, D_dense, D_output, D_win = num_sparse_features, dense_input:size(2), nclasses, sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
 	print("Got size parameters", D_o, D_d, D_h, D_win)
 
 	print(loss_function)
 	local model = nil
 	local criterion = nil
 	if model_type == "lr" then
-		model, criterion = makeLogisticRegressionModel(D_o, D_d, D_h,  embedding_size, window_size)
+		model, criterion = makeLogisticRegressionModel(D_sparse_in, D_dense, D_output, embedding_size, window_size)
 	elseif model_type == "nnfig1" then
-		model, criterion = makeNNmodel_figure1(D_o, D_d, hidden_layers, D_h , embedding_size, window_size)
+		model, criterion = makeNNmodel_figure1(D_sparse_in, D_dense, hidden_layers, D_output,embedding_size, window_size)
 	elseif model_type == "nnpre" then
-		model, criterion = make_pretrained_NNmodel(D_o, D_d, hidden_layers, D_h, D_win, word_embeddings)
+		model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, D_win, word_embeddings)
 	else
 		assert(false)
 	end
