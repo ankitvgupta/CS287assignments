@@ -8,17 +8,19 @@ dofile("models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
-	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers)
+	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers, word_embeddings)
 
 	print("Began logistic regression")
-	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
-	print("Got size parameters", D_o, D_d, D_h)
+	local D_o, D_d, D_h, D_win = num_sparse_features, dense_input:size(2), nclasses, sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	print("Got size parameters", D_o, D_d, D_h, D_win)
 
 	local model = nil
 	if model_type == "lr" then
 		model = makeLogisticRegressionModel(D_o, D_d, D_h)
 	elseif model_type == "nnfig1" then
 		model = makeNNmodel_figure1(D_o, D_d, hidden_layers, D_h)
+	elseif model_type == "nnpre" then
+		model = make_pretrained_NNmodel(D_o, D_d, hidden_layers, D_h, D_win, word_embeddings)
 	else
 		assert(false)
 	end
