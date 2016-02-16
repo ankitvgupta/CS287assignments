@@ -24,7 +24,7 @@ end
 
 -- This function builds the neural network used in the paper
 
-function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output)
+function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output, loss_function)
 	print("Making neural network model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
@@ -41,8 +41,9 @@ function makeNNmodel_figure1(D_o, D_d, D_hidden, D_output)
 	model:add(nn.HardTanh())
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
+	criterion = nn.ClassNLLCriterion()
 
-	return model
+	return model, criterion
 
 end
 

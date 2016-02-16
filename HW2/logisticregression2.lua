@@ -8,31 +8,33 @@ dofile("models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
-	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers, optimizer)
+	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers, optimizer, loss_function)
 
 	print("Began logistic regression")
 	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 	print("Got size parameters", D_o, D_d, D_h)
 
+	print(loss_function)
 	local model = nil
+	local criterion = nil
 	if model_type == "lr" then
-		model = makeLogisticRegressionModel(D_o, D_d, D_h)
+		model, criterion = makeLogisticRegressionModel(D_o, D_d, D_h)
 	elseif model_type == "nnfig1" then
-		model = makeNNmodel_figure1(D_o, D_d, hidden_layers, D_h)
+		model, criterion = makeNNmodel_figure1(D_o, D_d, hidden_layers, D_h, loss_function)
 	else
 		assert(false)
 	end
 
 	print("Set up model")
 
-	local criterion = nn.ClassNLLCriterion()
-	print("Set up criterion")
+	--local criterion = nn.ClassNLLCriterion()
+	--local criterion = nn.MultiMarginCriterion()
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
 	local parameters, gradParameters = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
 	print("Got params and grads")
 	--print(training_output)
-	print("Counts of each of the classes in training set")
-	print(valueCounts(training_output))
+	--print("Counts of each of the classes in training set")
+	--print(valueCounts(training_output))
 	print("Starting Validation accuracy", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	local num_minibatches = sparse_input:size(1)/minibatch_size
 
@@ -72,13 +74,14 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				--return loss,gradParameters
 				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
 	    	end
+	    	-- Do the update operation.
 	    	if optimizer == "adagrad" then
 		    	config =  {
 		    	            learningRate = eta,
 	        	            weightDecay = lambda,
 	        	            learningRateDecay = 5e-7
 	                       }
-	        optim.adagrad(feval, parameters, config)
+	        	optim.adagrad(feval, parameters, config)
 	    	elseif optimizer == "sgd" then
 	    		config = {
 	        		   learningRate = eta, 

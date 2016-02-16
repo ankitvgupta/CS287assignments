@@ -22,8 +22,9 @@ cmd:option('-eta', 50, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sg
 cmd:option('-lambda', 0, 'regularization penalty (.0001 seems to work well for sgd)')
 cmd:option('-minibatch', 2000, 'Minibatch size (500 for nn, 2000 for lr)')
 cmd:option('-epochs', 20, 'Number of epochs of SGD')
-cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (not yet implemented)')
+cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (not yet implemented)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
+cmd:option('-lossfunction', "nll", 'not implemented')
 -- Hyperparameters
 -- ...
 
@@ -55,7 +56,7 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	                  sparse_validation_input, dense_validation_input, validation_output, 
-   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1", opt.hiddenlayers, opt.optimizer)
+   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1", opt.hiddenlayers, opt.optimizer, opt.lossfunction)
    print("Options and accuracy")
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
