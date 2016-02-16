@@ -3,6 +3,7 @@ require('nn')
 
 -- This function makes the logistic regression model
 function makeLogisticRegressionModel(D_o, D_d, D_h)
+	print("Making lr model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local sparse_multiply = nn.Sequential()
@@ -23,7 +24,8 @@ end
 
 -- This function builds the neural network used in the paper
 
-function makeNNmodel_figure1(D_0, D_d, D_output)
+function makeNNmodel_figure1(D_o, D_d, D_output)
+	print("Making neural network model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local sparse_multiply = nn.Sequential()
