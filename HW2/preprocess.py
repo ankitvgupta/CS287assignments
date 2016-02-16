@@ -244,6 +244,7 @@ def main(arguments):
         f['numSparseFeatures'] = np.array([numSparseFeatures], dtype=np.int32)
         f['numDenseFeatures'] = np.array([numDenseFeatures], dtype=np.int32)
         f['numClasses'] = np.array([numClasses], dtype=np.int32)
+        f['d_win'] = np.array([dwin], dtype=np.int32)
 
 
 if __name__ == '__main__':

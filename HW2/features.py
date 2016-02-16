@@ -51,9 +51,9 @@ class UnigramFeature(SentenceFeature):
 			if word is not "PADDING":
 				word = word.lower()
 			try:
-				feat.append(self.word_to_idx[word]+idx*self.numWords)
+				feat.append(self.word_to_idx[word])
 			except KeyError:
-				feat.append(self.word_to_idx["RARE"]+idx*self.numWords)
+				feat.append(self.word_to_idx["RARE"])
 
 		return feat
 
@@ -61,7 +61,7 @@ class UnigramFeature(SentenceFeature):
 		return True
 
 	def numFeats(self):
-		return self.numWords*self.dwin
+		return self.numWords
 
 
 class CapitalizationFeature(SentenceFeature):
