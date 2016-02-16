@@ -24,6 +24,7 @@ cmd:option('-lambda', 0, 'regularization penalty (.0001 seems to work well for s
 cmd:option('-minibatch', 2000, 'Minibatch size')
 cmd:option('-epochs', 20, 'Number of epochs of SGD')
 cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (not yet implemented)')
+cmd:option('-hiddenlayers', 100, 'Number of hidden layers (if using neural net)')
 -- Hyperparameters
 -- ...
 
@@ -55,7 +56,7 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	                  sparse_validation_input, dense_validation_input, validation_output, 
-   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1")
+   	                  nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, "nnfig1", opt.hiddenlayers)
    print("Options and accuracy")
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))

@@ -8,7 +8,7 @@ dofile("models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
-	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type)
+	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers)
 
 	print("Began logistic regression")
 	local D_o, D_d, D_h = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
@@ -18,7 +18,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	if model_type == "lr" then
 		model = makeLogisticRegressionModel(D_o, D_d, D_h)
 	elseif model_type == "nnfig1" then
-		model = makeNNmodel_figure1(D_o, D_d, D_h)
+		model = makeNNmodel_figure1(D_o, D_d, hidden_layers, D_h)
 	else
 		assert(false)
 	end
