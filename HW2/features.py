@@ -24,6 +24,9 @@ class SentenceFeature(object):
 			assert padded_sentence[i] == "PADDING"
 			assert padded_sentence[l-i-1] == "PADDING"
 
+	def numFeats(self):
+		raise UnimplementedError
+
 
 class UnigramFeature(SentenceFeature):
 	def __init__(self, dwin, vocab):
@@ -57,9 +60,17 @@ class UnigramFeature(SentenceFeature):
 	def isSparse(self):
 		return True
 
+	def numFeats(self):
+		return len(self.word_to_idx)*self.dwin
+
 
 class CapitalizationFeature(SentenceFeature):
 
+	# for each word,
+	# first entry is all lowercase
+	# second entry is all caps
+	# third entry is first letter capital
+	# fourth entry is one letter capital
 	def convert(self, padded_sentence, word_idx):
 		self.validate_sentence(padded_sentence, word_idx)
 
@@ -68,10 +79,16 @@ class CapitalizationFeature(SentenceFeature):
 		end = word_idx + self.dwin/2
 		for i in range(start, end+1):
 			word = padded_sentence[i]
-			upper = int(word[0].isupper())
-			feat.append(upper)
+			all_lower = int(word.islower())
+			all_caps = int(word.isupper())
+			first_cap = int(word[0].isupper())
+			one_letter_cap = int(len([c for c in word if c.isupper()]) == 1)
+			feat.extend([all_lower, all_caps, first_cap, one_letter_cap])
 
 		return feat
 
 	def isSparse(self):
 		return False
+
+	def numFeats(self):
+		return 4*self.dwin

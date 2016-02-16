@@ -66,6 +66,9 @@ def init_vocab(file_path, top_n=100000):
 
 def init_features(feature_list):
     inited_features = []
+    numSparseFeatures = 0
+    numDenseFeatures = 0
+
     for feature in feature_list:
         if type(feature) is tuple:
             kwargs = feature[1]
@@ -76,7 +79,13 @@ def init_features(feature_list):
         inited_feature = feature(**kwargs)
         inited_feature.initialize()
         inited_features.append(inited_feature)
-    return inited_features
+
+        if inited_feature.isSparse():
+            numSparseFeatures += inited_feature.numFeats()
+        else:
+            numDenseFeatures += inited_feature.numFeats()
+
+    return inited_features, numSparseFeatures, numDenseFeatures
 
 def load_padded_sentences(data_file, dwin):
     all_sentences = []
@@ -168,11 +177,8 @@ def main(arguments):
     vocab = init_vocab(train)
     # Initialize features
     print "Initializing features..."
-    features = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
+    features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
 
-    # For now, the number of sparse features is the size of the vocab, and dense features is the size of the window
-    numSparseFeatures = len(vocab)*dwin
-    numDenseFeatures = dwin
     numClasses = len(tag_dict)
     print "sparse, dense, classes:"
     print numSparseFeatures, numDenseFeatures, numClasses
