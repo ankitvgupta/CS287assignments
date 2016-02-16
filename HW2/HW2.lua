@@ -9,7 +9,6 @@ dofile('logisticregression2.lua')
 
 -- For Odyssey, uncomment these
 --dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
---dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression.lua')
 --dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression2.lua')
 
 
@@ -19,12 +18,12 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'lr', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
-cmd:option('-eta', 50, 'Learning rate (.1 for adagrad, 500 for sgd)')
+cmd:option('-eta', 50, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
 cmd:option('-lambda', 0, 'regularization penalty (.0001 seems to work well for sgd)')
-cmd:option('-minibatch', 2000, 'Minibatch size')
+cmd:option('-minibatch', 2000, 'Minibatch size (500 for nn, 2000 for lr)')
 cmd:option('-epochs', 20, 'Number of epochs of SGD')
 cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (not yet implemented)')
-cmd:option('-hiddenlayers', 100, 'Number of hidden layers (if using neural net)')
+cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 -- Hyperparameters
 -- ...
 
