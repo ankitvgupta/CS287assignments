@@ -72,7 +72,7 @@ end
 
 -- TODO: Change this to use the new approach of having one embedding per word!
 function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, window_size, word_embeddings)
-	print("Making neural network model")
+	print("Making neural network model 2")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
 	local get_embeddings = nn.Sequential()
