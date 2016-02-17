@@ -201,8 +201,13 @@ def main(arguments):
     print "Loading tag dict..."
     tag_dict = load_tag_dict(tag_file)
     # Initialize vocabulary, a list of words
-    print "Initializing vocabulary (and word embeddings)..."
-    vocab, word_embeddings = init_vocab_and_embeddings(WORD_EMBEDDINGS_FILE, 40000)
+    if WORD_EMBEDDINGS_FILE is not None:
+        print "Initializing vocabulary (and word embeddings)..."
+        vocab, word_embeddings = init_vocab_and_embeddings(WORD_EMBEDDINGS_FILE, 500000)
+    else:
+        print "Initializing vocabulary..."
+        vocab = init_vocab(train)
+        word_embeddings = None
     # Initialize features
     print "Initializing features..."
     features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
@@ -240,7 +245,10 @@ def main(arguments):
             if data_name != 'test':
                 f[data_name+'_output'] = Ys[i]
 
-        f['word_embeddings'] = word_embeddings
+        if word_embeddings is not None:
+            f['word_embeddings'] = word_embeddings
+        else:
+            f['word_embeddings'] = np.array([0], dtype=np.int32)
         f['numSparseFeatures'] = np.array([numSparseFeatures], dtype=np.int32)
         f['numDenseFeatures'] = np.array([numDenseFeatures], dtype=np.int32)
         f['numClasses'] = np.array([numClasses], dtype=np.int32)
