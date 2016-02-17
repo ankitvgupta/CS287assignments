@@ -10,7 +10,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	                        validation_sparse_input, validation_dense_input, validation_output, 
 	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size)
 
-	local D_sparse_in, D_dense, D_output, D_win = num_sparse_features, dense_input:size(2), nclasses, sparse_input:size(1) -- width of W_o, width of W_d, height of both W_o and W_d
+	local D_sparse_in, D_dense, D_output = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 
 	local model = nil
 	local criterion = nil
@@ -19,7 +19,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	elseif model_type == "nnfig1" then
 		model, criterion = makeNNmodel_figure1(D_sparse_in, D_dense, hidden_layers, D_output,embedding_size, window_size)
 	elseif model_type == "nnpre" then
-		model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, D_win, word_embeddings)
+		model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, window_size, word_embeddings)
 	else
 		assert(false)
 	end

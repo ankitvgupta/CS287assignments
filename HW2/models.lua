@@ -71,26 +71,33 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 end
 
 -- TODO: Change this to use the new approach of having one embedding per word!
-function make_pretrained_NNmodel(D_o, D_d, D_hidden, D_output, D_win, word_embeddings)
-	print("Making neural network model pretrained")
+function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, window_size, word_embeddings)
+	print("Making neural network model")
 
 	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
-	local sparse_multiply = nn.Sequential()
-	local lookup = nn.LookupTable(D_o, D_hidden)
+	local get_embeddings = nn.Sequential()
+	--sparse_multiply:add(nn.LookupTable(D_sparse_in, D_hidden))
+	--sparse_multiply:add(nn.Sum(1,2))
 
-	local catbeddings = word_embeddings
+	local embedding_size = word_embeddings:size(2)
 
-	for i=1, 4 do
-		catbeddings = catbeddings:cat(word_embeddings, 1)
-	end
+	local lookup = nn.LookupTable(word_embeddings:size())
+	lookup.weight = word_embeddings
 
-	lookup.weight = catbeddings
+	print(embedding_size, window_size, D_hidden)
 
-	sparse_multiply:add(lookup)
-	sparse_multiply:add(nn.Sum(1,2))
+	-- I THINK this is now correct.
+	-- Get the word embeddings for each of the words
+	get_embeddings:add(lookup)
+	-- Flatten those features into a single vector  
+	get_embeddings:add(nn.View(-1):setNumInputDims(2))
+	-- Apply a linear layer to those.
+	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
+	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
-	par:add(sparse_multiply) -- first child
-	par:add(nn.Linear(D_d, D_hidden)) -- second child
+
+	par:add(get_embeddings) -- first child
+	par:add(nn.Linear(D_dense, D_hidden)) -- second child
 	
 	local model = nn.Sequential()
 	model:add(par)
@@ -98,7 +105,7 @@ function make_pretrained_NNmodel(D_o, D_d, D_hidden, D_output, D_win, word_embed
 	model:add(nn.HardTanh())
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
-	local criterion = nn.ClassNLLCriterion()
+	criterion = nn.ClassNLLCriterion()
 
 	return model, criterion
 
