@@ -230,7 +230,7 @@ def main(arguments):
 
     # Write out to hdf5
     print "Writing out to hdf5"
-    filename = args.dataset + '.hdf5'
+    filename = args.dataset + '_'+str(dwin)+'.hdf5'
     with h5py.File(filename, "w") as f:
         for i, data_name in enumerate(['train', 'valid', 'test']):
             
