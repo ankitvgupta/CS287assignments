@@ -16,6 +16,7 @@ cmd = torch.CmdLine()
 
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
+cmd:option('-testfile', '', 'test file')
 cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
 cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
@@ -46,7 +47,7 @@ function main()
    local sparse_validation_input = f:read('valid_sparse_input'):all():long()
    local dense_validation_input = f:read('valid_dense_input'):all():double()
    local validation_output = f:read('valid_output'):all():long()
-   local word_embeddings = f:read('word_embeddings'):all():double()
+   local word_embeddings = f:read('word_embeddings'):all():double() 
 
    print("Imported all data")
 
@@ -60,8 +61,20 @@ function main()
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
 
-
    -- Test.
+   print("Writing to test file")
+   if (opt.testfile ~= '') then
+      local sparse_test_input = f:read('test_sparse_input'):all():long()
+      local dense_test_input = f:read('test_dense_input'):all():double()
+      local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
+      local _, class_preds = torch.max(scores, 2)
+      local results = class_preds:squeeze()
+      file = io.open(opt.testfile, 'a')
+      io.output(file)
+      for test_i = 1, results:size()[1] do
+         io.write(test_i, ',', results[test_i], '\n')
+      end
+   end
 end
 
 main()
