@@ -2,7 +2,7 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=2000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=5000                  #Memory per cpu in MB (see also --mem)
 
 #SBATCH -t 6:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue               #Partition to submit to
