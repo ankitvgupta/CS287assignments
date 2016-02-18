@@ -22,7 +22,7 @@ end
 
 
 function printoptions(opt)
-    print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
+	print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
 end
 
 
@@ -119,8 +119,8 @@ function getLinearModelPredictions(W, b, Xsparse, Xdense, num_sparse_features, n
 	W_dense = W:narrow(2, W:size(2) - num_dense_features + 1, num_dense_features)
 
 	-- Sum the sparse and multiplication terms 
-    local Ans = sparseMultiply(Xsparse, W_sparse:t())
-    Ans:add(torch.mm(Xdense:double(), W_dense:t()))
+	local Ans = sparseMultiply(Xsparse, W_sparse:t())
+	Ans:add(torch.mm(Xdense:double(), W_dense:t()))
 
     --print(Ans)
 
@@ -137,12 +137,12 @@ end
 
 -- W and b are the weights to be trained. X is the sparse matrix representation of the input. Y is the classes
 function validateLinearModel(W, b, x_sparse, x_dense, y, num_sparse_features, num_dense_features)
-    local c = getLinearModelPredictions(W, b, x_sparse, x_dense, num_sparse_features, num_dense_features)
-    print("min and max predicted class", torch.min(c), torch.max(c))
-    equality = torch.eq(c, y)
+	local c = getLinearModelPredictions(W, b, x_sparse, x_dense, num_sparse_features, num_dense_features)
+	print("min and max predicted class", torch.min(c), torch.max(c))
+	equality = torch.eq(c, y)
 
-    score = equality:sum()/equality:size()[1]
-    return score
+	score = equality:sum()/equality:size()[1]
+	return score
 end   
 
 -- -- Returns another tensor with only the rows of X that have sentences of length minlength
