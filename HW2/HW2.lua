@@ -48,6 +48,17 @@ function main()
    local validation_output = f:read('valid_output'):all():long()
    local word_embeddings = f:read('word_embeddings'):all():double()
 
+
+   -- If we are using logistic regression, our features are not words, but word:position pairs. This accounts for that.
+   if opt.classifier == "lr" then
+	   sparse_training_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_training_input:size(1), d_win):long()
+	   sparse_validation_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_validation_input:size(1), d_win):long()
+
+	   sparse_training_input = torch.cmul(sparse_training_input, sparse_training_multiplier)
+	   sparse_validation_input = torch.cmul(sparse_validation_input, sparse_validation_multiplier)
+	   nsparsefeatures = nsparsefeatures * d_win
+	end
+
    print("Imported all data")
 
    -- Train.
