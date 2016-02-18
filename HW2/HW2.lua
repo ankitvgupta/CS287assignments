@@ -49,14 +49,19 @@ function main()
    local validation_output = f:read('valid_output'):all():long()
    local word_embeddings = f:read('word_embeddings'):all():double() 
 
+    local sparse_test_input = f:read('test_sparse_input'):all():long()
+    local dense_test_input = f:read('test_dense_input'):all():double()
+
 
    -- If we are using logistic regression, our features are not words, but word:position pairs. This accounts for that.
    if opt.classifier == "lr" then
 	   sparse_training_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_training_input:size(1), d_win):long()
 	   sparse_validation_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_validation_input:size(1), d_win):long()
+	   sparse_test_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_test_input:size(1), d_win):long()
 
 	   sparse_training_input = torch.cmul(sparse_training_input, sparse_training_multiplier)
 	   sparse_validation_input = torch.cmul(sparse_validation_input, sparse_validation_multiplier)
+	   sparse_test_input = torch.cmul(sparse_test_input, sparse_test_multiplier)
 	   nsparsefeatures = nsparsefeatures * d_win
 	end
 
@@ -75,13 +80,12 @@ function main()
    -- Test.
    print("Writing to test file")
    if (opt.testfile ~= '') then
-      local sparse_test_input = f:read('test_sparse_input'):all():long()
-      local dense_test_input = f:read('test_dense_input'):all():double()
       local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
       local _, class_preds = torch.max(scores, 2)
       local results = class_preds:squeeze()
-      file = io.open(opt.testfile, 'a')
+      file = io.open(opt.testfile, 'w')
       io.output(file)
+      io.write("ID,Class")
       for test_i = 1, results:size()[1] do
          io.write(test_i, ',', results[test_i], '\n')
       end
