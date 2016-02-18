@@ -2,9 +2,9 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=5000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=3000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 6:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 4:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/feb16/setup_%A_%a_out.txt            #File to which standard out will be written
