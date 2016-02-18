@@ -17,7 +17,7 @@ print(sys.argv)
 
 for line in sys.stdin:
 
-	if line[0] == "=" or len(line) == 1:
+	if line[0] == "=" or len(line) == 1 or line[0] == "W":
 		continue
 	if line[0] == '0' and line[1] == ".":
 		accuracies.append(line.split('\t')[0])

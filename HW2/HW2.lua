@@ -78,8 +78,8 @@ function main()
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
 
    -- Test.
-   print("Writing to test file")
    if (opt.testfile ~= '') then
+   	print("Writing to test file")
    	local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
    	local _, class_preds = torch.max(scores, 2)
    	local results = class_preds:squeeze()
