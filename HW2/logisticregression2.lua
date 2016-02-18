@@ -1,14 +1,14 @@
 require('nn')
 
---dofile("utils.lua")
---dofile("models.lua")
+dofile("utils.lua")
+dofile("models.lua")
 -- -- For odyssey
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
-	                        validation_sparse_input, validation_dense_input, validation_output, 
-	                        num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size)
+	validation_sparse_input, validation_dense_input, validation_output, 
+	num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size)
 
 	local D_sparse_in, D_dense, D_output = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 
@@ -16,15 +16,15 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	local criterion = nil
 	if model_type == "lr" then
 		model, criterion = makeLogisticRegressionModel(D_sparse_in, D_dense, D_output, embedding_size, window_size)
-	elseif model_type == "nnfig1" then
-		model, criterion = makeNNmodel_figure1(D_sparse_in, D_dense, hidden_layers, D_output,embedding_size, window_size)
-	elseif model_type == "nnpre" then
-		model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, window_size, word_embeddings)
-	else
-		assert(false)
-	end
+		elseif model_type == "nnfig1" then
+			model, criterion = makeNNmodel_figure1(D_sparse_in, D_dense, hidden_layers, D_output,embedding_size, window_size)
+			elseif model_type == "nnpre" then
+				model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, window_size, word_embeddings)
+			else
+				assert(false)
+			end
 
-	print("Set up model")
+			print("Set up model")
 
 	--local criterion = nn.ClassNLLCriterion()
 	--local criterion = nn.MultiMarginCriterion()
@@ -52,7 +52,7 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
 
 		    -- Create a closure for optim
-			local feval = function(x)
+		    local feval = function(x)
 				-- Inspired by this torch demo: https://github.com/andresy/torch-demos/blob/master/train-a-digit-classifier/train-on-mnist.lua
 				-- get new parameters
 				if x ~= parameters then
@@ -72,27 +72,27 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				-- return f and df/dX
 				--return loss,gradParameters
 				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
-	    	end
+			end
 	    	-- Do the update operation.
 	    	if optimizer == "adagrad" then
-		    	config =  {
-		    	            learningRate = eta,
-	        	            weightDecay = lambda,
-	        	            learningRateDecay = 5e-7
-	                       }
-	        	optim.adagrad(feval, parameters, config)
+	    		config =  {
+	    		learningRate = eta,
+	    		weightDecay = lambda,
+	    		learningRateDecay = 5e-7
+	    	}
+	    	optim.adagrad(feval, parameters, config)
 	    	elseif optimizer == "sgd" then
 	    		config = {
-	        		   learningRate = eta, 
-	                 }
-	            optim.sgd(feval, parameters, config)
-	    	else 
-	    		assert(false)
-	    	end
-	        
+	    		learningRate = eta, 
+	    	}
+	    	optim.sgd(feval, parameters, config)
+	    else 
+	    	assert(false)
+	    end
+	    
 
-		end
-		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	end
-	return model
+	print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
+end
+return model
 end
