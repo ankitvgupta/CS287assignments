@@ -18,7 +18,6 @@ selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
 #filename, classifier, eta, minibatchsize, numepochs, alpha, lambda, optimizer
 
-# Print the config variables
 datafile=${selected_config[0]}
 classifier=${selected_config[1]}
 eta=${selected_config[2]}
@@ -27,6 +26,8 @@ epochs=${selected_config[4]}
 alpha=${selected_config[5]}
 lambda=${selected_config[6]}
 optimizer=${selected_config[7]}
+hiddenlayers=${selected_config[8]}
+embeddingsize=${selected_config[9]}
 
 cd /scratch
 source new-modules.sh
@@ -42,6 +43,8 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW2/HW2.lua \
   -epochs $epochs \
   -alpha $alpha \
   -lambda $lambda \
-  -optimizer $optimizer 
+  -optimizer $optimizer \
+  -hiddenlayers $hiddenlayers \
+  -embedding_size $embeddingsize
 
 
