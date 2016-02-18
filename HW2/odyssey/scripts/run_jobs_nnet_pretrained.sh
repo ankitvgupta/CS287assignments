@@ -5,7 +5,7 @@
 #SBATCH --mem=3000                  #Memory per cpu in MB (see also --mem)
 
 #SBATCH -t 4:00:00              #Indicate duration using HH:MM:SS
-#SBATCH -p serial_requeue               #Partition to submit to
+#SBATCH -p general               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/feb16/setup_%A_%a_out.txt            #File to which standard out will be written
 #SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/feb16/setup_%A_%a_err.txt            #File to which standard err will be written
