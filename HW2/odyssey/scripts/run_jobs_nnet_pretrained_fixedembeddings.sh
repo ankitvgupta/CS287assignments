@@ -7,8 +7,8 @@
 #SBATCH -t 4:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/feb16/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/feb16/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/fixedembeddings/setup_%A_%a_out.txt            #File to which standard out
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/fixedembeddings/setup_%A_%a_err.txt            #File to which standard err
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
