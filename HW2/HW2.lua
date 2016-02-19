@@ -25,7 +25,7 @@ cmd:option('-odyssey', false, 'Set to true if running on odyssey')
 function main() 
    -- Parse input params
    opt = cmd:parse(arg)
-   _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/' or ''
+   _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW2/' or ''
 
    dofile(_G.path..'nb.lua')
    dofile(_G.path..'logisticregression2.lua')
