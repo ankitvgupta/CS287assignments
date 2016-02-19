@@ -1,6 +1,3 @@
---dofile("utils.lua")
-
--- For odyssey
 dofile(_G.path.."utils.lua")
 
 -- Returns W, b. For Naive Bayes,

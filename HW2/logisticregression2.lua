@@ -1,3 +1,5 @@
+require('nn')
+--require('cudnn')
 dofile(_G.path.."utils.lua")
 dofile(_G.path.."models.lua")
 
@@ -5,7 +7,7 @@ dofile(_G.path.."models.lua")
 function LogisticRegression(sparse_input, dense_input, training_output,
 	validation_sparse_input, validation_dense_input, validation_output, 
 	num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, 
-	model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size, fixed_embeddings)
+	model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size, fixed_embeddings, save_losses)
 
 	local D_sparse_in, D_dense, D_output = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 
@@ -34,7 +36,12 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	--print(valueCounts(training_output))
 	print("Starting Validation accuracy", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	local num_minibatches = sparse_input:size(1)/minibatch_size
-
+	file = nil
+	if save_losses ~= '' then
+		file = io.open(save_losses, 'w')
+		--io.output(file)
+   		file:write("Epoch,Loss\n")
+   	end
 	for i = 1, num_epochs do
 		print("L1 norm of params:", torch.abs(parameters):sum())
 
@@ -71,10 +78,16 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 					embedding_layer:zeroGradParameters()
 				end
 
+				if save_losses ~= '' and j == 1 then
+					file:write(i, ',', loss, '\n')
+				end
+
 				-- return f and df/dX
 				--return loss,gradParameters
 				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
 			end
+			
+			
 			--print(torch.abs(embedding_layer.weight):sum())
 	    	-- Do the update operation.
 	    	if optimizer == "adagrad" then

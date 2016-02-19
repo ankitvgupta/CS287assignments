@@ -9,6 +9,7 @@ cmd = torch.CmdLine()
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
 cmd:option('-testfile', '', 'test file')
+cmd:option('-save_losses', '', 'file to save loss per epoch to (leave blank if not wanted)')
 cmd:option('-fixed_embeddings', false, 'Set to true if using fixed embeddings')
 cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
@@ -16,7 +17,7 @@ cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sg
 cmd:option('-lambda', 0, 'regularization penalty (not implemented)')
 cmd:option('-minibatch', 2000, 'Minibatch size (500 for nn, 2000 for lr)')
 cmd:option('-epochs', 20, 'Number of epochs of SGD')
-cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (adagrad or sgd)')
+cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (adagrad or sgd)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 cmd:option('-embedding_size', 50, 'Size of word embedding')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
@@ -55,7 +56,7 @@ function main()
 
 
    -- If we are using logistic regression, our features are not words, but word:position pairs. This accounts for that.
-   if opt.classifier == "lr" then
+   if opt.classifier == "lr" or opt.classifier == "nb" then
    	sparse_training_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_training_input:size(1), d_win):long()
    	sparse_validation_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_validation_input:size(1), d_win):long()
    	sparse_test_multiplier = torch.range(1, d_win):resize(1, d_win):expand(sparse_test_input:size(1), d_win):long()
@@ -68,19 +69,22 @@ function main()
 
    print("Imported all data")
 
-   -- Train.
-   --W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, 1)
-   --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
-   local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
-   	sparse_validation_input, dense_validation_input, validation_output, 
-   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, 
-   	opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win, opt.fixed_embeddings)
-   print("Options and accuracy")
-   printoptions(opt)
-   print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
+   -- Train and Validate.
+   if opt.classifier == "nb" then
+   	W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, 1)
+   	print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
+   else
+	   local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
+	   	sparse_validation_input, dense_validation_input, validation_output, 
+	   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, 
+	   	opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win, opt.fixed_embeddings, opt.save_losses)
+	   print("Options and accuracy")
+	   printoptions(opt)
+	   print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
+	end
 
-   -- Test.
-   if (opt.testfile ~= '') then
+   -- Write to test file.
+   if (opt.testfile ~= '' and opt.classifer ~= "nb") then
    	print("Writing to test file")
    	local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
    	local _, class_preds = torch.max(scores, 2)
