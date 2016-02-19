@@ -3,14 +3,6 @@ require("hdf5")
 require("nn")
 require("optim")
 --require('cudnn')
--- For local use, use these.
---dofile('nb.lua')
---dofile('logisticregression2.lua')
-
--- For Odyssey, uncomment these
-dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
-dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression2.lua')
-
 
 cmd = torch.CmdLine()
 
@@ -27,11 +19,19 @@ cmd:option('-epochs', 20, 'Number of epochs of SGD')
 cmd:option('-optimizer', 'adagrad', 'Name of optimizer to use (adagrad or sgd)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 cmd:option('-embedding_size', 50, 'Size of word embedding')
+cmd:option('-odyssey', false, 'Set to true if running on odyssey')
 
 function main() 
    -- Parse input params
    opt = cmd:parse(arg)
+   _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/' or ''
+
+   dofile(_G.path..'nb.lua')
+   dofile(_G.path..'logisticregression2.lua')
+
    printoptions(opt)
+
+
    local f = hdf5.open(opt.datafile, 'r')
 
    local nclasses = f:read('numClasses'):all():long()[1]
