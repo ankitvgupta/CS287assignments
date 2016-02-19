@@ -2,7 +2,7 @@
 require("hdf5")
 require("nn")
 require("optim")
-
+--require('cudnn')
 -- For local use, use these.
 --dofile('nb.lua')
 --dofile('logisticregression2.lua')

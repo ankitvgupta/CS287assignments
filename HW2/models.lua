@@ -1,6 +1,6 @@
 -- This file contains the nn models used for training the various networks.
 require('nn')
-
+--require('cudnn')
 -- This function makes the logistic regression model
 function makeLogisticRegressionModel(D_sparse_in, D_dense, D_output,  embedding_size, window_size)
 	print("Making lr model")
@@ -106,7 +106,10 @@ function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, windo
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
 	criterion = nn.ClassNLLCriterion()
-
+	local usegpu = true
+	--if usegpu then
+	--	cudnn.convert(model, cudnn)
+	--end
 	return model, criterion
 
 end

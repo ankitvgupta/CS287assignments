@@ -1,5 +1,5 @@
 require('nn')
-
+--require('cudnn')
 --dofile("utils.lua")
 --dofile("models.lua")
 -- -- For odyssey
