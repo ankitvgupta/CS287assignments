@@ -4,12 +4,12 @@ require("nn")
 require("optim")
 --require('cudnn')
 -- For local use, use these.
---dofile('nb.lua')
---dofile('logisticregression2.lua')
+dofile('nb.lua')
+dofile('logisticregression2.lua')
 
 -- For Odyssey, uncomment these
-dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
-dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression2.lua')
+--dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/nb.lua')
+--dofile('/n/home09/ankitgupta/CS287/CS287assignments/HW2/logisticregression2.lua')
 
 
 cmd = torch.CmdLine()
@@ -17,6 +17,7 @@ cmd = torch.CmdLine()
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
 cmd:option('-testfile', '', 'test file')
+cmd:option('-fixed_embeddings', false, 'Set to true if using fixed embeddings')
 cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
 cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
@@ -72,7 +73,8 @@ function main()
    --print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
    	sparse_validation_input, dense_validation_input, validation_output, 
-   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win)
+   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, 
+   	opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win, opt.fixed_embeddings)
    print("Options and accuracy")
    printoptions(opt)
    print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))

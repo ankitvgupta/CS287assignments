@@ -50,8 +50,8 @@ print ""
 print "Best lr ones"
 print df[df['Classifier'] == 'lr']
 
-#print ""
-#print "Best hinge ones"
-#print df[df['Classifier'] == 'hinge']
+print ""
+print "Best nnfig1 ones"
+print df[df['Classifier'] == 'nnfig1']
 
 

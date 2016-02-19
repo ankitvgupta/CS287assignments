@@ -1,25 +1,27 @@
 require('nn')
 --require('cudnn')
---dofile("utils.lua")
---dofile("models.lua")
+dofile("utils.lua")
+dofile("models.lua")
 -- -- For odyssey
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
-dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/utils.lua")
+--dofile("/n/home09/ankitgupta/CS287/CS287assignments/HW2/models.lua")
 
 function LogisticRegression(sparse_input, dense_input, training_output,
 	validation_sparse_input, validation_dense_input, validation_output, 
-	num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size)
+	num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, 
+	model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size, fixed_embeddings)
 
 	local D_sparse_in, D_dense, D_output = num_sparse_features, dense_input:size(2), nclasses -- width of W_o, width of W_d, height of both W_o and W_d
 
 	local model = nil
 	local criterion = nil
+	local embedding_layer = nil
 	if model_type == "lr" then
 		model, criterion = makeLogisticRegressionModel(D_sparse_in, D_dense, D_output, embedding_size, window_size)
 		elseif model_type == "nnfig1" then
 			model, criterion = makeNNmodel_figure1(D_sparse_in, D_dense, hidden_layers, D_output,embedding_size, window_size)
 			elseif model_type == "nnpre" then
-				model, criterion = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, window_size, word_embeddings)
+				model, criterion, embedding_layer = make_pretrained_NNmodel(D_sparse_in, D_dense, hidden_layers, D_output, window_size, word_embeddings)
 			else
 				assert(false)
 			end
@@ -69,10 +71,15 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
 				model:backward({sparse_vals, dense_vals}, dLdpreds)
 
+				if fixed_embeddings then
+					embedding_layer:zeroGradParameters()
+				end
+
 				-- return f and df/dX
 				--return loss,gradParameters
 				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
 			end
+			--print(torch.abs(embedding_layer.weight):sum())
 	    	-- Do the update operation.
 	    	if optimizer == "adagrad" then
 	    		config =  {

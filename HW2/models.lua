@@ -110,7 +110,7 @@ function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, windo
 	--if usegpu then
 	--	cudnn.convert(model, cudnn)
 	--end
-	return model, criterion
+	return model, criterion, lookup
 
 end
 
