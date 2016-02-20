@@ -81,20 +81,21 @@ function main()
 	   print("Options and accuracy")
 	   printoptions(opt)
 	   print(getaccuracy(model, sparse_validation_input, dense_validation_input:double(), validation_output))
-	end
+	
+      -- Write to test file.
+      if (opt.testfile ~= '') then
+         print("Writing to test file")
+         local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input:double()}))
+         local _, class_preds = torch.max(scores, 2)
+         local results = class_preds:squeeze()
+         file = io.open(opt.testfile, 'w')
+         io.output(file)
+         io.write("ID,Class")
+         for test_i = 1, results:size()[1] do
+            io.write(test_i, ',', results[test_i], '\n')
+         end
+      end
 
-   -- Write to test file.
-   if (opt.testfile ~= '' and opt.classifer ~= "nb") then
-   	print("Writing to test file")
-   	local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
-   	local _, class_preds = torch.max(scores, 2)
-   	local results = class_preds:squeeze()
-   	file = io.open(opt.testfile, 'w')
-   	io.output(file)
-   	io.write("ID,Class")
-   	for test_i = 1, results:size()[1] do
-   		io.write(test_i, ',', results[test_i], '\n')
-   	end
    end
 end
 
