@@ -43,16 +43,16 @@ function main()
    print("nclasses:", nclasses, "nsparsefeatures:", nsparsefeatures, "ndensefeatures:", ndensefeatures)
 
    local sparse_training_input = f:read('train_sparse_input'):all():long()
-   local dense_training_input = f:read('train_dense_input'):all():double()
+   local dense_training_input = f:read('train_dense_input'):all():long()
    local training_output = f:read('train_output'):all():long()
 
    local sparse_validation_input = f:read('valid_sparse_input'):all():long()
-   local dense_validation_input = f:read('valid_dense_input'):all():double()
+   local dense_validation_input = f:read('valid_dense_input'):all():long()
    local validation_output = f:read('valid_output'):all():long()
    local word_embeddings = f:read('word_embeddings'):all():double() 
 
    local sparse_test_input = f:read('test_sparse_input'):all():long()
-   local dense_test_input = f:read('test_dense_input'):all():double()
+   local dense_test_input = f:read('test_dense_input'):all():long()
 
 
    -- If we are using logistic regression, our features are not words, but word:position pairs. This accounts for that.
@@ -74,13 +74,13 @@ function main()
    	W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, 1)
    	print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    else
-	   local model = LogisticRegression(sparse_training_input, dense_training_input, training_output, 
-	   	sparse_validation_input, dense_validation_input, validation_output, 
+	   local model = LogisticRegression(sparse_training_input, dense_training_input:double(), training_output, 
+	   	sparse_validation_input, dense_validation_input:double(), validation_output, 
 	   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, 
 	   	opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win, opt.fixed_embeddings, opt.save_losses)
 	   print("Options and accuracy")
 	   printoptions(opt)
-	   print(getaccuracy(model, sparse_validation_input, dense_validation_input, validation_output))
+	   print(getaccuracy(model, sparse_validation_input, dense_validation_input:double(), validation_output))
 	end
 
    -- Write to test file.
