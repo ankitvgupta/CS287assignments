@@ -71,7 +71,7 @@ function main()
 
    -- Train and Validate.
    if opt.classifier == "nb" then
-   	W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, 1)
+   	W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, opt.alpha)
    	print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    else
 	   local model = LogisticRegression(sparse_training_input, dense_training_input:double(), training_output, 
