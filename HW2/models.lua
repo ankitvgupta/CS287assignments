@@ -46,6 +46,7 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	get_embeddings:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
 	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
+	print(get_embeddings:forward(torch.LongTensor{1,2,3,4,5}))
 	print(embedding_size*window_size)
 	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
