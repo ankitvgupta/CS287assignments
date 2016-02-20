@@ -46,7 +46,6 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	get_embeddings:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
 	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
-	print(embedding_size*window_size)
 	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 
@@ -60,11 +59,6 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
 	criterion = nn.ClassNLLCriterion()
-
-	local x = torch.LongTensor({{45,12,13},{17,3,4}})
-	local x2 = torch.randn(2, D_dense)
-	print("forward test")
-	print(par:forward({x, x2}))
 
 
 	return model, criterion
