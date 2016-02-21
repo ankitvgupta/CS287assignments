@@ -11,7 +11,7 @@ cmd:option('-datafile', '', 'data file')
 cmd:option('-testfile', '', 'test file')
 cmd:option('-save_losses', '', 'file to save loss per epoch to (leave blank if not wanted)')
 cmd:option('-fixed_embeddings', false, 'Set to true if using fixed embeddings')
-cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre)')
+cmd:option('-classifier', 'nnfig1', 'classifier to use (nnfig1 or lr or nnpre or nb)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor for NB')
 cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
 cmd:option('-lambda', 0, 'regularization penalty (not implemented)')
@@ -81,20 +81,21 @@ function main()
 	   print("Options and accuracy")
 	   printoptions(opt)
 	   print(getaccuracy(model, sparse_validation_input, dense_validation_input:double(), validation_output))
-	end
+	
+      -- Write to test file.
+      if (opt.testfile ~= '') then
+         print("Writing to test file")
+         local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input:double()}))
+         local _, class_preds = torch.max(scores, 2)
+         local results = class_preds:squeeze()
+         file = io.open(opt.testfile, 'w')
+         io.output(file)
+         io.write("ID,Class")
+         for test_i = 1, results:size()[1] do
+            io.write(test_i, ',', results[test_i], '\n')
+         end
+      end
 
-   -- Write to test file.
-   if (opt.testfile ~= '' and opt.classifer ~= "nb") then
-   	print("Writing to test file")
-   	local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input}))
-   	local _, class_preds = torch.max(scores, 2)
-   	local results = class_preds:squeeze()
-   	file = io.open(opt.testfile, 'w')
-   	io.output(file)
-   	io.write("ID,Class")
-   	for test_i = 1, results:size()[1] do
-   		io.write(test_i, ',', results[test_i], '\n')
-   	end
    end
 end
 
