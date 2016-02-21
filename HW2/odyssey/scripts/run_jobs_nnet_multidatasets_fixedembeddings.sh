@@ -5,7 +5,7 @@
 #SBATCH --mem=5000                  #Memory per cpu in MB (see also --mem)
 
 #SBATCH -t 12:00:00              #Indicate duration using HH:MM:SS
-#SBATCH -p general               #Partition to submit to
+#SBATCH -p serial_requeue               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/out/fixedembeddings/setup_%A_%a_out.txt            #File to which standard out
 #SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW2/odyssey/outputs/err/fixedembeddings/setup_%A_%a_err.txt            #File to which standard err
@@ -46,6 +46,7 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW2/HW2.lua \
   -optimizer $optimizer \
   -hiddenlayers $hiddenlayers \
   -embedding_size $embeddingsize \
-  -fixed_embeddings
+  -fixed_embeddings \
+  -odyssey
 
 
