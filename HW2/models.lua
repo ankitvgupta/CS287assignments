@@ -31,9 +31,9 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 
 	get_embeddings:add(nn.LookupTable(D_sparse_in, embedding_size))
 	get_embeddings:add(nn.View(-1):setNumInputDims(2))
+
 	-- Apply a linear layer to those.
 	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
-
 
 	par:add(get_embeddings) -- first child
 	par:add(nn.Linear(D_dense, D_hidden)) -- second child
@@ -42,7 +42,7 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	model:add(par)
 	model:add(nn.CAddTable())
 	model:add(nn.HardTanh())
-	model:add(nn.Linear(D_hidden, D_output)) -- second child
+	model:add(nn.Linear(D_hidden, D_output))
 	model:add(nn.LogSoftMax())
 	criterion = nn.ClassNLLCriterion()
 
