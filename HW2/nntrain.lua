@@ -4,7 +4,7 @@ dofile(_G.path.."utils.lua")
 dofile(_G.path.."models.lua")
 
 
-function LogisticRegression(sparse_input, dense_input, training_output,
+function TrainNNModel(sparse_input, dense_input, training_output,
 	validation_sparse_input, validation_dense_input, validation_output, 
 	num_sparse_features, nclasses, minibatch_size, eta, num_epochs, lambda, 
 	model_type, hidden_layers,  optimizer, word_embeddings, embedding_size, window_size, fixed_embeddings, save_losses)
@@ -26,26 +26,25 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 
 			print("Set up model")
 
-	--local criterion = nn.ClassNLLCriterion()
-	--local criterion = nn.MultiMarginCriterion()
 	-- we can flatten (and then retrieve) all parameters (and gradParameters) of a module in the following way:
 	local parameters, gradParameters = model:getParameters() -- N.B. getParameters() moves around memory, and should only be called once!
+	
 	print("Got params and grads")
-	--print(training_output)
-	--print("Counts of each of the classes in training set")
-	--print(valueCounts(training_output))
 	print("Starting Validation accuracy", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
+	
 	local num_minibatches = sparse_input:size(1)/minibatch_size
+	
+	-- For loss plot.
 	file = nil
 	if save_losses ~= '' then
 		file = io.open(save_losses, 'w')
-		--io.output(file)
    		file:write("Epoch,Loss\n")
    	end
+
 	for i = 1, num_epochs do
 		print("L1 norm of params:", torch.abs(parameters):sum())
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
-			--print(j)
+
 		    -- zero out our gradients
 		    gradParameters:zero()
 		    model:zeroGradParameters()
@@ -81,14 +80,10 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 					file:write(i, ',', loss, '\n')
 				end
 
-				-- return f and df/dX
-				--return loss,gradParameters
-				return loss,gradParameters --:add(parameters:clone():mul(lambda):div(num_minibatches))
+				return loss,gradParameters
 			end
 			
-			
-			--print(torch.abs(embedding_layer.weight):sum())
-	    	-- Do the update operation.
+			-- Do the update operation.
 	    	if optimizer == "adagrad" then
 	    		config =  {
 	    		learningRate = eta,
@@ -101,13 +96,13 @@ function LogisticRegression(sparse_input, dense_input, training_output,
 	    		learningRate = eta, 
 	    	}
 	    	optim.sgd(feval, parameters, config)
-	    else 
-	    	assert(false)
-	    end
-	    
+		    else 
+		    	assert(false)
+		    end
+		    
 
+		end
+		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
 	end
-	print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output))
-end
 return model
 end

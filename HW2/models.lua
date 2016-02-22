@@ -5,24 +5,17 @@ require('nn')
 function makeLogisticRegressionModel(D_sparse_in, D_dense, D_output,  embedding_size, window_size)
 	print("Making lr model")
 
-	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
+	local par = nn.ParallelTable()
 	local sparse_multiply = nn.Sequential()
 	sparse_multiply:add(nn.LookupTable(D_sparse_in, D_output))
 	sparse_multiply:add(nn.Sum(1,2))
-
-	--sparse_multiply:add(nn.LookupTable(D_sparse_in, embedding_size))
-	-- Flatten those features into a single vector  
-	--sparse_multiply:add(nn.View(-1):setNumInputDims(2))
-	-- Apply a linear layer to those.
-	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
-	--sparse_multiply:add(nn.Linear(embedding_size*window_size, D_output))
 
 	par:add(sparse_multiply) -- first child
 	par:add(nn.Linear(D_dense, D_output)) -- second child
 	
 	local model = nn.Sequential()
 	model:add(par)
-	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
+	model:add(nn.CAddTable())
 
 	model:add(nn.LogSoftMax())
 	criterion = nn.ClassNLLCriterion()
@@ -30,22 +23,15 @@ function makeLogisticRegressionModel(D_sparse_in, D_dense, D_output,  embedding_
 end
 
 -- This function builds the neural network used in the paper
-
 function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embedding_size, window_size)
 	print("Making neural network model")
 
-	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
+	local par = nn.ParallelTable()
 	local get_embeddings = nn.Sequential()
-	--sparse_multiply:add(nn.LookupTable(D_sparse_in, D_hidden))
-	--sparse_multiply:add(nn.Sum(1,2))
 
-	-- I THINK this is now correct.
-	-- Get the word embeddings for each of the words
 	get_embeddings:add(nn.LookupTable(D_sparse_in, embedding_size))
-	-- Flatten those features into a single vector  
 	get_embeddings:add(nn.View(-1):setNumInputDims(2))
 	-- Apply a linear layer to those.
-	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
 	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 
@@ -54,7 +40,7 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 	
 	local model = nn.Sequential()
 	model:add(par)
-	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
+	model:add(nn.CAddTable())
 	model:add(nn.HardTanh())
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
@@ -65,29 +51,18 @@ function makeNNmodel_figure1(D_sparse_in, D_dense, D_hidden, D_output,  embeddin
 
 end
 
--- TODO: Change this to use the new approach of having one embedding per word!
 function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, window_size, word_embeddings)
 	print("Making neural network model 2")
 
-	local par = nn.ParallelTable() -- takes a TABLE of inputs, applies i'th child to i'th input, and returns a table
+	local par = nn.ParallelTable()
 	local get_embeddings = nn.Sequential()
-	--sparse_multiply:add(nn.LookupTable(D_sparse_in, D_hidden))
-	--sparse_multiply:add(nn.Sum(1,2))
-
 	local embedding_size = word_embeddings:size(2)
 
 	local lookup = nn.LookupTable(word_embeddings:size())
 	lookup.weight = word_embeddings
 
-	print(embedding_size, window_size, D_hidden)
-
-	-- I THINK this is now correct.
-	-- Get the word embeddings for each of the words
 	get_embeddings:add(lookup)
-	-- Flatten those features into a single vector  
 	get_embeddings:add(nn.View(-1):setNumInputDims(2))
-	-- Apply a linear layer to those.
-	-- THIS ASSUMES D_WIN - 3 -- TODO: MAKE THAT BE AN ARG
 	get_embeddings:add(nn.Linear(embedding_size*window_size, D_hidden))
 
 
@@ -96,7 +71,7 @@ function make_pretrained_NNmodel(D_sparse_in, D_dense, D_hidden, D_output, windo
 	
 	local model = nn.Sequential()
 	model:add(par)
-	model:add(nn.CAddTable()) -- CAddTable adds its incoming tables
+	model:add(nn.CAddTable())
 	model:add(nn.HardTanh())
 	model:add(nn.Linear(D_hidden, D_output)) -- second child
 	model:add(nn.LogSoftMax())
@@ -112,7 +87,6 @@ end
 function getaccuracy(model, validation_sparse_input, validation_dense_input, validation_output)
 	scores = model:forward({validation_sparse_input, validation_dense_input})
 	local _, class_preds = torch.max(scores, 2)
-	--print(valueCounts(class_preds:squeeze()))
 	local equality = torch.eq(class_preds, validation_output)
 	local score = equality:sum()/equality:size()[1]
 	return score

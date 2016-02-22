@@ -2,7 +2,6 @@
 require("hdf5")
 require("nn")
 require("optim")
---require('cudnn')
 
 cmd = torch.CmdLine()
 
@@ -28,7 +27,7 @@ function main()
    _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW2/' or ''
 
    dofile(_G.path..'nb.lua')
-   dofile(_G.path..'logisticregression2.lua')
+   dofile(_G.path..'nntrain.lua')
 
    printoptions(opt)
 
@@ -74,7 +73,7 @@ function main()
    	W, b = naiveBayes(sparse_training_input, dense_training_input, training_output, nsparsefeatures, nclasses, opt.alpha)
    	print(validateLinearModel(W, b, sparse_validation_input, dense_validation_input, validation_output, nsparsefeatures, ndensefeatures))
    else
-	   local model = LogisticRegression(sparse_training_input, dense_training_input:double(), training_output, 
+	   local model = TrainNNModel(sparse_training_input, dense_training_input:double(), training_output, 
 	   	sparse_validation_input, dense_validation_input:double(), validation_output, 
 	   	nsparsefeatures, nclasses, opt.minibatch, opt.eta, opt.epochs, opt.lambda, opt.classifier, 
 	   	opt.hiddenlayers, opt.optimizer, word_embeddings, opt.embedding_size, d_win, opt.fixed_embeddings, opt.save_losses)
@@ -82,7 +81,7 @@ function main()
 	   printoptions(opt)
 	   print(getaccuracy(model, sparse_validation_input, dense_validation_input:double(), validation_output))
 	
-      -- Write to test file.
+      -- Write to test file. Only supported for NNModels.
       if (opt.testfile ~= '') then
          print("Writing to test file")
          local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input:double()}))
@@ -90,7 +89,7 @@ function main()
          local results = class_preds:squeeze()
          file = io.open(opt.testfile, 'w')
          io.output(file)
-         io.write("ID,Class")
+         io.write("ID,Class\n")
          for test_i = 1, results:size()[1] do
             io.write(test_i, ',', results[test_i], '\n')
          end

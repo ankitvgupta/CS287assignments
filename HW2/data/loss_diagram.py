@@ -1,7 +1,10 @@
 # Usage python loss_diagram.py
 import pandas as pd 
 import sys
+import seaborn as sns
 import matplotlib.pyplot as plt 
+
+sns.set_context("paper")
 
 data_lr = pd.read_csv("losses_lr.txt")
 data_nn = pd.read_csv("losses_nn.txt")
