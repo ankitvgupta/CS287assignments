@@ -208,8 +208,8 @@ def main(arguments):
     sentences = file_list_to_sentences([train, valid, test])
     tag_dict = load_tag_dict(tag_file)
 
-    # tag_names, tag_counts = file_list_to_tag_count([train, valid], tag_dict)
-    # plot_tag_distribution(tag_names, tag_counts, 'tagcounts.png')
+    tag_names, tag_counts = file_list_to_tag_count([train, valid], tag_dict)
+    plot_tag_distribution(tag_names, tag_counts, 'tagcounts.png')
 
     perc_dict = vocab_file_to_percent_dict('data/glove.6B.50d.txt')
     rank_list = test_set_to_rank_list(test, perc_dict)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-"""Classes for binary features of sentences
+"""Classes for binary features of words for POS tagging
 """
 
-class SentenceFeature(object):
+class Feature(object):
 
 	def __init__(self, dwin):
 		self.dwin = dwin
@@ -28,7 +28,7 @@ class SentenceFeature(object):
 		raise UnimplementedError
 
 
-class UnigramFeature(SentenceFeature):
+class UnigramFeature(Feature):
 	def __init__(self, dwin, vocab):
 		self.dwin = dwin
 		self.vocab = vocab
@@ -64,7 +64,7 @@ class UnigramFeature(SentenceFeature):
 		return self.numWords
 
 
-class CapitalizationFeature(SentenceFeature):
+class CapitalizationFeature(Feature):
 
 	# for each word,
 	# first entry is all lowercase
