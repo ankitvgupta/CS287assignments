@@ -44,7 +44,6 @@ function LogisticRegression(sparse_input, dense_input, training_output,
    	end
 	for i = 1, num_epochs do
 		print("L1 norm of params:", torch.abs(parameters):sum())
-
 		for j = 1, sparse_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
 		    -- zero out our gradients
