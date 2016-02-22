@@ -81,7 +81,7 @@ function main()
 	   printoptions(opt)
 	   print(getaccuracy(model, sparse_validation_input, dense_validation_input:double(), validation_output))
 	
-      -- Write to test file. Only supported for NNModels.
+      -- Write to test file. Only for NNModels.
       if (opt.testfile ~= '') then
          print("Writing to test file")
          local scores = torch.squeeze(model:forward({sparse_test_input, dense_test_input:double()}))
