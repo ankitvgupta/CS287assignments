@@ -4,16 +4,23 @@ end
 
 -- trie is the trie we are adding to (note that this is passed by reference)
 -- sentence is a torch tensor consisting of the words
-function add_word_and_context_to_trie(trie, sentence)
-	local sentence_len = sentence:size(1)
+-- The target is optional - if included, then whole window used as context. Otherwise, 
+--      last element of context is the sentence
+function add_word_and_context_to_trie(trie, context, target)
+	local sentence_len = context:size(1)
+
+	if target == nil then
+		target = context[sentence_len]
+		sentence_len = sentence_len - 1
+	end
 
 	-- The last word is one being predicted
-	local target = sentence[sentence_len]
+	--local target = context[sentence_len]
 
 	local position = trie
-	-- iterate backwards through the sentence's context (this is a reverse trie)
-	for i = sentence_len - 1, 1, -1 do
-		local word = sentence[i]
+	-- iterate backwards through the context (since this is a reverse trie)
+	for i = sentence_len, 1, -1 do
+		local word = context[i]
 
 		if position[word] ~= nil then
 			position = position[word]
@@ -88,16 +95,16 @@ end
 
 function trie_example()
 	local reverse_trie = init_trie()
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,2,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,2,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,1,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,2})
-	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,2,3},1)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,2,3},2)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3},2)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,1,3},2)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3},1)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3},1)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,2},1)
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,3},1)
 	print(reverse_trie)
-	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
+	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,3})
 	print(counts)
 	print(normalize_table(counts))
 end
@@ -132,5 +139,7 @@ function bigtrie_example(num_sentences, length, vocab_size)
 --	print(normalize_table(counts))
 end
 
---trie_example()
-bigtrie_example(1000000,5,1000)
+
+
+trie_example()
+--bigtrie_example(1000000,5,1000)
