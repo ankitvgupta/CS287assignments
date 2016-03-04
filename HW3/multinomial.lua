@@ -60,8 +60,6 @@ function get_word_counts_for_context(trie, context)
 end
 
 function normalize_table(tab)
-	if tab == nil:
-		return tab
 	local total = 0
 	for _, val in pairs(tab) do
 		total = total + val
@@ -108,7 +106,7 @@ function bigtrie_example(num_sentences, length, vocab_size)
     	print(try)
 		counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{try})
     end
-    --print(counts)
+    print(counts)
     
 --	print(reverse_trie)
 --	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
