@@ -1,3 +1,5 @@
+dofile(_G.path.."utils.lua")
+
 function init_trie()
 	return {}
 end
@@ -73,48 +75,6 @@ function get_word_counts_for_context(trie, context)
 	return position['counts']
 end
 
--- Calculates the number of items in a table
--- This can be used to calculate N_{c,*}
-function number_of_items_in_table(tab)
-	return #tab
-end
-
--- Sums of the values in a table
--- This can be used to calculate F_{c,*}
-function sum_of_values_in_table(tab)
-	local total = 0
-	for _, val in pairs(tab) do
-		total = total + val
-	end
-	return total
-end
-
--- Multiply each value in a table by x
-function multiply_table_by_x(tab, x)
-	local new_table = {}
-	for key, val in pairs(tab) do
-		new_table[key] = val*x
-	end
-	return new_table
-end
-
--- Takes the elementwise sum of two tables
--- This is essentially an outer join, where we sum values on duplicate keys.
-function sum_tables(tab1, tab2)
-	new_table = {}
-	for key,val in pairs(tab1) do
-		new_table[key] = val
-	end
-	for key, val in pairs(tab2) do
-		if new_table[key] ~= nil then
-			new_table[key] = new_table[key] + val
-		else
-			new_table[key] = val
-		end
-	end
-	return new_table
-end
-
 
 -- input_contexts: Torch LongTensor (N x d_win)
 -- output_words: Torch LongTensor (N x 1)
@@ -161,13 +121,6 @@ function predict(trie, context)
 	-- This implements the rest of the fraction
 	local p_wb = multiply_table_by_x(numerator, 1.0/(F_cstar + N_cstar))
 	return p_wb
-end
-
--- This function might not actually have any value, but
---      it basically just normalizes the counts in a table.
-function normalize_table(tab)
-	local total = sum_of_values_in_table(tab)
-	return multiply_table_by_x(tab, 1/total)
 end
 
 -- Creates a simple trie that demonstrates its main features.
