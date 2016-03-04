@@ -39,14 +39,16 @@ function add_word_and_context_to_trie(trie, sentence)
 
 end
 
-reverse_trie = init_trie()
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,2,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,2,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,1,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,2})
-add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,3})
-
-print(reverse_trie)
+function trie_example()
+	reverse_trie = init_trie()
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,2,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,2,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,1,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,2})
+	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,3})
+	print(reverse_trie)
+end
+trie_example()
