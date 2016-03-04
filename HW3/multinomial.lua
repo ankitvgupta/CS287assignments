@@ -83,13 +83,81 @@ function sum_of_values_in_table(tab)
 	return total
 end
 
-function normalize_table(tab)
-	local total = sum_of_values_in_table(tab)
-	new_table = {}
+function multiply_table_by_x(tab, x)
+	local new_table = {}
 	for key, val in pairs(tab) do
-		new_table[key] = val/total
+		new_table[key] = val*x
 	end
 	return new_table
+end
+
+function sum_tables(tab1, tab2):
+	new_table = {}
+	for key,val in pairs(tab1) do
+		new_table[key] = val
+	end
+	for key, val in pairs(tab2) do
+		if new_table[key] ~= nil then
+			new_table[key] = new_table[key] + val
+		else
+			new_table[key] = val
+		end
+	end
+	return new_table
+end
+
+
+-- input_contexts: Torch LongTensor (N x d_win)
+-- output_words: Torch LongTensor (N x 1)
+-- Both of these should use the IDs of the 
+function train(input_contexts, output_words)
+
+	-- Make sure the inputs are valid 
+	assert(input_contexts:size(1) == output_words:size(1))
+	local N = input_contexts:size(1)
+
+	-- Load data into Trie
+	local reverse_trie = init_trie()
+	for i in 1, N do
+		add_word_and_context_to_trie(reverse_trie, input_contexts[i],output_words[i])
+	end
+	return reverse_trie
+end
+
+-- function p_ML(count_table)
+-- 	return normalize_table(count_table)
+-- end
+
+-- Returns the distribution over the vocabulary given the context
+-- Trie should be a trained trie 
+-- Context is a LongTensor.
+--
+-- Note that this function operates recursively
+function predict(trie, context)
+	local num_words = context:size(1)
+	if num_words == 0 then
+		return {}
+	end
+	local count_table = get_word_counts_for_context(trie, context)
+	local F_cstar = sum_of_values_in_table(count_table)
+	local N_cstar = number_of_items_in_table(count_table) 
+
+	-- This implements F_{c,w} + N_{C,star}*p_wb(w|c')
+	local numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, context:narrow(1, 2, num_words - 1)),N_cstar))
+
+	-- This implements the rest of the fraction
+	local p_wb = multiply_table_by_x(numerator, 1.0/(F_cstar + N_cstar))
+	return p_wb
+end
+
+function normalize_table(tab)
+	local total = sum_of_values_in_table(tab)
+	return multiply_table_by_x(tab, 1/total)
+	-- local new_table = {}
+	-- for key, val in pairs(tab) do
+	-- 	new_table[key] = val/total
+	-- end
+	-- return new_table
 end
 
 
