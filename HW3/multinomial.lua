@@ -1,5 +1,3 @@
-
-
 function init_trie()
 	return {}
 end
@@ -88,6 +86,18 @@ function trie_example()
 	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
 	print(counts)
 	print(normalize_table(counts))
-
 end
+
+-- Creates a trie with large number of 
+function bigtrie_example(num_sentences, length, vocab_size)
+	local reverse_trie = init_trie()
+	for i = 1, num_sentences do
+		add_word_and_context_to_trie(reverse_trie, torch.rand(length):mul(vocab_size):long())
+	end
+--	print(reverse_trie)
+--	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
+--	print(counts)
+--	print(normalize_table(counts))
+end
+
 trie_example()
