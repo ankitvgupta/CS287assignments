@@ -61,9 +61,21 @@ function get_word_counts_for_context(trie, context)
 	return position['counts']
 end
 
+function normalize_table(tab)
+	local total = 0
+	for _, val in pairs(tab) do
+		total = total + val
+	end
+	new_table = {}
+	for key, val in pairs(tab) do
+		new_table[key] = val/total
+	end
+	return new_table
+end
+
 
 function trie_example()
-	reverse_trie = init_trie()
+	local reverse_trie = init_trie()
 	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,2,3})
 	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{2,2,3})
 	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,3})
@@ -73,6 +85,9 @@ function trie_example()
 	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,1,2})
 	add_word_and_context_to_trie(reverse_trie, torch.LongTensor{1,3})
 	print(reverse_trie)
-	print(get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1}))
+	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
+	print(counts)
+	print(normalize_table(counts))
+
 end
 trie_example()
