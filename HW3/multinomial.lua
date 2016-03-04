@@ -100,7 +100,7 @@ function bigtrie_example(num_sentences, length, vocab_size)
     print("Getting counts")
     local try = 0
     local counts = nil
-    print(reverse_trie)
+    print(reverse_trie[1]['counts'])
     --while counts == nil do
     --    try = try + 1
     --   print(try)
