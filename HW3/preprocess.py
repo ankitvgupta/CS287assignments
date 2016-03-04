@@ -39,9 +39,10 @@ def parse_line(s, vocab, dwin, frontpad=True, backpad=True, lowercase=False):
     idxs = []
 
     for word in s.split():
-        if word not in vocab:
-            word = '<unk>'
-        idxs.append(vocab[word])
+        if word[0] != '_':
+            if word not in vocab:
+                word = '<unk>'
+            idxs.append(vocab[word])
 
     return idxs
 
@@ -152,13 +153,12 @@ def main(arguments):
                         type=str)
     parser.add_argument('dwin', help="Window size",
                         type=int)
-    parser.add_argument('allwins', help="If true, generate all window sizes <= dwin",
-                        type=bool, default=True, action='store', nargs='?')
+    parser.add_argument('-s', '--single', action='store_true', help="Generate single window size dwin")
 
     args = parser.parse_args(arguments)
     dataset = args.dataset
     dwin = args.dwin
-    allwins = args.allwins
+    single = args.single
     train, valid, valid_blanks, test_blanks, word_dict = FILE_PATHS[dataset]
 
     # Load vocab dict
@@ -171,10 +171,10 @@ def main(arguments):
     print "Creating validation output..."
     valid_true_outs = create_output_data(valid, valid_blanks, vocab_dict)
 
-    if allwins:
-        dwins = range(0, dwin+1)
-    else:
+    if single:
         dwins = [dwin]
+    else:
+        dwins = range(0, dwin+1)
 
     for dw in dwins:
 
