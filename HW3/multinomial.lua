@@ -55,6 +55,11 @@ end
 -- 		 Returns nil if context not in trie.
 function get_word_counts_for_context(trie, context)
 
+	-- Deal with the special case of the highest level position (unigrams - no previous words)
+	if #context:size() == 0 then
+		return trie['counts']
+	end
+
 	local context_len = context:size(1)
 	--print(context_len)
 
@@ -133,28 +138,35 @@ function fit(input_contexts, output_words)
 	return reverse_trie
 end
 
+function normalize_table(tab)
+	local total = sum_of_values_in_table(tab)
+	return multiply_table_by_x(tab, 1/total)
+end
+
 -- Returns the distribution over the vocabulary given the context
 -- Trie should be a trained trie 
 -- Context is a LongTensor.
 --
 -- Note that this function operates recursively
 function predict(trie, context)
-	local num_words = context:size(1)
-	if num_words == 0 then
-		return nil
+	local num_words = -1
+	-- If there is no context, just return the base case
+	if #context:size() == 0 then 
+		return normalize_table(get_word_counts_for_context(trie, context))
+	else 
+		num_words = context:size(1)
 	end
-	-- if num_words == 0 then
-	-- 	return {}
-	-- end
+	--local num_words = context:size(1)
 	local count_table = get_word_counts_for_context(trie, context)
 	local F_cstar = sum_of_values_in_table(count_table)
 	local N_cstar = number_of_items_in_table(count_table) 
 
 	-- This implements F_{c,w} + N_{C,star}*p_wb(w|c')
 	local numerator = nil
-	if num_words == 1 then -- base case
-		numerator = sum_tables(count_table, multiply_table_by_x({},N_cstar))
-	else
+	if num_words == 1 then -- base case, the unigram case is just the distribution of final words.
+		--numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, torch.LongTensor{}),N_cstar))
+		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, Torch.LongTensor{}), N_cstar))
+	elseif num_words > 1 then
 		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, context:narrow(1, 2, num_words - 1)),N_cstar))
 	end
 
@@ -163,12 +175,7 @@ function predict(trie, context)
 	return p_wb
 end
 
--- This function might not actually have any value, but
---      it basically just normalizes the counts in a table.
-function normalize_table(tab)
-	local total = sum_of_values_in_table(tab)
-	return multiply_table_by_x(tab, 1/total)
-end
+
 
 -- Creates a simple trie that demonstrates its main features.
 function trie_example()
