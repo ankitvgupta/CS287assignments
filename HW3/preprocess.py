@@ -19,8 +19,6 @@ def load_vocab_dict(file_path):
             idx, word, _ = line.strip().split()
             vocab_dict[word] = int(idx)
     m = max(vocab_dict.values())
-    vocab_dict['<s>'] = m+1
-    vocab_dict['</s>'] = m+2
 
     return vocab_dict
 
