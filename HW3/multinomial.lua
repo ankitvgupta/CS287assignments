@@ -121,5 +121,5 @@ function bigtrie_example(num_sentences, length, vocab_size)
 --	print(normalize_table(counts))
 end
 
-trie_example()
---bigtrie_example(1000000,5,10000)
+--trie_example()
+bigtrie_example(1000000,5,1000)
