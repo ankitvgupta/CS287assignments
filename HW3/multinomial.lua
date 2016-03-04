@@ -43,6 +43,7 @@ end
 function get_word_counts_for_context(trie, context)
 
 	local context_len = context:size(1)
+	print(context_len)
 
 	local position = trie
 	-- iterate backwards through the sentence's context (this is a reverse trie)
@@ -56,6 +57,7 @@ function get_word_counts_for_context(trie, context)
 		end
 
 	end
+	print(position)
 	return position['counts']
 end
 
@@ -100,13 +102,17 @@ function bigtrie_example(num_sentences, length, vocab_size)
     print("Getting counts")
     local try = 0
     local counts = nil
-    print(reverse_trie[1]['counts'])
-    while counts == nil do
-    	try = try + 1
-    	print(try)
-		counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{try})
-    end
-    print(counts)
+    get_word_counts_for_context(reverse_trie, torch.LongTensor{1})
+    get_word_counts_for_context(reverse_trie, torch.LongTensor{2})
+    get_word_counts_for_context(reverse_trie, torch.LongTensor{3})
+
+    --print(reverse_trie[1]['counts'])
+    --while counts == nil do
+    --	try = try + 1
+    --	print(try)
+	--	counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{try})
+    --end
+    --print(counts)
     
 --	print(reverse_trie)
 --	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
