@@ -17,23 +17,23 @@ function add_word_and_context_to_trie(trie, sentence)
 
 		if position[word] ~= nil then
 			position = position[word]
-			--position['count']  = position['count'] + 1
 		else 
 			position[word] = {}
 			position = position[word]
-			--position['count'] = 1
 		end
 
-	
-	if position['counts'] == nil then
-		local counts = {}
-		counts[target] = 1
-		position['counts'] = counts
-	elseif position['counts'][target] == nil then
-		position['counts'][target] = 1
-	else
-		position['counts'][target] = position['counts'][target]  + 1
-	end 
+		-- If this is the first time we have gotten here.
+		if position['counts'] == nil then
+			local counts = {}
+			counts[target] = 1
+			position['counts'] = counts
+		-- If we have gotten here, but the target is different
+		elseif position['counts'][target] == nil then
+			position['counts'][target] = 1
+		-- If we have gotten here and seen this target before
+		else
+			position['counts'][target] = position['counts'][target]  + 1
+		end 
 	end
 
 end
@@ -44,7 +44,7 @@ end
 function get_word_counts_for_context(trie, context)
 
 	local context_len = context:size(1)
-	print(context_len)
+	--print(context_len)
 
 	local position = trie
 	-- iterate backwards through the sentence's context (this is a reverse trie)
@@ -58,7 +58,7 @@ function get_word_counts_for_context(trie, context)
 		end
 
 	end
-	print(position)
+	--print(position)
 	return position['counts']
 end
 
@@ -103,9 +103,9 @@ function bigtrie_example(num_sentences, length, vocab_size)
     print("Getting counts")
     local try = 0
     local counts = nil
-    get_word_counts_for_context(reverse_trie, torch.LongTensor{1})
-    get_word_counts_for_context(reverse_trie, torch.LongTensor{2})
-    get_word_counts_for_context(reverse_trie, torch.LongTensor{3})
+    print(get_word_counts_for_context(reverse_trie, torch.LongTensor{1}))
+    print(get_word_counts_for_context(reverse_trie, torch.LongTensor{2}))
+    print(get_word_counts_for_context(reverse_trie, torch.LongTensor{3}))
 
     --print(reverse_trie[1]['counts'])
     --while counts == nil do
