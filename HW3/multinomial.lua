@@ -92,6 +92,9 @@ end
 function bigtrie_example(num_sentences, length, vocab_size)
 	local reverse_trie = init_trie()
 	for i = 1, num_sentences do
+		if i % 10000 == 0 then
+			print(i)
+		end
 		add_word_and_context_to_trie(reverse_trie, torch.rand(length):mul(vocab_size):long())
 	end
 --	print(reverse_trie)
@@ -101,3 +104,4 @@ function bigtrie_example(num_sentences, length, vocab_size)
 end
 
 trie_example()
+--bigtrie_example(1000000,5,10000)
