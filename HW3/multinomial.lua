@@ -100,12 +100,13 @@ function bigtrie_example(num_sentences, length, vocab_size)
     print("Getting counts")
     local try = 0
     local counts = nil
-    while counts == nil do
-        try = try + 1
-        print(try)
-	    counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1})
-    end
-    print(counts)
+    print(reverse_trie)
+    --while counts == nil do
+    --    try = try + 1
+    --   print(try)
+	--    counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1})
+    --end
+    --print(counts)
     
 --	print(reverse_trie)
 --	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
