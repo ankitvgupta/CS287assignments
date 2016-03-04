@@ -24,7 +24,7 @@ function add_word_and_context_to_trie(trie, sentence)
 			--position['count'] = 1
 		end
 
-	end
+	
 	if position['counts'] == nil then
 		local counts = {}
 		counts[target] = 1
@@ -34,6 +34,7 @@ function add_word_and_context_to_trie(trie, sentence)
 	else
 		position['counts'][target] = position['counts'][target]  + 1
 	end 
+	end
 
 end
 
@@ -120,5 +121,5 @@ function bigtrie_example(num_sentences, length, vocab_size)
 --	print(normalize_table(counts))
 end
 
---trie_example()
-bigtrie_example(1000000,5,10000)
+trie_example()
+--bigtrie_example(1000000,5,10000)
