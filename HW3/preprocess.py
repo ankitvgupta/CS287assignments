@@ -18,7 +18,6 @@ def load_vocab_dict(file_path):
         for line in f:
             idx, word, _ = line.strip().split()
             vocab_dict[word] = int(idx)
-    m = max(vocab_dict.values())
 
     return vocab_dict
 
@@ -37,10 +36,9 @@ def parse_line(s, vocab, dwin, frontpad=True, backpad=True, lowercase=False):
     idxs = []
 
     for word in s.split():
-        if word[0] != '_':
-            if word not in vocab:
-                word = '<unk>'
-            idxs.append(vocab[word])
+        if word not in vocab:
+            word = '<unk>'
+        idxs.append(vocab[word])
 
     return idxs
 
@@ -49,7 +47,12 @@ def parse_options(s, vocab):
 
 def parse_context(s, vocab, dwin):
     full_context = parse_line(s, vocab, dwin, backpad=False)
+    if len(full_context) == 0:
+        return []
+    # remove the target word
+    full_context.pop()
     start = len(full_context)-dwin
+    assert len(full_context[start:]) == dwin
     return full_context[start:]
 
 def split_idxs(idxs, dwin):
@@ -100,42 +103,26 @@ def create_data_from_blanks(data_file, vocab, dwin):
 
     return Cs, Os
 
-def create_output_data(valid, valid_blanks, vocab_dict):
+def create_output_data(valid_blanks, vocab_dict):
     Y = []
-    with open(valid, 'rb') as vf:
-        with open(valid_blanks, 'rb') as vb:
-            for blanks_line in vb:
-                blank_split = blanks_line.split()
-                if blank_split[0] == 'C':
-                    context = blank_split[1:]
-                    full_text = vf.next()
-                    full_split = full_text.split()
-                    full_split += ['</s>']
-
-                    # if the context is the full sentence, predict another </s>
-                    if context[-1] == '</s>':
-                        full_split.append('</s>')
-
-                    context_len = len(context)
-                    # debugging
-                    assert context_len < len(full_split)
-                    for i, b in enumerate(context):
-                        assert (full_split[i] == b) or (full_split[i] == '<unk>'), full_split
-
-                    target = full_split[context_len]
+    with open(valid_blanks, 'rb') as f:
+        for line in f:
+            if line[0] == 'C':
+                line_split = line[2:].split()
+                target = line_split[-1]
+                try:
                     y = vocab_dict[target]
-                    Y.append(y)
-
+                except KeyError:
+                    y = vocab_dict['<unk>']
+                Y.append(y)
     return Y
 
 
 FILE_PATHS = {"PTB": ("data/train.txt",
-                      "data/valid.txt",
                       "data/valid_blanks.txt",
                       "data/test_blanks.txt",
                       "data/words.dict"),
               "SMALL": ("data/train.1000.txt",
-                       "data/valid.1000.txt",
                        "data/valid_blanks.txt",
                        "data/test_blanks.txt",
                        "data/words.1000.dict")}
@@ -157,7 +144,7 @@ def main(arguments):
     dataset = args.dataset
     dwin = args.dwin
     single = args.single
-    train, valid, valid_blanks, test_blanks, word_dict = FILE_PATHS[dataset]
+    train, valid_blanks, test_blanks, word_dict = FILE_PATHS[dataset]
 
     # Load vocab dict
     print "Loading vocab dict..."
@@ -167,7 +154,7 @@ def main(arguments):
     numClasses = len(vocab_dict)
 
     print "Creating validation output..."
-    valid_true_outs = create_output_data(valid, valid_blanks, vocab_dict)
+    valid_true_outs = create_output_data(valid_blanks, vocab_dict)
 
     if single:
         dwins = [dwin]
