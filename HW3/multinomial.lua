@@ -62,11 +62,22 @@ function get_word_counts_for_context(trie, context)
 	return position['counts']
 end
 
-function normalize_table(tab)
+-- This can be used to calculate N_{c,*}
+function number_of_items_in_table(tab)
+	return #tab
+end
+
+-- This can be used to calculate F_{c,*}
+function sum_of_values_in_table(tab)
 	local total = 0
 	for _, val in pairs(tab) do
 		total = total + val
 	end
+	return total
+end
+
+function normalize_table(tab)
+	local total = sum_of_values_in_table(tab)
 	new_table = {}
 	for key, val in pairs(tab) do
 		new_table[key] = val/total
