@@ -92,12 +92,26 @@ end
 function bigtrie_example(num_sentences, length, vocab_size)
 	local reverse_trie = init_trie()
 	for i = 1, num_sentences do
+		if i % 10000 == 0 then
+			print(i)
+		end
 		add_word_and_context_to_trie(reverse_trie, torch.rand(length):mul(vocab_size):long())
 	end
+    print("Getting counts")
+    local try = 0
+    local counts = nil
+    while counts == nil do
+        try = try + 1
+        print(try)
+	    counts = get_word_counts_for_context(reverse_trie, torch.rand(length):mul(vocab_size):long())
+    end
+    print(counts)
+    
 --	print(reverse_trie)
 --	local counts = get_word_counts_for_context(reverse_trie, torch.LongTensor{1,1})
 --	print(counts)
 --	print(normalize_table(counts))
 end
 
-trie_example()
+--trie_example()
+bigtrie_example(1000000,5,10000)
