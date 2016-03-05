@@ -153,8 +153,14 @@ function isnan(x) return x ~= x end
 
 function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alpha)
 	assert(valid_input:size(1) == valid_options:size(1))
+	print("Starting predictions")
 	local predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
+	print("Initialized predictions tensor")
 	for i = 1, valid_input:size(1) do
+		if i % 100 == 0 then
+			print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+			collectgarbage()
+		end
 		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)
 		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
 		local values_wanted = prediction:index(1, valid_options[i])
