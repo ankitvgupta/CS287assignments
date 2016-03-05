@@ -53,6 +53,32 @@ function sum_of_values_in_table(tab)
 	return total
 end
 
+-- For some reason the Torch constructor didnt work.
+function table_to_tensor(tab, size)
+	local t = torch.zeros(size)
+	for k,v in pairs(tab) do
+		t[k] = v
+	end
+	return t
+end
+
+-- Adds 'amount' to each key of tab from 1 to max_possible
+-- This is used for laplace smoothing
+function add_to_tab(tab, max_possible, amount)
+	local new_tab = {}
+	--print(max_possible)
+	for i = 1, max_possible do
+		if tab[i] ~= nil then
+			new_tab[i] = tab[i] + amount
+		else
+			new_tab[i] = amount
+		end
+	end
+	return new_tab
+end
+
+
+
 -- Multiply each value in a table by x
 function multiply_table_by_x(tab, x)
 	local new_table = {}

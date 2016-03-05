@@ -42,7 +42,7 @@ function add_word_and_context_to_trie(trie, context, target)
 		local word = context[i]
 
 		if position[word] ~= nil then
-			position = position[word]
+			position = position[ word]
 		else 
 			position[word] = {}
 			position = position[word]
@@ -55,11 +55,12 @@ end
 -- Given a trie and the context being looked for, returns a table
 --       with the counts of each word that proceeded that context
 -- 		 Returns nil if context not in trie.
-function get_word_counts_for_context(trie, context)
+function get_word_counts_for_context(trie, context, vocab_size, alpha)
 
 	-- Deal with the special case of the highest level position (unigrams - no previous words)
 	if #context:size() == 0 then
-		return trie['counts']
+		--return trie['counts']
+		return add_to_tab(trie['counts'], vocab_size, alpha)
 	end
 
 	local context_len = context:size(1)
@@ -73,11 +74,19 @@ function get_word_counts_for_context(trie, context)
 		if position[word] ~= nil then
 			position = position[word]
 		else 
-			return nil
+			--return {}
+			return add_to_tab({}, vocab_size, alpha)
 		end
 
 	end
-	return position['counts']
+	if position['counts'] then
+		-- Explicitely add the count for the <s> string which will never be predicted.
+		position['counts'][3] = 0
+		--return position['counts']
+		return add_to_tab(position['counts'], vocab_size, alpha)
+	end
+	--return {}
+	return add_to_tab({}, vocab_size, alpha)
 end
 
 
@@ -92,7 +101,7 @@ function fit(input_contexts, output_words)
 
 	-- Load data into Trie
 	local reverse_trie = init_trie()
-	for i in 1, N do
+	for i = 1, N do
 		add_word_and_context_to_trie(reverse_trie, input_contexts[i],output_words[i])
 	end
 	return reverse_trie
@@ -108,32 +117,52 @@ end
 -- Context is a LongTensor.
 --
 -- Note that this function operates recursively
-function predict(trie, context)
+function predict(trie, context, vocab_size, alpha)
+	--print("Predict", vocab_size, alpha)
 	local num_words = -1
 	-- If there is no context, just return the base case
 	if #context:size() == 0 then 
-		return normalize_table(get_word_counts_for_context(trie, context))
+		return normalize_table(get_word_counts_for_context(trie, context, vocab_size, alpha))
 	else 
 		num_words = context:size(1)
 	end
 	--local num_words = context:size(1)
-	local count_table = get_word_counts_for_context(trie, context)
+	local count_table = get_word_counts_for_context(trie, context, vocab_size, alpha)
+	--count_table = add_to_tab(count_table, vocab_size, alpha)
+	--count_table[3] = 0
 	local F_cstar = sum_of_values_in_table(count_table)
 	local N_cstar = number_of_items_in_table(count_table) 
+	--print(F_cstar, N_cstar)
+	assert(N_cstar > 0)
 
 	-- This implements F_{c,w} + N_{C,star}*p_wb(w|c')
 	local numerator = nil
 	if num_words == 1 then -- base case, the unigram case is just the distribution of final words.
 		--numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, torch.LongTensor{}),N_cstar))
-		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, Torch.LongTensor{}), N_cstar))
+		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, torch.LongTensor{}, vocab_size, alpha), N_cstar))
 	elseif num_words > 1 then
-		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, context:narrow(1, 2, num_words - 1)),N_cstar))
+		numerator = sum_tables(count_table, multiply_table_by_x(predict(trie, context:narrow(1, 2, num_words - 1), vocab_size, alpha),N_cstar))
 	end
 
 	-- This implements the rest of the fraction
 	local p_wb = multiply_table_by_x(numerator, 1.0/(F_cstar + N_cstar))
 	return p_wb
 end
+
+function isnan(x) return x ~= x end
+
+function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alpha)
+	assert(valid_input:size(1) == valid_options:size(1))
+	local predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
+	for i = 1, valid_input:size(1) do
+		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)
+		local values_wanted = prediction:index(1, valid_options[i])
+		values_wanted:div(values_wanted:sum())
+		predictions[i] = values_wanted
+	end
+	return predictions
+end
+
 
 -- Creates a simple trie that demonstrates its main features.
 function trie_example()
@@ -174,5 +203,5 @@ end
 
 
 
-trie_example()
+--trie_example()
 --bigtrie_example(1000000,5,1000)

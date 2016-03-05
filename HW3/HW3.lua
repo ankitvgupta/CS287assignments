@@ -33,6 +33,8 @@ function main()
    _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW3/' or ''
 
    dofile(_G.path..'train.lua')
+   dofile(_G.path..'multinomial.lua')
+   dofile(_G.path..'utils.lua')
 
    local f = hdf5.open(opt.datafile, 'r')
 
@@ -59,8 +61,13 @@ function main()
 		print("Accuracy:")
 		print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
     elseif opt.classifier == 'multinomial' then
-    	local reverse_trie = init_trie()
-    	
+    	local reverse_trie = fit(training_input, training_output)
+    	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}))
+    	--print(test_context[1])
+    	print("Starting prediction")
+    	--print(predict(reverse_trie, test_context[1], nclasses, opt.alpha))
+    	--print(valid_options[1])
+    	print(predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha):sum(1))
     end
 
 
