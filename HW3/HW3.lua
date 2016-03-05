@@ -70,7 +70,7 @@ function main()
     	local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
     	print("Cross-entropy loss", cross_entropy_loss)
 
-    	result = scores_to_preds(predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha))
+    	result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
     end
 
     if (opt.testfile ~= '') then
