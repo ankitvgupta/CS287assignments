@@ -81,7 +81,7 @@ function get_word_counts_for_context(trie, context, vocab_size, alpha)
 	end
 	if position['counts'] then
 		-- Explicitely add the count for the <s> string which will never be predicted.
-		position['counts'][3] = 0
+		--position['counts'][3] = 0
 		--return position['counts']
 		return add_to_tab(position['counts'], vocab_size, alpha)
 	end
