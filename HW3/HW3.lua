@@ -62,12 +62,8 @@ function main()
 		print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
-    	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}))
-    	--print(test_context[1])
-    	print("Starting prediction")
-    	--print(predict(reverse_trie, test_context[1], nclasses, opt.alpha))
-    	--print(valid_options[1])
-    	print(predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha):sum(1))
+    	local predicted_distributions = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+    	print(predicted_distributions)
     end
 
 
