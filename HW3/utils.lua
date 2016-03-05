@@ -49,7 +49,6 @@ function cross_entropy_loss(true_outputs, predicted_distribution, options)
 		predicted_distribution_index = find(options[i], true_outputs[i])
 		--print(i, true_outputs[i], predicted_distribution_index, options[i])
 		assert(predicted_distribution_index ~= -1)
-
 		loss = loss + logged_probabilities[i][predicted_distribution_index]
 	end
 	return loss
