@@ -30,6 +30,33 @@ function getaccuracy(model, validation_input, validation_options, validation_tru
 	return total_acc/n
 end
 
+function find(tensor_array, number)
+	for i = 1, tensor_array:size(1) do
+		--print(tensor_array[i])
+		if tensor_array[i] == number then
+			return i
+		end
+	end
+	return -1
+end
+
+-- Calculates cross-entropy loss. This is the sum of the log
+-- probabilities that were predicted for the true class.
+function cross_entropy_loss(true_outputs, predicted_distribution, options)
+	local logged_probabilities = torch.log(predicted_distribution)
+	local loss = 0.0
+	for i = 1, true_outputs:size(1) do
+		predicted_distribution_index = find(options[i], true_outputs[i])
+		--print(i, true_outputs[i], predicted_distribution_index, options[i])
+		assert(predicted_distribution_index ~= -1)
+
+		loss = loss + logged_probabilities[i][predicted_distribution_index]
+	end
+	return loss
+end
+
+
+
 -- This function might not actually have any value, but
 --      it basically just normalizes the counts in a table.
 function normalize_table(tab)
