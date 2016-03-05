@@ -156,6 +156,7 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 	local predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
 	for i = 1, valid_input:size(1) do
 		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)
+		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
 		local values_wanted = prediction:index(1, valid_options[i])
 		values_wanted:div(values_wanted:sum())
 		predictions[i] = values_wanted
