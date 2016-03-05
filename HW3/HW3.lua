@@ -56,10 +56,15 @@ function main()
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
    		model = trainModel(model, criterion, training_input, training_output, valid_input, valid_options, valid_true_outs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
-   end
+		print("Accuracy:")
+		print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
+    elseif opt.classifier == 'multinomial' then
+    	local reverse_trie = init_trie()
+    	
+    end
 
-   print("Accuracy:")
-   print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
+
+
 
 
 
