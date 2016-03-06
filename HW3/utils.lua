@@ -30,6 +30,33 @@ function getaccuracy(model, validation_input, validation_options, validation_tru
 	return total_acc/n
 end
 
+function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)
+	local n = validation_input:size(1)
+	local option_count = validation_options:size(2)
+
+	local total_acc = 0.0
+
+	for i=1, n do
+		local options = validation_options[i]
+		local option_probs = result[i]:add(-1*result[i]:min())/(result[i]:max()-result[i]:min())
+		local true_idx = validation_true_outs[i]
+		local acc_updated = false
+
+		for j=1, option_count do
+			if validation_options[i][j] == true_idx then
+				acc = option_probs[j]
+				acc_updated = true
+				break
+			end
+		end
+
+		assert(acc_updated)
+		total_acc = total_acc + acc
+	end
+
+	return total_acc/n
+end
+
 function scores_to_preds(scores)
 	_, class_preds =  torch.max(scores, 2)
 	print(class_preds)

@@ -71,6 +71,11 @@ function main()
     	print("Cross-entropy loss", cross_entropy_loss)
 
     	result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+
+    	local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+    	print("Result accuracy", acc)
+    else
+    	print("Error: classifier '", opt.classifier, "' not implemented")
     end
 
     if (opt.testfile ~= '') then
