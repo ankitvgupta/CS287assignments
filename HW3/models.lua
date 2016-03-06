@@ -27,3 +27,27 @@ function neuralNetwork(D_sparse_in, D_hidden, D_output, embedding_size, window_s
 	return model, criterion
 
 end
+
+
+function nn_predictall_and_subset(model, valid_input, valid_options)
+	assert(valid_input:size(1) == valid_options:size(1))
+	print("Starting predictions")
+	local output_predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
+	print("Initialized output predictions tensor")
+	local predictions = torch.exp(model:forward(valid_input))
+	--print(predictions:sum(2))
+
+	for i = 1, valid_input:size(1) do
+		--if i % 100 == 0 then
+		--	print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+		--	collectgarbage()
+		--end
+
+		local values_wanted = predictions[i]:index(1, valid_options[i])
+		--print(values_wanted)
+		values_wanted:div(values_wanted:sum())
+		output_predictions[i] = values_wanted
+		--print(output_predictions[i]:sum())
+	end
+	return output_predictions
+end

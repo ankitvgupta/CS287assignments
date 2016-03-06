@@ -23,7 +23,7 @@ function trainModel(model,
    	local parameters, gradParameters = model:getParameters()
 
    	print("Got params and grads")
-	print("Starting Validation accuracy", getaccuracy(model, validation_input, validation_options, validation_true_out))
+	print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
 	for i = 1, num_epochs do
 		print("L1 norm of params:", torch.abs(parameters):sum())
@@ -86,7 +86,8 @@ function trainModel(model,
 		    
 
 		end
-		print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_input, validation_options, validation_true_out))
+		--print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_input, validation_options, validation_true_out))
+		print("Epoch "..i.." Validation accuracy:", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 	end
 return model
 end
