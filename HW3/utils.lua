@@ -142,7 +142,7 @@ end
 
 -- Calculates the number of items in a table
 -- This can be used to calculate N_{c,*}
-function number_of_items_in_table(tab)
+function number_of_items_in_table(tab, min_value)
 	return #tab
 end
 
