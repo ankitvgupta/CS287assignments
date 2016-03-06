@@ -30,6 +30,83 @@ function getaccuracy(model, validation_input, validation_options, validation_tru
 	return total_acc/n
 end
 
+function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)
+	local n = validation_input:size(1)
+	local option_count = validation_options:size(2)
+
+	local total_acc = 0.0
+
+	for i=1, n do
+		local options = validation_options[i]
+		local option_probs = result[i]:add(-1*result[i]:min())/(result[i]:max()-result[i]:min())
+		local true_idx = validation_true_outs[i]
+		local acc_updated = false
+
+		for j=1, option_count do
+			if validation_options[i][j] == true_idx then
+				acc = option_probs[j]
+				acc_updated = true
+				break
+			end
+		end
+
+		assert(acc_updated)
+		total_acc = total_acc + acc
+	end
+
+	return total_acc/n
+end
+
+function scores_to_preds(scores)
+	_, class_preds =  torch.max(scores, 2)
+	print(class_preds)
+	local preds = class_preds:squeeze()
+	binary_preds = torch.zeros(scores:size(1), scores:size(2))
+	for i=1, scores:size(1) do
+		binary_preds[i][preds[i]] = 1
+	end
+	return binary_preds
+end
+
+function get_predictions_from_model(model, test_input, test_options)
+	local n = test_input:size(1)
+	local option_count = test_options:size(2)
+	local results = torch.zeros(n, option_count)
+
+	local scores = model:forward(test_input)
+
+	for i=1, n do
+		local max_score = scores[i][1]
+		local pred = 1
+
+		for j=1, option_count do
+			local idx = test_options[i][j]
+			local s = scores[i][idx]
+			if s > max_score then
+				max_score = s
+				pred = j
+			end
+		end
+
+		results[i][pred] = 1
+	end
+
+	return results
+end
+
+function write_predictions(results, outfile)
+	io.output(outfile)
+	io.write("ID,Class1,Class2,Class3,Class4,Class5,Class6,Class7,Class8,Class9,Class10,Class11,Class12,Class13,Class14,Class15,Class16,Class17,Class18,Class19,Class20,Class21,Class22,Class23,Class24,Class25,Class26,Class27,Class28,Class29,Class30,Class31,Class32,Class33,Class34,Class35,Class36,Class37,Class38,Class39,Class40,Class41,Class42,Class43,Class44,Class45,Class46,Class47,Class48,Class49,Class50\n")
+	for test_i = 1, results:size(1) do
+		io.write(test_i)
+		for binary_i = 1, results:size(2) do
+			io.write(',', results[test_i][binary_i])
+		end
+		io.write('\n')
+	end
+
+end
+
 function find(tensor_array, number)
 	for i = 1, tensor_array:size(1) do
 		--print(tensor_array[i])

@@ -54,6 +54,8 @@ function main()
    local test_context = f:read('test_context'):all():long()
    local test_options = f:read('test_options'):all():long()
 
+   local result
+
    -- Train neural network.
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
@@ -63,12 +65,23 @@ function main()
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
     	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
-	local predicted_distributions = predictall_and_subset(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
+		local predicted_distributions = predictall_and_subset(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
     	--print(predicted_distributions:sum(2))
     	local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
     	print("Cross-entropy loss", cross_entropy_loss)
+
+    	result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+
+    	local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+    	print("Result accuracy", acc)
+    else
+    	print("Error: classifier '", opt.classifier, "' not implemented")
     end
 
+    if (opt.testfile ~= '') then
+        print("Writing to test file")
+    	write_predictions(result, opt.testfile)
+    end
 
 
 
