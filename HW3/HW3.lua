@@ -66,7 +66,8 @@ function main()
 		local acc = getaccuracy2(model, valid_input, valid_options, valid_true_outs)
 		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
 		--local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
-    	print("Result accuracy", acc)
+    	printoptions(opt)
+    	print(acc)
 
 		--print("Accuracy:")
 		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
@@ -88,7 +89,7 @@ function main()
     end
 
     if (opt.testfile ~= '') then
-        print("Writing to test file")
+        --print("Writing to test file")
     	write_predictions(result, opt.testfile)
     end
 
