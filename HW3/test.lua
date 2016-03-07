@@ -1,7 +1,7 @@
 
 --sample_indices a tensor of dimension 1xK
 --probs is the distribution over all of the probabilities.
-function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta)
+function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta, bias, biasparams, biasgradparams)
 	--dimension of z is minibatch_size x hidden_layer size
 	model:zeroGradParameters()
 	local tanh_result = model:forward(input_minibatch)
@@ -21,7 +21,8 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	--rows_wanted[1] = output_minibatch[1]
 	--print(tanh_result)
 	local lookuptable_rows = lookuptable:forward(rows_wanted)
-	--print(lookuptable_rows)
+	local bias_rows = bias:forward(rows_wanted)
+	--print(bias_rows)
 	--assert(false)
 	
 	-- Set whether each of these are true word or sampled or not (all are sampled, except the first is true)
@@ -40,8 +41,8 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	--pmls:narrow(1, 2, K):add(probs:index(1, sample_indices))
 	local z = torch.zeros(minibatch_size, K+1)
 	for i = 1, minibatch_size do
-		--print(tanh_result[i])
-		z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t())
+		--print(bias_rows[i]:t())
+		z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t()) + bias_rows[i]:t()
 	end
 	--print(z)
 
@@ -79,6 +80,16 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	end
 	--print(lookup_grad)
 
+	local bias_grad = torch.zeros(bias_rows:size())
+	--print(lookup_grad)
+	for i = 1, minibatch_size do
+		--print(tanh_result[i]:size(), sigmoid_grad[i]:size())
+		bias_grad[i] = sigmoid_grad[i]
+		--bias_grad[i] --= --torch.mm(sigmoid_grad[i]:view(K+1, 1), tanh_result[i]:view(1, tanh_result:size(2)))
+		--print(tanh_result[i])
+		--z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t())
+	end
+
 
 	--print(tanh_result)
 	--print(sigmoid_grad)
@@ -107,6 +118,9 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 	lookuptable:backward(rows_wanted, lookup_grad)
 	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
+
+	bias:backward(rows_wanted, bias_grad)
+	biasparams:add(torch.mul(biasgradparams,-1*eta))
 
 	model:backward(input_minibatch, model_grad)
 	modelparams:add(torch.mul(modelgradparams,-1*eta))

@@ -123,31 +123,34 @@ function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	-- we have z_w and z_{s_i,k} now
 
 
-	return model, nn.LookupTable(D_sparse_in, D_hidden)
+	return model, nn.LookupTable(D_sparse_in, D_hidden), nn.LookupTable(D_sparse_in, 1)
 
 end
 
 -- add the lookuptable weights to the model 
-function make_NCEPredict_model(model, lookuptable, D_hidden, D_output)
+function make_NCEPredict_model(model, lookuptable, bias, D_hidden, D_output)
 	local linear_layer = nn.Linear(D_hidden, D_output)
 	model:add(linear_layer)
-	print(linear_layer.weight:size())
-	print(lookuptable.weight:size())
+	print(linear_layer.bias:size())
+	print(bias.weight:squeeze():size())
+
 	linear_layer.weight = lookuptable.weight
-	linear_layer.bias = torch.zeros(linear_layer.bias:size())
+	linear_layer.bias = bias.weight:squeeze()
+
 	model:add(nn.LogSoftMax())
 	return model
 end
 
--- model, lookup = NCE(10, 2, 10, 2, 3)
+-- model, lookup, bias = NCE(10, 2, 10, 2, 3)
 -- modelparams, modelgradparams = model:getParameters()
+-- biasparams, biasgrad = model:getParameters()
 -- input_batch = torch.LongTensor{{7, 5, 2}, {5,4,9}, {1,8,6}}
 -- output_batch = torch.LongTensor{6,1,4}
 -- sample_indices = torch.LongTensor{2, 2, 2, 3, 3}
 -- sample_probs = torch.Tensor{.15, .05, .23, 05, .001, .01, .2, .3, .0001, .00001}
 -- lookupparams, lookupgrads = lookup:getParameters()
 -- --print(modelparams)
--- forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs, 1)
+-- forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs, 1, bias, biasparams, biasgrad)
 -- --print(modelparams)
 -- NCEPredict(model, lookup, 2, 10)
 

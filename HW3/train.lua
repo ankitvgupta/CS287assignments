@@ -127,13 +127,14 @@ function trainNCEModel(
    	local distribution = normalize_table(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, D_output, alpha))
    	local p_ml_tensor = table_to_tensor(distribution, D_output)
 
-	local model, lookup = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
+	local model, lookup, bias = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	local modelparams, modelgradparams = model:getParameters()
 	--input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
 	--output_batch = torch.LongTensor{1, 2}
 	--local sample_indices = torch.LongTensor{1, 72, 21, 341, 17, 8, 15}
 	--sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
 	local lookupparams, lookupgrads = lookup:getParameters()
+	local biasparams, biasgradparams = bias:getParameters()
 	print(training_input:size())
 
    	--local parameters, gradParameters = model:getParameters()
@@ -158,7 +159,7 @@ function trainNCEModel(
 		    minibatch_inputs = training_input:narrow(1, j, 1)
 		    minibatch_outputs = training_output:narrow(1, j, 1)
 		    sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)
-		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta)
+		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
 
 
 		 --    -- Create a closure for optim
@@ -214,7 +215,7 @@ function trainNCEModel(
 		--print("Epoch "..i.." Validation accuracy:", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 	end
 	print(lookup.weight)
-	return model, lookup
+	return model, lookup, bias
 end
 
 
