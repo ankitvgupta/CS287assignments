@@ -23,7 +23,7 @@ for line in sys.stdin:
 		accuracies.append(line.split('\t')[0])
 	if line[0] == 'D':
 		splitted = line.split('\t')
-		sets.append([splitted[1].split("HW2/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
+		sets.append([splitted[1].split("HW3/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
 
 print len(accuracies), len(sets)
 

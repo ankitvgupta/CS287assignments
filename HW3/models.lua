@@ -23,18 +23,55 @@ function neuralNetwork(D_sparse_in, D_hidden, D_output, embedding_size, window_s
 end
 
 --sample_indices a tensor of dimension 1xK
---sample_probs is the same
-function forwardPass(model, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, sample_probs)
+--probs is the distribution over all of the probabilities.
+function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs)
 	--dimension of z is minibatch_size x hidden_layer size
 	local z = model:forward(input_minibatch)
 	local K = sample_indices:size(1)
 	local minibatch_size, hidden_size = z:size(1), z:size(2)
 	--print(lookuptable.weight)
+	local total_gradient = torch.zeros(z:size())
 
+
+	lookuptablegradparameters:zero()
+
+	-- Grab the ML probabililities for each of the true words in the minibatch
+	local prob = probs:index(1, output_minibatch)
+
+	-- Grab the lookuptable rows for each of the true words. This is minibatchsize x hiddenlayer
+	local lookuptable_rows = lookuptable:forward(output_minibatch)
+
+	-- We now dot product the ith row of z with the ith row of lookuptable_rows (elementwise-mul and then sum left to right)
+	-- The product will be minibatchsize x 1
+	local dot_product = torch.cmul(z, lookuptable_rows):sum(2)
+	local subtracted = dot_product - torch.log(torch.mul(prob, K))
+
+
+	local sigmoid = nn.Sigmoid()
+	-- Calculate the prediction for each of the inputs
+	local predictions = sigmoid:forward(subtracted)
+	criterion = nn.BCECriterion()
+	-- Calculate the loss - note that these are all the correct ones, so the correct classes are all just 1
+	local loss = criterion:forward(predictions, torch.ones(predictions:size(1)))
+	-- Calculate the gradient
+	dLdpreds = criterion:backward(predictions, torch.zeros(predictions:size(1))) -- gradients of loss wrt preds
+	sigmoid:backward(subtracted, dLdpreds)
+	
+	local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
+	-- Update the lookuptable 
+	local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
+	-- Add that to the gradient to be passed back to the model
+	total_gradient:add(lookup_grad)
+	--print(lookup_grad)
+	lookuptable:backward(output_minibatch, lookup_grad)
+	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-.1))
+
+
+	-- do the sampled cases
 	for sample_i =1, sample_indices:size(1) do
 		lookuptablegradparameters:zero()
 		local idx = sample_indices[sample_i]
-		local prob = sample_probs[sample_i]
+		local prob = probs[idx]
 
 		local lookuptable_row = lookuptable:forward(torch.LongTensor{idx}):squeeze()
 
@@ -53,9 +90,14 @@ function forwardPass(model, lookuptable, lookuptableparameters, lookuptablegradp
 		local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
 		local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
 
+		total_gradient:add(lookup_grad)
+		print(lookup_grad)
 		lookuptable:backward(torch.LongTensor{idx}, lookup_grad:sum(1))
 		lookuptableparameters:add(torch.mul(lookuptablegradparameters,-.1))
 	end
+
+	model:backward(input_minibatch, total_gradient)
+	modelparams:add(torch.mul(modelgradparams,-.1))
 
 end
 
@@ -76,13 +118,15 @@ function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 end
 
 model, lookup = NCE(10, 2, 4, 2, 3)
+modelparams, modelgradparams = model:getParameters()
 input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
-output_batch = torch.Tensor{}
+output_batch = torch.LongTensor{1, 2}
 sample_indices = torch.LongTensor{1, 1, 1}
-sample_probs = torch.Tensor{.1, .2, .3}
+sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
 params, grads = lookup:getParameters()
-forwardPass(model, lookup, params, grads, input_batch, output_batch, sample_indices, sample_probs)
-
+print(modelparams)
+forwardandBackwardPass(model, modelparams, modelgradparams ,lookup, params, grads, input_batch, output_batch, sample_indices, sample_probs)
+print(modelparams)
 function nn_predictall_and_subset(model, valid_input, valid_options)
 	assert(valid_input:size(1) == valid_options:size(1))
 	print("Starting predictions")
