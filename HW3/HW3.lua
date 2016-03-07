@@ -19,6 +19,7 @@ cmd:option('-optimizer', 'sgd', 'Name of optimizer to use (adagrad or sgd)')
 cmd:option('-hiddenlayers', 10, 'Number of hidden layers (if using neural net)')
 cmd:option('-embedding_size', 50, 'Size of word embedding')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
+cmd:option('-K', 10, 'for NCE only')
 
 -- Hyperparameters
 -- ...
@@ -40,6 +41,8 @@ function main()
    printoptions(opt)
 
    local f = hdf5.open(opt.datafile, 'r')
+   local f2 = hdf5.open("samples.hdf5")
+   local samples = f2:read("samples"):all():long()
 
    local nclasses = f:read('numClasses'):all():long()[1]
    local nfeatures = f:read('numFeatures'):all():long()[1]
@@ -63,14 +66,26 @@ function main()
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
    		model = trainModel(model, criterion, training_input, training_output, valid_input, valid_options, valid_true_outs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
-		local acc = getaccuracy2(model, valid_input, valid_options, valid_true_outs)
+		local acc, cross_entropy_loss = getaccuracy2(model, valid_input, valid_options, valid_true_outs)
 		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
 		--local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
     	printoptions(opt)
-    	print(acc)
+    	print("Results:", acc, cross_entropy_loss)
+
+    	--print(acc)
 
 		--print("Accuracy:")
 		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
+	elseif opt.classifier == 'nce' then
+		trainNCEModel(training_input, training_output,
+					valid_input, 
+					valid_options,
+					valid_true_outs,
+					opt.minibatch, 
+					opt.epochs, 
+					opt.optimizer, 
+					opt.save_losses,
+					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K)
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
     	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
@@ -79,11 +94,11 @@ function main()
     	local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
     	print("Cross-entropy loss", cross_entropy_loss)
 
-    	result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+    	--result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
-    	local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+    	local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
     	printoptions(opt)
-    	print(acc)
+    	print("Results:", acc, cross_entropy_loss)
     else
     	print("Error: classifier '", opt.classifier, "' not implemented")
     end

@@ -92,7 +92,7 @@ function getaccuracy2(model, valid_input, valid_options, valid_true_outs)
 
 	result = nn_predictall_and_subset(model, valid_input, valid_options)
 	--print("Sum", result:sum())
-	return get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+	return get_result_accuracy(result, valid_input, valid_options, valid_true_outs), cross_entropy_loss(valid_true_outs, result, valid_options)
 
 end
 
@@ -158,7 +158,7 @@ function cross_entropy_loss(true_outputs, predicted_distribution, options)
 		assert(predicted_distribution_index ~= -1)
 		loss = loss + logged_probabilities[i][predicted_distribution_index]
 	end
-	return loss
+	return -loss/true_outputs:size(1)
 end
 
 

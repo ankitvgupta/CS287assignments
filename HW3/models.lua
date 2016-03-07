@@ -24,8 +24,9 @@ end
 
 --sample_indices a tensor of dimension 1xK
 --probs is the distribution over all of the probabilities.
-function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs)
+function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta)
 	--dimension of z is minibatch_size x hidden_layer size
+	model:zeroGradParameters()
 	local z = model:forward(input_minibatch)
 	local K = sample_indices:size(1)
 	local minibatch_size, hidden_size = z:size(1), z:size(2)
@@ -64,7 +65,7 @@ function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable
 	total_gradient:add(lookup_grad)
 	--print(lookup_grad)
 	lookuptable:backward(output_minibatch, lookup_grad)
-	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-.1))
+	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
 
 
 	-- do the sampled cases
@@ -91,13 +92,13 @@ function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable
 		local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
 
 		total_gradient:add(lookup_grad)
-		print(lookup_grad)
+		--print(lookup_grad)
 		lookuptable:backward(torch.LongTensor{idx}, lookup_grad:sum(1))
-		lookuptableparameters:add(torch.mul(lookuptablegradparameters,-.1))
+		lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
 	end
 
 	model:backward(input_minibatch, total_gradient)
-	modelparams:add(torch.mul(modelgradparams,-.1))
+	modelparams:add(torch.mul(modelgradparams,-1*eta))
 
 end
 
@@ -117,16 +118,16 @@ function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 
 end
 
-model, lookup = NCE(10, 2, 4, 2, 3)
-modelparams, modelgradparams = model:getParameters()
-input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
-output_batch = torch.LongTensor{1, 2}
-sample_indices = torch.LongTensor{1, 1, 1}
-sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
-params, grads = lookup:getParameters()
-print(modelparams)
-forwardandBackwardPass(model, modelparams, modelgradparams ,lookup, params, grads, input_batch, output_batch, sample_indices, sample_probs)
-print(modelparams)
+-- model, lookup = NCE(10, 2, 4, 2, 3)
+-- modelparams, modelgradparams = model:getParameters()
+-- input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
+-- output_batch = torch.LongTensor{1, 2}
+-- sample_indices = torch.LongTensor{1, 1, 1}
+-- sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
+-- lookupparams, lookupgrads = lookup:getParameters()
+-- print(modelparams)
+-- forwardandBackwardPass(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs)
+-- print(modelparams)
 function nn_predictall_and_subset(model, valid_input, valid_options)
 	assert(valid_input:size(1) == valid_options:size(1))
 	print("Starting predictions")
