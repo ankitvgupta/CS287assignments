@@ -40,6 +40,11 @@ function find(tensor_array, number)
 	return -1
 end
 
+-- Returns indicies into 1d tensor that match the number
+function find_matching(tensor, num)
+	return torch.linspace(1, tensor:size(1), tensor:size(1))[tensor:eq(num)]:long()
+end
+
 function printoptions(opt)
 	print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
 end
@@ -150,13 +155,23 @@ end
 -- Calculates cross-entropy loss. This is the sum of the log
 -- probabilities that were predicted for the true class.
 function cross_entropy_loss(true_outputs, predicted_distribution, options)
-	local logged_probabilities = torch.log(predicted_distribution)
+	--print(true_outputs)
+	assert(true_outputs:size(1) == predicted_distribution:size(1))
+	assert(true_outputs:size(1) == options:size(1))
+	--local logged_probabilities = torch.log(predicted_distribution)
+	--print(logged_probabilities[1])
+	--print(true_outputs:size(1))
 	local loss = 0.0
 	for i = 1, true_outputs:size(1) do
-		predicted_distribution_index = find(options[i], true_outputs[i])
+		local matched_indicies = find_matching(options[i], true_outputs[i])
+		assert(matched_indicies:size(1) > 0)
+		loss = loss + torch.log(predicted_distribution[i]:index(1, matched_indicies):sum())
+		--loss = loss + logged_probabilities[i]:index(1, matched_indicies):sum()
+		--local predicted_distribution_index = find(options[i], true_outputs[i])
+		
 		--print(i, true_outputs[i], predicted_distribution_index, options[i])
-		assert(predicted_distribution_index ~= -1)
-		loss = loss + logged_probabilities[i][predicted_distribution_index]
+		--assert(predicted_distribution_index ~= -1)
+		--loss = loss + logged_probabilities[i][predicted_distribution_index]
 	end
 	return -loss/true_outputs:size(1)
 end

@@ -141,12 +141,13 @@ function nn_predictall_and_subset(model, valid_input, valid_options)
 		--	print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
 		--	collectgarbage()
 		--end
-
+		--print(valid_options[i])
 		local values_wanted = predictions[i]:index(1, valid_options[i])
 		--print(values_wanted)
 		values_wanted:div(values_wanted:sum())
-		output_predictions[i] = values_wanted
+		output_predictions[i]:add(values_wanted)
 		--print(output_predictions[i]:sum())
 	end
+	--print(output_predictions)
 	return output_predictions
 end
