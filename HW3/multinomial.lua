@@ -158,7 +158,7 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 	print("Initialized predictions tensor")
 	for i = 1, valid_input:size(1) do
 		if i % 100 == 0 then
-			print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
 			collectgarbage()
 		end
 		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)
