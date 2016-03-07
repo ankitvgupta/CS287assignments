@@ -143,7 +143,7 @@ function trainNCEModel(
 	--print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
 	for i = 1, num_epochs do
-		print("Epoch", i, "L1 norm of params:", torch.abs(modelparams):sum())
+		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
 		--for j = 1, training_input:size(1), 1 do
@@ -153,12 +153,12 @@ function trainNCEModel(
 		    --model:zeroGradParameters()
 
 		    -- get the minibatch
-		    -- minibatch_inputs = training_input:narrow(1, j, minibatch_size)
-		    -- minibatch_outputs = training_output:narrow(1, j, minibatch_size)
-		    -- sample_batch = training_output:narrow(1, j, K)
-		    minibatch_inputs = training_input:narrow(1, j, 1)
-		    minibatch_outputs = training_output:narrow(1, j, 1)
-		    sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)
+		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
+		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
+		    sample_batch = sample_indices:narrow(1, j, K)
+		    -- minibatch_inputs = training_input:narrow(1, j, 1)
+		    -- minibatch_outputs = training_output:narrow(1, j, 1)
+		    -- sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)
 		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
 
 
@@ -214,7 +214,7 @@ function trainNCEModel(
 		--print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_input, validation_options, validation_true_out))
 		--print("Epoch "..i.." Validation accuracy:", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 	end
-	print(lookup.weight)
+	--print(lookup.weight)
 	return model, lookup, bias
 end
 

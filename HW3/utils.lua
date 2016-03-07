@@ -103,7 +103,7 @@ end
 
 function scores_to_preds(scores)
 	_, class_preds =  torch.max(scores, 2)
-	print(class_preds)
+	--print(class_preds)
 	local preds = class_preds:squeeze()
 	binary_preds = torch.zeros(scores:size(1), scores:size(2))
 	for i=1, scores:size(1) do
