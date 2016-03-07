@@ -1,6 +1,8 @@
 require('nn')
 
-dofile('test.lua')
+dofile(_G.path.."test.lua")
+
+--dofile('test.lua')
 --Returns an initialized MLP1 and NLL loss
 --D_sparse_in is the number of words
 --D_hidden is the dim of the hidden layer (tanhs)
