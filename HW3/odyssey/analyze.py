@@ -19,8 +19,9 @@ for line in sys.stdin:
 
 	if line[0] == "=" or len(line) == 1 or line[0] == "W":
 		continue
-	if line[0] == '0' and line[1] == ".":
-		accuracies.append(line.split('\t')[0])
+	if line[0] == 'R' and line[1] == ".":
+		splitted = line.split('\t')
+		accuracies.append(splitted[1], splitted[2])
 	if line[0] == 'D':
 		splitted = line.split('\t')
 		sets.append([splitted[1].split("HW3/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
