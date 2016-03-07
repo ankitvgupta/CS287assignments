@@ -30,31 +30,70 @@ function getaccuracy(model, validation_input, validation_options, validation_tru
 	return total_acc/n
 end
 
+function find(tensor_array, number)
+	for i = 1, tensor_array:size(1) do
+		--print(tensor_array[i])
+		if tensor_array[i] == number then
+			return i
+		end
+	end
+	return -1
+end
+
+function printoptions(opt)
+	print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
+end
+
 function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)
+	--print("True outs", validation_true_outs:size())
 	local n = validation_input:size(1)
 	local option_count = validation_options:size(2)
-
 	local total_acc = 0.0
+	 
+	local a, c = torch.max(result, 2)
+	c = c:squeeze()
+	--print(c)
+	--print(c:squeeze())
+
 
 	for i=1, n do
-		local options = validation_options[i]
-		local option_probs = result[i]:add(-1*result[i]:min())/(result[i]:max()-result[i]:min())
-		local true_idx = validation_true_outs[i]
-		local acc_updated = false
 
-		for j=1, option_count do
-			if validation_options[i][j] == true_idx then
-				acc = option_probs[j]
-				acc_updated = true
-				break
-			end
+		local true_idx = find(validation_options[i], validation_true_outs[i])
+		assert(true_idx ~= -1)
+		--print(c[i]:squeeze())
+
+		if true_idx == c[i] then
+			total_acc = total_acc + 1
 		end
 
-		assert(acc_updated)
-		total_acc = total_acc + acc
+
+
+		-- local options = validation_options[i]
+		-- local option_probs = result[i]:add(-1*result[i]:min())/(result[i]:max()-result[i]:min())
+		-- local true_idx = validation_true_outs[i]
+		-- local acc_updated = false
+
+		-- for j=1, option_count do
+		-- 	if validation_options[i][j] == true_idx then
+		-- 		acc = option_probs[j]
+		-- 		acc_updated = true
+		-- 		break
+		-- 	end
+		-- end
+
+		-- assert(acc_updated)
+		-- total_acc = total_acc + acc
 	end
 
 	return total_acc/n
+end
+
+function getaccuracy2(model, valid_input, valid_options, valid_true_outs)
+
+	result = nn_predictall_and_subset(model, valid_input, valid_options)
+	--print("Sum", result:sum())
+	return get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+
 end
 
 function scores_to_preds(scores)
@@ -107,15 +146,6 @@ function write_predictions(results, outfile)
 
 end
 
-function find(tensor_array, number)
-	for i = 1, tensor_array:size(1) do
-		--print(tensor_array[i])
-		if tensor_array[i] == number then
-			return i
-		end
-	end
-	return -1
-end
 
 -- Calculates cross-entropy loss. This is the sum of the log
 -- probabilities that were predicted for the true class.

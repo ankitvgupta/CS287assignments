@@ -131,9 +131,9 @@ function predict(trie, context, vocab_size, alpha)
 	--count_table = add_to_tab(count_table, vocab_size, alpha)
 	--count_table[3] = 0
 	local F_cstar = sum_of_values_in_table(count_table)
-	local N_cstar = number_of_items_in_table(count_table) 
+	local N_cstar = number_of_items_in_table(count_table, alpha) 
 	--print(F_cstar, N_cstar)
-	assert(N_cstar > 0)
+	assert(F_cstar > 0)
 
 	-- This implements F_{c,w} + N_{C,star}*p_wb(w|c')
 	local numerator = nil
@@ -158,7 +158,7 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 	print("Initialized predictions tensor")
 	for i = 1, valid_input:size(1) do
 		if i % 100 == 0 then
-			print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
 			collectgarbage()
 		end
 		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)

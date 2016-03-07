@@ -28,13 +28,16 @@ function main()
    -- Parse input params
    opt = cmd:parse(arg)
 
-   print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
+   --print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size)
+
 
    _G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW3/' or ''
 
    dofile(_G.path..'train.lua')
    dofile(_G.path..'multinomial.lua')
    dofile(_G.path..'utils.lua')
+
+   printoptions(opt)
 
    local f = hdf5.open(opt.datafile, 'r')
 
@@ -60,8 +63,14 @@ function main()
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
    		model = trainModel(model, criterion, training_input, training_output, valid_input, valid_options, valid_true_outs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
-		print("Accuracy:")
-		print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
+		local acc = getaccuracy2(model, valid_input, valid_options, valid_true_outs)
+		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
+		--local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+    	printoptions(opt)
+    	print(acc)
+
+		--print("Accuracy:")
+		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
     	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
@@ -73,13 +82,14 @@ function main()
     	result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
     	local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
-    	print("Result accuracy", acc)
+    	printoptions(opt)
+    	print(acc)
     else
     	print("Error: classifier '", opt.classifier, "' not implemented")
     end
 
     if (opt.testfile ~= '') then
-        print("Writing to test file")
+        --print("Writing to test file")
     	write_predictions(result, opt.testfile)
     end
 
