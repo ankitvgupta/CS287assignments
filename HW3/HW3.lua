@@ -41,8 +41,8 @@ function main()
    printoptions(opt)
 
    local f = hdf5.open(opt.datafile, 'r')
-   local f2 = hdf5.open("samples.hdf5")
-   local samples = f2:read("samples"):all():long()
+   --local f2 = hdf5.open("samples.hdf5")
+   --local samples = f2:read("samples"):all():long()
 
    local nclasses = f:read('numClasses'):all():long()[1]
    local nfeatures = f:read('numFeatures'):all():long()[1]
