@@ -164,8 +164,14 @@ function cross_entropy_loss(true_outputs, predicted_distribution, options)
 	local loss = 0.0
 	for i = 1, true_outputs:size(1) do
 		local matched_indicies = find_matching(options[i], true_outputs[i])
+		--print(matched_indicies)
 		assert(matched_indicies:size(1) > 0)
-		loss = loss + torch.log(predicted_distribution[i]:index(1, matched_indicies)[1])
+		loss = loss - torch.log(predicted_distribution[i]:index(1, matched_indicies)[1])
+		--print(predicted_distribution[i]:index(1, matched_indicies)[1])
+		--print(loss)
+		--if loss > 100 then
+		--	assert(false)
+		--end
 		--loss = loss + torch.log(predicted_distribution[i]:index(1, matched_indicies):sum())
 		
 		--loss = loss + logged_probabilities[i]:index(1, matched_indicies):sum()
@@ -175,7 +181,7 @@ function cross_entropy_loss(true_outputs, predicted_distribution, options)
 		--assert(predicted_distribution_index ~= -1)
 		--loss = loss + logged_probabilities[i][predicted_distribution_index]
 	end
-	return -loss/true_outputs:size(1)
+	return loss/true_outputs:size(1)
 end
 
 

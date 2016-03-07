@@ -1,5 +1,6 @@
 require('nn')
 
+dofile('test.lua')
 --Returns an initialized MLP1 and NLL loss
 --D_sparse_in is the number of words
 --D_hidden is the dim of the hidden layer (tanhs)
@@ -140,13 +141,13 @@ end
 
 -- model, lookup = NCE(10, 2, 10, 2, 3)
 -- modelparams, modelgradparams = model:getParameters()
--- input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
--- output_batch = torch.LongTensor{1, 2}
--- sample_indices = torch.LongTensor{1, 1, 1}
--- sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
+-- input_batch = torch.LongTensor{{7, 5, 2}, {5,4,9}, {1,8,6}}
+-- output_batch = torch.LongTensor{6,1,4}
+-- sample_indices = torch.LongTensor{2, 2, 2, 3, 3}
+-- sample_probs = torch.Tensor{.15, .05, .23, 05, .001, .01, .2, .3, .0001, .00001}
 -- lookupparams, lookupgrads = lookup:getParameters()
 -- --print(modelparams)
--- forwardandBackwardPass(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs, 1)
+-- forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs, 1)
 -- --print(modelparams)
 -- NCEPredict(model, lookup, 2, 10)
 
@@ -156,7 +157,6 @@ function nn_predictall_and_subset(model, valid_input, valid_options)
 	local output_predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
 	print("Initialized output predictions tensor")
 	local predictions = torch.exp(model:forward(valid_input))
-	--print(predictions:sum(2))
 
 	for i = 1, valid_input:size(1) do
 		--if i % 100 == 0 then
