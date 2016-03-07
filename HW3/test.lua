@@ -62,7 +62,7 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 	-- Calculate the loss
 	local loss = criterion:forward(predictions, classifications)
-	print(loss)
+	--print(loss)
 
 	-- Calculate the gradient
 	local dLdpreds = criterion:backward(predictions, classifications) -- gradients of loss wrt preds
