@@ -142,8 +142,7 @@ function trainNCEModel(
 	--print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
 	for i = 1, num_epochs do
-		print("L1 norm of params:", torch.abs(modelparams):sum())
-		print("Size", training_input:size(1))
+		print("Epoch", i, "L1 norm of params:", torch.abs(modelparams):sum())
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
 		--for j = 1, training_input:size(1), 1 do
