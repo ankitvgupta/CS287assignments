@@ -1,5 +1,6 @@
 require('nn')
 
+dofile('test.lua')
 --Returns an initialized MLP1 and NLL loss
 --D_sparse_in is the number of words
 --D_hidden is the dim of the hidden layer (tanhs)
@@ -54,6 +55,8 @@ function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable
 	criterion = nn.BCECriterion()
 	-- Calculate the loss - note that these are all the correct ones, so the correct classes are all just 1
 	local loss = criterion:forward(predictions, torch.ones(predictions:size(1)))
+	--print(loss)
+
 	-- Calculate the gradient
 	dLdpreds = criterion:backward(predictions, torch.zeros(predictions:size(1))) -- gradients of loss wrt preds
 	sigmoid:backward(subtracted, dLdpreds)
@@ -61,6 +64,8 @@ function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable
 	local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
 	-- Update the lookuptable 
 	local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
+
+	local overall_grad = torch.cmul(lookuptable_rows, resizedGrad:expand(minibatch_size, hidden_size))
 	-- Add that to the gradient to be passed back to the model
 	total_gradient:add(lookup_grad)
 	--print(lookup_grad)
@@ -91,6 +96,10 @@ function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable
 		local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
 		local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
 
+		--lookuptable_row:view(1, lookuptable_row:size(1)):expand(minibatch_size, hidden_size)
+
+		local overall_grad = torch.cmul(lookuptable_row:view(1, lookuptable_row:size(1)):expand(minibatch_size, hidden_size), resizedGrad:expand(minibatch_size, hidden_size))
+
 		total_gradient:add(lookup_grad)
 		--print(lookup_grad)
 		lookuptable:backward(torch.LongTensor{idx}, lookup_grad:sum(1))
@@ -114,27 +123,43 @@ function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	-- we have z_w and z_{s_i,k} now
 
 
-	return model, nn.LookupTable(D_sparse_in, D_hidden)
+	return model, nn.LookupTable(D_sparse_in, D_hidden), nn.LookupTable(D_sparse_in, 1)
 
 end
 
--- model, lookup = NCE(10, 2, 4, 2, 3)
+-- add the lookuptable weights to the model 
+function make_NCEPredict_model(model, lookuptable, bias, D_hidden, D_output)
+	local linear_layer = nn.Linear(D_hidden, D_output)
+	model:add(linear_layer)
+	print(linear_layer.bias:size())
+	print(bias.weight:squeeze():size())
+
+	linear_layer.weight = lookuptable.weight
+	linear_layer.bias = bias.weight:squeeze()
+
+	model:add(nn.LogSoftMax())
+	return model
+end
+
+-- model, lookup, bias = NCE(10, 2, 10, 2, 3)
 -- modelparams, modelgradparams = model:getParameters()
--- input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
--- output_batch = torch.LongTensor{1, 2}
--- sample_indices = torch.LongTensor{1, 1, 1}
--- sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
+-- biasparams, biasgrad = model:getParameters()
+-- input_batch = torch.LongTensor{{7, 5, 2}, {5,4,9}, {1,8,6}}
+-- output_batch = torch.LongTensor{6,1,4}
+-- sample_indices = torch.LongTensor{2, 2, 2, 3, 3}
+-- sample_probs = torch.Tensor{.15, .05, .23, 05, .001, .01, .2, .3, .0001, .00001}
 -- lookupparams, lookupgrads = lookup:getParameters()
--- print(modelparams)
--- forwardandBackwardPass(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs)
--- print(modelparams)
+-- --print(modelparams)
+-- forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, input_batch, output_batch, sample_indices, sample_probs, 1, bias, biasparams, biasgrad)
+-- --print(modelparams)
+-- NCEPredict(model, lookup, 2, 10)
+
 function nn_predictall_and_subset(model, valid_input, valid_options)
 	assert(valid_input:size(1) == valid_options:size(1))
 	print("Starting predictions")
 	local output_predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
 	print("Initialized output predictions tensor")
 	local predictions = torch.exp(model:forward(valid_input))
-	--print(predictions:sum(2))
 
 	for i = 1, valid_input:size(1) do
 		--if i % 100 == 0 then
