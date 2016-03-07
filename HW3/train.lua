@@ -207,7 +207,7 @@ function trainNCEModel(
 		--print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_input, validation_options, validation_true_out))
 		--print("Epoch "..i.." Validation accuracy:", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 	end
-return model
+	return model, lookup
 end
 
 

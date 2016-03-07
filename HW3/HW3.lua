@@ -77,7 +77,7 @@ function main()
 		--print("Accuracy:")
 		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
 	elseif opt.classifier == 'nce' then
-		trainNCEModel(training_input, training_output,
+		local model, lookup = trainNCEModel(training_input, training_output,
 					valid_input, 
 					valid_options,
 					valid_true_outs,
@@ -86,10 +86,18 @@ function main()
 					opt.optimizer, 
 					opt.save_losses,
 					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K)
+
+    -- Combine the models to a normal nn model for making predictions
+    local prediction_model = make_NCEPredict_model(model, lookup, opt.hiddenlayers, nclasses)
+    local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
+    printoptions(opt)
+    print("Results:", acc, cross_entropy_loss)
+
+
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
     	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
-		local predicted_distributions = predictall_and_subset(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
+		  local predicted_distributions = predictall_and_subset(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
     	--print(predicted_distributions:sum(2))
     	local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
     	print("Cross-entropy loss", cross_entropy_loss)
