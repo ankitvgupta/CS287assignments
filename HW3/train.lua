@@ -156,6 +156,7 @@ function trainNCEModel(
 		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
 		    sample_batch = sample_indices:narrow(1, j, K)
+		    --print(minibatch_inputs:size(), minibatch_outputs:size(), sample_batch:size())
 		    -- minibatch_inputs = training_input:narrow(1, j, 1)
 		    -- minibatch_outputs = training_output:narrow(1, j, 1)
 		    -- sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)

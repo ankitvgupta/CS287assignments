@@ -62,7 +62,7 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 	-- Calculate the loss
 	local loss = criterion:forward(predictions, classifications)
-	--print(loss)
+	print(loss)
 
 	-- Calculate the gradient
 	local dLdpreds = criterion:backward(predictions, classifications) -- gradients of loss wrt preds
@@ -117,10 +117,10 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	-- print(model_grad)
 
 	lookuptable:backward(rows_wanted, lookup_grad)
-	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-.001*eta))
+	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
 
 	bias:backward(rows_wanted, bias_grad)
-	biasparams:add(torch.mul(biasgradparams,-.001*eta))
+	biasparams:add(torch.mul(biasgradparams,-1*eta))
 
 	model:backward(input_minibatch, model_grad)
 	modelparams:add(torch.mul(modelgradparams,-1*eta))
