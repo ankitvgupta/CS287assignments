@@ -87,9 +87,14 @@ function main()
 					opt.save_losses,
 					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K)
 
+    local acc, cross_entropy_loss = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs)
+
+    --local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options)
+    --print(predictions:sum(2))
+    --local acc,cross_entropy_loss = get_result_accuracy(predictions, valid_input, valid_options, valid_true_outs), cross_entropy_loss(valid_true_outs, predictions, valid_options)
     -- Combine the models to a normal nn model for making predictions
-    local prediction_model = make_NCEPredict_model(model, lookup, bias, opt.hiddenlayers, nclasses)
-    local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
+    --local prediction_model = make_NCEPredict_model(model, lookup, bias, opt.hiddenlayers, nclasses)
+    --local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
     printoptions(opt)
     print("Results:", acc, cross_entropy_loss)
 

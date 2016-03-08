@@ -144,6 +144,8 @@ function trainNCEModel(
 
 	for i = 1, num_epochs do
 		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
+		print("Accuracy and CrossEntropy:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out))
+
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
 		--for j = 1, training_input:size(1), 1 do
@@ -161,6 +163,7 @@ function trainNCEModel(
 		    -- minibatch_outputs = training_output:narrow(1, j, 1)
 		    -- sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)
 		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
+
 
 
 		 --    -- Create a closure for optim
