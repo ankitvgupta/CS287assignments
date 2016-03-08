@@ -186,12 +186,12 @@ def main(arguments):
             f['valid_input'] = valid_input
             f['valid_output'] = valid_output
             if valid_blanks:
-                f['valid_context'] = valid_context
-                f['valid_options'] = valid_options
-                f['valid_true_outs'] = valid_true_outs
+                f['valid_blanks_input'] = valid_context
+                f['valid_blanks_options'] = valid_options
+                f['valid_blanks_output'] = valid_true_outs
             if test_blanks:
-                f['test_context'] = test_context
-                f['test_options'] = test_options
+                f['test_blanks_input'] = test_context
+                f['test_blanks_options'] = test_options
 
             f['numFeatures'] = np.array([numFeatures], dtype=np.int32)
             f['numClasses'] = np.array([numClasses], dtype=np.int32)
