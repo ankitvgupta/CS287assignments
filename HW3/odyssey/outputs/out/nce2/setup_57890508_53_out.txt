@@ -1,0 +1,65 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/PTB_1.hdf5	Classifier:	nce	Alpha:	0.0001	Eta:	0.1	Lambda:	1	Minibatch size:	128	Num Epochs:	20	Optimizer:	sgd	Hidden Layers:	100	Embedding size:	50	K:	20	
+Sample dist	1	10001	
+nclasses:	10001	nfeatures:	10001	d_win:	1	
+Full valid size	 73760
+     1
+[torch.LongStorage of size 2]
+
+ 73760
+[torch.LongStorage of size 1]
+
+Making NCE neural network model	
+ 929589
+      1
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	57051.078011221	LookupParams:	799525.52560853	Biasparams:	8035.9651584379	
+Accuracy, CrossEntropy, Perplexity:	0.013649851632047	5.1312668854915	169.23137907299	
+10.467855034409	
+Epoch	2	L1 norm of model params:	56981.526785637	LookupParams:	799574.42860852	Biasparams:	8031.5272532182	
+Accuracy, CrossEntropy, Perplexity:	0.0029673590504451	16.597152118597	16145503.028277	
+27.584600081264	
+Epoch	3	L1 norm of model params:	56967.682995206	LookupParams:	799644.2834473	Biasparams:	8030.7815426416	
+Accuracy, CrossEntropy, Perplexity:	0.0020771513353116	17.975653414854	64080676.312169	
+29.424964105759	
+Epoch	4	L1 norm of model params:	56969.537142633	LookupParams:	799723.48448691	Biasparams:	8031.1197839539	
+Accuracy, CrossEntropy, Perplexity:	0.0017804154302671	18.513505693827	109726964.12677	
+30.615589313003	
+Epoch	5	L1 norm of model params:	56975.902726618	LookupParams:	799800.86897187	Biasparams:	8032.2756367744	
+Accuracy, CrossEntropy, Perplexity:	0.0020771513353116	18.75078824796	139111767.11502	
+31.736586030467	
+Epoch	6	L1 norm of model params:	56983.312589028	LookupParams:	799874.32254047	Biasparams:	8034.3790555627	
+Accuracy, CrossEntropy, Perplexity:	0.0020771513353116	18.823535600927	149608972.89141	
+32.507464796971	
+Epoch	7	L1 norm of model params:	56990.620514933	LookupParams:	799946.76989791	Biasparams:	8036.6194450793	
+Accuracy, CrossEntropy, Perplexity:	0.0020771513353116	18.825484946606	149900896.9343	
+33.011301808693	
+Epoch	8	L1 norm of model params:	56997.465765393	LookupParams:	800018.66494069	Biasparams:	8039.0255260364	
+Accuracy, CrossEntropy, Perplexity:	0.0023738872403561	18.752390415199	139334826.07197	
+33.535029427806	
+Epoch	9	L1 norm of model params:	57003.904824423	LookupParams:	800092.00009191	Biasparams:	8041.4927068595	
+Accuracy, CrossEntropy, Perplexity:	0.0026706231454006	18.643226711432	124925324.3354	
+33.949506201054	
+Epoch	10	L1 norm of model params:	57009.751450495	LookupParams:	800166.91797971	Biasparams:	8043.9111377832	
+Accuracy, CrossEntropy, Perplexity:	0.0029673590504451	18.502067524396	108479039.11439	
+34.343886928837	
+Epoch	11	L1 norm of model params:	57014.024318058	LookupParams:	800244.1748033	Biasparams:	8046.2065660698	
+Accuracy, CrossEntropy, Perplexity:	0.0032640949554896	18.344556928522	92670145.951542	
+34.746067121884	
+Epoch	12	L1 norm of model params:	57017.668120817	LookupParams:	800320.65461528	Biasparams:	8048.3476553382	
+Accuracy, CrossEntropy, Perplexity:	0.0050445103857567	18.154360088623	76619340.410864	
+35.064699664493	
+Epoch	13	L1 norm of model params:	57020.562407419	LookupParams:	800395.63310476	Biasparams:	8050.3710894393	
+Accuracy, CrossEntropy, Perplexity:	0.0065281899109792	17.945046397931	62149069.124882	
+35.392849199879	
+Epoch	14	L1 norm of model params:	57023.060651286	LookupParams:	800468.87840459	Biasparams:	8052.4302033326	
+Accuracy, CrossEntropy, Perplexity:	0.0065281899109792	17.721294363561	49689011.177959	
+35.551686506977	
+Epoch	15	L1 norm of model params:	57024.731244003	LookupParams:	800540.5118633	Biasparams:	8054.4677405159	
+Accuracy, CrossEntropy, Perplexity:	0.0077151335311573	17.486962793674	39308950.290623	
+35.755170009724	
+Epoch	16	L1 norm of model params:	57025.868326889	LookupParams:	800610.28041054	Biasparams:	8056.3445267787	
+Accuracy, CrossEntropy, Perplexity:	0.0094955489614243	17.23804774845	30647073.926038	
+35.91635543341	
+Epoch	17	L1 norm of model params:	57026.593083765	LookupParams:	800678.109459	Biasparams:	8058.0895349123	
+Accuracy, CrossEntropy, Perplexity:	0.0097922848664688	16.979875239885	23673698.925203	

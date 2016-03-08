@@ -1,0 +1,66 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/PTB_1.hdf5	Classifier:	nce	Alpha:	0.0001	Eta:	0.5	Lambda:	1	Minibatch size:	128	Num Epochs:	40	Optimizer:	sgd	Hidden Layers:	50	Embedding size:	50	K:	40	
+Sample dist	1	10001	
+nclasses:	10001	nfeatures:	10001	d_win:	1	
+Full valid size	 73760
+     1
+[torch.LongStorage of size 2]
+
+ 73760
+[torch.LongStorage of size 1]
+
+Making NCE neural network model	
+ 929589
+      1
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	56894.511516842	LookupParams:	398491.37011342	Biasparams:	7991.8676771178	
+Accuracy, CrossEntropy, Perplexity:	0.010979228486647	4.9528522257576	141.57820157895	
+10.2606631634	
+Epoch	2	L1 norm of model params:	56900.287684027	LookupParams:	398932.9418516	Biasparams:	7985.9101950425	
+Accuracy, CrossEntropy, Perplexity:	0.0050445103857567	16.282047654934	11781577.668468	
+25.96373264988	
+Epoch	3	L1 norm of model params:	56929.713043946	LookupParams:	399470.91184991	Biasparams:	7999.8683605702	
+Accuracy, CrossEntropy, Perplexity:	0.015430267062315	15.638373933129	6189556.1215371	
+27.374901728778	
+Epoch	4	L1 norm of model params:	56946.980757199	LookupParams:	399986.49100405	Biasparams:	8011.9781476613	
+Accuracy, CrossEntropy, Perplexity:	0.023145400593472	14.662878267318	2333496.3199472	
+28.196157498177	
+Epoch	5	L1 norm of model params:	56957.655484465	LookupParams:	400471.65635564	Biasparams:	8023.9289726993	
+Accuracy, CrossEntropy, Perplexity:	0.032640949554896	13.588754120912	797114.9063046	
+28.780378298851	
+Epoch	6	L1 norm of model params:	56963.451810602	LookupParams:	400922.22729265	Biasparams:	8034.3849008838	
+Accuracy, CrossEntropy, Perplexity:	0.040652818991098	12.505015927583	269686.62818874	
+29.159941645663	
+Epoch	7	L1 norm of model params:	56966.602729989	LookupParams:	401335.7373822	Biasparams:	8043.0150070014	
+Accuracy, CrossEntropy, Perplexity:	0.0486646884273	11.424240595509	91513.391478351	
+29.341874238379	
+Epoch	8	L1 norm of model params:	56966.990402133	LookupParams:	401714.95604221	Biasparams:	8050.6776995086	
+Accuracy, CrossEntropy, Perplexity:	0.056973293768546	10.384465242484	32353.103890533	
+29.49311064204	
+Epoch	9	L1 norm of model params:	56965.727242938	LookupParams:	402057.49941655	Biasparams:	8058.3641939781	
+Accuracy, CrossEntropy, Perplexity:	0.064688427299703	9.3776175233742	11820.818355463	
+29.575224663634	
+Epoch	10	L1 norm of model params:	56962.641302511	LookupParams:	402365.10714097	Biasparams:	8065.4930527415	
+Accuracy, CrossEntropy, Perplexity:	0.081305637982196	8.4167768703276	4522.3039677044	
+29.67324787322	
+Epoch	11	L1 norm of model params:	56958.232781799	LookupParams:	402639.20235916	Biasparams:	8071.791250884	
+Accuracy, CrossEntropy, Perplexity:	0.098219584569733	7.5084626054627	1823.408089189	
+29.702910444051	
+Epoch	12	L1 norm of model params:	56952.844560586	LookupParams:	402883.61613047	Biasparams:	8077.1416871946	
+Accuracy, CrossEntropy, Perplexity:	0.12492581602374	6.670780143146	789.01090587015	
+29.747756552383	
+Epoch	13	L1 norm of model params:	56946.545566988	LookupParams:	403100.24375847	Biasparams:	8082.0665950258	
+Accuracy, CrossEntropy, Perplexity:	0.16142433234421	5.9110484026053	369.09291060542	
+29.764752902291	
+Epoch	14	L1 norm of model params:	56939.502904677	LookupParams:	403293.106197	Biasparams:	8086.3638178496	
+Accuracy, CrossEntropy, Perplexity:	0.2053412462908	5.2404283210989	188.75093110034	
+29.787483424434	
+Epoch	15	L1 norm of model params:	56931.681718986	LookupParams:	403464.93400272	Biasparams:	8090.2053292784	
+Accuracy, CrossEntropy, Perplexity:	0.25192878338279	4.6604886216783	105.68771084884	
+29.787125228859	
+Epoch	16	L1 norm of model params:	56923.52555796	LookupParams:	403618.16749369	Biasparams:	8093.5504160303	
+Accuracy, CrossEntropy, Perplexity:	0.3	4.176305615382	65.124812134733	
+29.797869958018	
+Epoch	17	L1 norm of model params:	56914.889189822	LookupParams:	403754.95981222	Biasparams:	8096.4945672222	
+Accuracy, CrossEntropy, Perplexity:	0.3353115727003	3.7734964687611	43.532007353744	
+29.790241256463	

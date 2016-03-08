@@ -1,0 +1,37 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/PTB_1.hdf5	Classifier:	nce	Alpha:	0.0001	Eta:	50	Lambda:	1	Minibatch size:	128	Num Epochs:	40	Optimizer:	sgd	Hidden Layers:	100	Embedding size:	50	K:	5	
+Sample dist	1	10001	
+nclasses:	10001	nfeatures:	10001	d_win:	1	
+Full valid size	 73760
+     1
+[torch.LongStorage of size 2]
+
+ 73760
+[torch.LongStorage of size 1]
+
+Making NCE neural network model	
+ 929589
+      1
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	57021.093366232	LookupParams:	799451.66676219	Biasparams:	7930.6480682465	
+Accuracy, CrossEntropy, Perplexity:	0.016913946587537	4.9416411799908	139.99982603351	
+10.297041604668	
+Epoch	2	L1 norm of model params:	59862.529109034	LookupParams:	783351.82830631	Biasparams:	8069.4061943671	
+Accuracy, CrossEntropy, Perplexity:	0.10059347181009	30.933552943196	27181370410596	
+78.0104805937	
+Epoch	3	L1 norm of model params:	59694.450937207	LookupParams:	775536.64886989	Biasparams:	8083.4576106165	
+Accuracy, CrossEntropy, Perplexity:	0.11454005934718	29.998550590155	10670996719652	
+90.976876377843	
+Epoch	4	L1 norm of model params:	59608.203842264	LookupParams:	771507.68514798	Biasparams:	8090.0203870342	
+Accuracy, CrossEntropy, Perplexity:	0.13976261127596	28.179893901878	1731300371444.8	
+89.352080366994	
+Epoch	5	L1 norm of model params:	59637.7166726	LookupParams:	768280.7141512	Biasparams:	8095.1197981187	
+Accuracy, CrossEntropy, Perplexity:	0.15014836795252	28.208138354787	1780897122706.7	
+89.877463015515	
+Epoch	6	L1 norm of model params:	59583.79713298	LookupParams:	766681.13851343	Biasparams:	8098.1108963931	
+Accuracy, CrossEntropy, Perplexity:	0.13412462908012	28.213452569811	1790386384609.8	
+87.377293366349	
+Epoch	7	L1 norm of model params:	59636.099601531	LookupParams:	765199.44273436	Biasparams:	8115.6977365939	
+Accuracy, CrossEntropy, Perplexity:	0.1433234421365	27.623170137893	992179760397.9	
+88.862986504903	
+Epoch	8	L1 norm of model params:	59656.414093753	LookupParams:	762474.61927451	Biasparams:	8119.4499379116	

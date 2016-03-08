@@ -1,0 +1,30 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/PTB_4.hdf5	Classifier:	nce	Alpha:	0.0001	Eta:	10	Lambda:	1	Minibatch size:	128	Num Epochs:	40	Optimizer:	sgd	Hidden Layers:	100	Embedding size:	50	K:	40	
+Sample dist	1	10001	
+nclasses:	10001	nfeatures:	10001	d_win:	4	
+Full valid size	 73760
+     4
+[torch.LongStorage of size 2]
+
+ 73760
+[torch.LongStorage of size 1]
+
+Making NCE neural network model	
+ 929589
+      4
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	57423.397375535	LookupParams:	798221.80405704	Biasparams:	7972.5602120116	
+Accuracy, CrossEntropy, Perplexity:	0.014540059347181	4.781401501977	119.27139205438	
+10.136335880993	
+Epoch	2	L1 norm of model params:	57084.845609257	LookupParams:	801040.45377091	Biasparams:	8023.6645116755	
+Accuracy, CrossEntropy, Perplexity:	0.47566765578635	4.4947494693801	89.545732226916	
+39.880732795718	
+Epoch	3	L1 norm of model params:	56747.518501493	LookupParams:	801229.85333149	Biasparams:	8030.2142896693	
+Accuracy, CrossEntropy, Perplexity:	0.53471810089021	3.7384118170266	42.031183918118	
+39.595580184714	
+Epoch	4	L1 norm of model params:	56454.473073236	LookupParams:	801297.59541453	Biasparams:	8032.2563515117	
+Accuracy, CrossEntropy, Perplexity:	0.5593471810089	3.5266003779642	34.008155991915	
+39.396840576135	
+Epoch	5	L1 norm of model params:	56228.394102545	LookupParams:	801337.54489008	Biasparams:	8032.1718016807	
+Accuracy, CrossEntropy, Perplexity:	0.57062314540059	3.1065556257535	22.343950778694	
+39.305671473882	
