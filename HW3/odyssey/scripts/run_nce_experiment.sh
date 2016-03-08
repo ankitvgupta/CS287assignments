@@ -43,7 +43,7 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW3/HW3.lua \
   -optimizer $optimizer \
   -hiddenlayers $hiddenlayers \
   -embedding_size $embeddingsize \
-  -K $K
+  -K $K \
   -odyssey
 
 
