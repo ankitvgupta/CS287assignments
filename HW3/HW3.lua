@@ -106,7 +106,7 @@ function main()
     -- Combine the models to a normal nn model for making predictions
     --local prediction_model = make_NCEPredict_model(model, lookup, bias, opt.hiddenlayers, nclasses)
     --local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
-    local full_cross_ent = NCE_predictions2(model, lookup, bias, valid_blanks_input, valid_blanks_outputs, opt.hiddenlayers, nclasses)
+    local full_cross_ent = NCE_predictions2(model, lookup, bias, valid_input, valid_output, opt.hiddenlayers, nclasses)
     printoptions(opt)
     print("Results(Acc,Cross,Perp,FullCross,FullPerp):", acc, cross_entropy_loss, perplexity, full_cross_ent, torch.exp(full_cross_ent) )
 
