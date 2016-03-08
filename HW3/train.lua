@@ -114,7 +114,7 @@ function trainNCEModel(
 					D_output,
 					embedding_size,
 					window_size,
-					alpha, eta, sample_indices, K)
+					alpha, eta, sample_indices, K, p_ml_tensor)
 
 	-- For loss plot.
 	file = nil
@@ -123,9 +123,7 @@ function trainNCEModel(
    		file:write("Epoch,Loss\n")
    	end
 
-   	local reverse_trie = fit(training_input, training_output)
-   	local distribution = normalize_table(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, D_output, alpha))
-   	local p_ml_tensor = table_to_tensor(distribution, D_output)
+   	
 
 	local model, lookup, bias = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	local modelparams, modelgradparams = model:getParameters()
@@ -144,7 +142,7 @@ function trainNCEModel(
 
 	for i = 1, num_epochs do
 		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
-		print("Accuracy and CrossEntropy:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out))
+		print("Accuracy and CrossEntropy:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out, p_ml_tensor))
 
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)

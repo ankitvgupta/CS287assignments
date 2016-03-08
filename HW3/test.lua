@@ -78,13 +78,18 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 
 	lookuptable:backward(rows_wanted, lookup_grad)
-	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
-
+	--lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
 	bias:backward(rows_wanted, bias_grad)
-	biasparams:add(torch.mul(biasgradparams,-1*eta))
-
 	model:backward(input_minibatch, model_grad)
-	modelparams:add(torch.mul(modelgradparams,-1*eta))
+
+	lookuptableparameters:add(-eta, lookuptablegradparameters)
+	biasparams:add(-eta, biasgradparams)
+	--biasparams:add(torch.mul(biasgradparams,-1*eta))
+
+	--print(model)
+	modelparams:add(-eta, modelgradparams)
+	--modelparams:add(torch.mul(modelgradparams,-1*eta))
+
 
 	--local lookup_grad = torch.cmul(z, sigmoid_grad:expand(minibatch_size, hidden_size))
 

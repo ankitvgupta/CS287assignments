@@ -143,7 +143,7 @@ end
 -- 	return model
 -- end
 
-function NCE_predictions(model, lookuptable, bias, to_predict_input, to_predict_options)
+function NCE_predictions(model, lookuptable, bias, to_predict_input, to_predict_options, probs)
 
 	model:zeroGradParameters()
 	lookuptable:zeroGradParameters()
@@ -159,18 +159,29 @@ function NCE_predictions(model, lookuptable, bias, to_predict_input, to_predict_
 	local lookuptable_rows = lookuptable:forward(rows_wanted)
 	local bias_rows = bias:forward(rows_wanted)
 
+	-- Get the p_ML for each of these words
+	pmls = torch.zeros(minibatch_size, K)
+	for i = 1, minibatch_size do
+		pmls[i] = probs:index(1, to_predict_options[i])
+	end
+
+	--pmls:select(2,1):add(probs:index(1, output_minibatch))
+	--pmls:add(probs:index(1, sample_indices):view(1, K):expand(minibatch_size,K))
+
 	local z = torch.zeros(minibatch_size, K)
 	for i = 1, minibatch_size do
 		--print(bias_rows[i]:t())
 		z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t()) + bias_rows[i]:t()
 	end
 
-	predictions = nn:SoftMax():forward(z)
+	z = z - pmls
+
+	predictions = nn:LogSoftMax():forward(z)
 	return predictions
 end
 
-function getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs)
-    local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options)
+function getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, sample_probs)
+    local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options, sample_probs)
     --print(predictions:sum(2))
     return get_result_accuracy(predictions, valid_input, valid_options, valid_true_outs), cross_entropy_loss(valid_true_outs, predictions, valid_options)
 end
@@ -207,5 +218,5 @@ function nn_predictall_and_subset(model, valid_input, valid_options)
 		--print(output_predictions[i]:sum())
 	end
 	--print(output_predictions)
-	return output_predictions
+	return torch.log(output_predictions)
 end
