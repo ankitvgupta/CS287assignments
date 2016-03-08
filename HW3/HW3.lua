@@ -117,6 +117,19 @@ function main()
     	local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
     	printoptions(opt)
     	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
+    elseif opt.classifier == 'laplace' then
+      local reverse_trie = fit(training_input, training_output)
+      --print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
+      local predicted_distributions = getlaplacepredictions(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
+      --print(predicted_distributions:sum(2))
+      local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
+      print("Cross-entropy loss", cross_entropy_loss)
+
+      --result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+
+      local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
+      printoptions(opt)
+      print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     else
     	print("Error: classifier '", opt.classifier, "' not implemented")
     end

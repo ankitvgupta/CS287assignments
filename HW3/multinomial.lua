@@ -112,6 +112,19 @@ function normalize_table(tab)
 	return multiply_table_by_x(tab, 1/total)
 end
 
+
+function predict_laplace(trie, context, vocab_size, alpha)
+	local count_table = get_word_counts_for_context(trie, context, vocab_size, alpha)
+	--count_table = add_to_tab(count_table, vocab_size, alpha)
+	--count_table[3] = 0
+	local F_cstar = sum_of_values_in_table(count_table)
+	--local N_cstar = number_of_items_in_table(count_table, alpha) 
+
+	local normalized_table = multiply_table_by_x(count_table, 1.0/(F_cstar))
+	return normalized_table
+end
+
+
 -- Returns the distribution over the vocabulary given the context
 -- Trie should be a trained trie 
 -- Context is a LongTensor.
@@ -162,6 +175,25 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 			collectgarbage()
 		end
 		local prediction = table_to_tensor(predict(trie, valid_input[i], vocab_size, alpha), vocab_size)
+		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
+		local values_wanted = prediction:index(1, valid_options[i])
+		values_wanted:div(values_wanted:sum())
+		predictions[i] = values_wanted
+	end
+	return torch.log(predictions)
+end
+
+function getlaplacepredictions(trie, valid_input, valid_options, vocab_size, alpha)
+	assert(valid_input:size(1) == valid_options:size(1))
+	print("Starting predictions")
+	local predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
+	print("Initialized predictions tensor")
+	for i = 1, valid_input:size(1) do
+		if i % 100 == 0 then
+			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+			collectgarbage()
+		end
+		local prediction = table_to_tensor(predict_laplace(trie, valid_input[i], vocab_size, alpha), vocab_size)
 		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
 		local values_wanted = prediction:index(1, valid_options[i])
 		values_wanted:div(values_wanted:sum())
