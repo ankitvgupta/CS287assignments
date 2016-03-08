@@ -55,20 +55,25 @@ function main()
    local training_input = f:read('train_input'):all():long()   
    local training_output = f:read('train_output'):all():long()
 
-   local valid_input = f:read('valid_context'):all():long()
-   local valid_options = f:read('valid_options'):all():long()
-   local valid_true_outs = f:read('valid_true_outs'):all():long()
+   local valid_input = f:read('valid_input'):all():long()
+   local valid_output = f:read('valid_output'):all():long()
+   print("Full valid size", valid_input:size(), valid_output:size())
 
-   local test_context = f:read('test_context'):all():long()
-   local test_options = f:read('test_options'):all():long()
+
+   local valid_blanks_input = f:read('valid_blanks_input'):all():long()
+   local valid_blanks_options = f:read('valid_blanks_options'):all():long()
+   local valid_blanks_outputs = f:read('valid_blanks_output'):all():long()
+
+   local test_blanks_input = f:read('test_blanks_input'):all():long()
+   local test_blanks_options = f:read('test_blanks_options'):all():long()
 
    local result
 
    -- Train neural network.
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
-   		model = trainModel(model, criterion, training_input, training_output, valid_input, valid_options, valid_true_outs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
-		local acc, cross_entropy_loss = getaccuracy2(model, valid_input, valid_options, valid_true_outs)
+   		model = trainModel(model, criterion, training_input, training_output, valid_blanks_input, valid_blanks_options, valid_blanks_outputs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
+		local acc, cross_entropy_loss = getaccuracy2(model, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
 		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
 		--local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
     	printoptions(opt)
@@ -84,16 +89,16 @@ function main()
     local p_ml_tensor = table_to_tensor(distribution, nclasses)
 
 		local model, lookup, bias = trainNCEModel(training_input, training_output,
-					valid_input, 
-					valid_options,
-					valid_true_outs,
+					valid_blanks_input, 
+					valid_blanks_options,
+					valid_blanks_outputs,
 					opt.minibatch, 
 					opt.epochs, 
 					opt.optimizer, 
 					opt.save_losses,
-					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K, p_ml_tensor)
+					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K, p_ml_tensor,valid_input, valid_output)
 
-    local acc, cross_entropy_loss, perplexity = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, p_ml_tensor)
+    local acc, cross_entropy_loss, perplexity = getNCEStats(model, lookup, bias, valid_blanks_input, valid_blanks_options, valid_blanks_outputs, p_ml_tensor)
 
     --local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options)
     --print(predictions:sum(2))
@@ -101,7 +106,7 @@ function main()
     -- Combine the models to a normal nn model for making predictions
     --local prediction_model = make_NCEPredict_model(model, lookup, bias, opt.hiddenlayers, nclasses)
     --local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
-    local full_cross_ent = NCE_predictions2(model, lookup, bias, valid_input, valid_true_outs, opt.hiddenlayers, nclasses)
+    local full_cross_ent = NCE_predictions2(model, lookup, bias, valid_blanks_input, valid_blanks_outputs, opt.hiddenlayers, nclasses)
     printoptions(opt)
     print("Results(Acc,Cross,Perp,FullCross,FullPerp):", acc, cross_entropy_loss, perplexity, full_cross_ent, torch.exp(full_cross_ent) )
 
@@ -109,27 +114,27 @@ function main()
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
     	--print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
-		  local predicted_distributions = predictall_and_subset(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
+		  local predicted_distributions = predictall_and_subset(reverse_trie, valid_blanks_input, valid_blanks_options, nclasses, opt.alpha)
     	--print(predicted_distributions:sum(2))
-    	local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
+    	local cross_entropy_loss = cross_entropy_loss(valid_blanks_outputs, predicted_distributions, valid_blanks_options)
     	print("Cross-entropy loss", cross_entropy_loss)
 
     	--result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
-    	local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
+    	local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_output)
     	printoptions(opt)
     	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     elseif opt.classifier == 'laplace' then
       local reverse_trie = fit(training_input, training_output)
       --print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
-      local predicted_distributions = getlaplacepredictions(reverse_trie, valid_input, valid_options, nclasses, opt.alpha)
+      local predicted_distributions = getlaplacepredictions(reverse_trie, valid_blanks_input, valid_blanks_options, nclasses, opt.alpha)
       --print(predicted_distributions:sum(2))
-      local cross_entropy_loss = cross_entropy_loss(valid_true_outs, predicted_distributions, valid_options)
+      local cross_entropy_loss = cross_entropy_loss(valid_blanks_output, predicted_distributions, valid_blanks_options)
       print("Cross-entropy loss", cross_entropy_loss)
 
       --result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
-      local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
+      local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_output)
       printoptions(opt)
       print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     else

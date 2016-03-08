@@ -102,9 +102,9 @@ end
 function trainNCEModel(
 					training_input, 
 					training_output,
-					validation_input, 
-					validation_options,
-					validation_true_out,
+					valid_blanks_input, 
+					valid_blanks_options,
+					valid_blanks_output,
 					minibatch_size, 
 					num_epochs,
 					optimizer, 
@@ -114,7 +114,13 @@ function trainNCEModel(
 					D_output,
 					embedding_size,
 					window_size,
-					alpha, eta, sample_indices, K, p_ml_tensor)
+					alpha, 
+					eta, 
+					sample_indices, 
+					K, 
+					p_ml_tensor,
+					valid_input,
+					valid_output)
 
 	-- For loss plot.
 	file = nil
@@ -146,8 +152,8 @@ function trainNCEModel(
 		embedding.weight:renorm(embedding.weight, 2, 1, 1)
 
 		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
-		print("Accuracy, CrossEntropy, Perplexity:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out, p_ml_tensor))
-		print(NCE_predictions2(model, lookup, bias, validation_input, validation_true_out, D_hidden, D_output))
+		print("Accuracy, CrossEntropy, Perplexity:", getNCEStats(model, lookup, bias, valid_blanks_input, valid_blanks_options, valid_blanks_output, p_ml_tensor))
+		print(NCE_predictions2(model, lookup, bias, valid_input, valid_output, D_hidden, D_output))
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 
 

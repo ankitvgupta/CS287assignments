@@ -151,8 +151,7 @@ function NCE_predictions2(model, lookuptable, bias, to_predict_input, true_outpu
 	model:zeroGradParameters()
 	lookuptable:zeroGradParameters()
 	bias:zeroGradParameters()
-	local tanh_result = model:forward(to_predict_input)
-
+	--print("NumValidationInputs", to_predict_input:size(1))
 
 	local prediction_err = nn.Sequential()
 	local linear_layer = nn.Linear(D_hidden, D_output)
@@ -165,9 +164,15 @@ function NCE_predictions2(model, lookuptable, bias, to_predict_input, true_outpu
 	prediction_err:add(nn.LogSoftMax())
 	
 	local crit = nn.ClassNLLCriterion()
-	local preds = prediction_err:forward(tanh_result)
-	local cross_entropy_loss = crit:forward(preds, true_outputs)
-	return cross_entropy_loss
+	crit.sizeAverage = false
+	local total = 0
+	for i = 1, to_predict_input:size(1) - 100, 100 do
+		local tanh_result = model:forward(to_predict_input:narrow(1, i, 100))
+		local preds = prediction_err:forward(tanh_result)
+		local cross_entropy_loss = crit:forward(preds, true_outputs:narrow(1, i, 100))
+		total = total + cross_entropy_loss
+	end
+	return total/to_predict_input:size(1)
 
 	-- local tanh_result = model:forward(to_predict_input)
 	-- local minibatch_size = to_predict_input:size(1)
