@@ -119,10 +119,12 @@ def create_output_data(valid_blanks, vocab_dict):
 
 
 FILE_PATHS = {"PTB": ("data/train.txt",
+                      "data/valid.txt",
                       "data/valid_blanks.txt",
                       "data/test_blanks.txt",
                       "data/words.dict"),
               "SMALL": ("data/train.1000.txt",
+                        "data/valid.1000.txt",
                        "data/valid_blanks.txt",
                        "data/test_blanks.txt",
                        "data/words.1000.dict")}
@@ -144,7 +146,7 @@ def main(arguments):
     dataset = args.dataset
     dwin = args.dwin
     single = args.single
-    train, valid_blanks, test_blanks, word_dict = FILE_PATHS[dataset]
+    train, valid, valid_blanks, test_blanks, word_dict = FILE_PATHS[dataset]
 
     # Load vocab dict
     print "Loading vocab dict..."
@@ -167,6 +169,9 @@ def main(arguments):
         train_input, train_output = create_training_data(train, vocab_dict, dw)
 
         print "Creating language samples from valid data..."
+        valid_input, valid_output = create_training_data(valid, vocab_dict, dw)
+
+        print "Creating language samples from valid data..."
         valid_context, valid_options = create_data_from_blanks(valid_blanks, vocab_dict, dw)
 
         print "Creating language samples from test data..."
@@ -178,6 +183,8 @@ def main(arguments):
         with h5py.File(filename, "w") as f:
             f['train_input'] = train_input
             f['train_output'] = train_output
+            f['valid_input'] = valid_input
+            f['valid_output'] = valid_output
             if valid_blanks:
                 f['valid_context'] = valid_context
                 f['valid_options'] = valid_options
