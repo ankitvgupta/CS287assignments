@@ -19,6 +19,7 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	local rows_wanted = torch.zeros(minibatch_size, K+1):long()
 	rows_wanted:narrow(2, 2, K):add(sample_indices:view(1, K):expand(minibatch_size,K))
 	rows_wanted:select(2,1):add(output_minibatch)
+	--print(rows_wanted)
 
 	local lookuptable_rows = lookuptable:forward(rows_wanted)
 	local bias_rows = bias:forward(rows_wanted)

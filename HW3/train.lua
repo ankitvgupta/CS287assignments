@@ -140,6 +140,7 @@ function trainNCEModel(
    	--print("Got params and grads")
 	--print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
+	local k_index = 1
 	for i = 1, num_epochs do
 		-- renormalize embedding weights for regularization
 		embedding.weight:renorm(embedding.weight, 2, 1, 1)
@@ -153,7 +154,8 @@ function trainNCEModel(
 		    -- get the minibatch
 		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
-		    sample_batch = sample_indices:narrow(1, j, K)
+		    sample_batch = sample_indices:narrow(1, k_index, K)
+		    k_index = k_index + K
 
 		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
 		end

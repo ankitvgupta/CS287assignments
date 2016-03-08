@@ -5,7 +5,7 @@ import h5py
 
 file = open("data/train.1000.txt")
 
-samples_wanted = 1000000
+samples_wanted = 10000000
 
 
 wordcount = Counter(file.read().split())
