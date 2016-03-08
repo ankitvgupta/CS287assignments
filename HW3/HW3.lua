@@ -41,8 +41,10 @@ function main()
    printoptions(opt)
 
    local f = hdf5.open(opt.datafile, 'r')
+   --local samples = nil
    local f2 = hdf5.open(_G.path..'samples.hdf5')
    local samples = f2:read("samples"):all():long()
+   print("Sample dist", torch.min(samples), torch.max(samples))
 
    local nclasses = f:read('numClasses'):all():long()[1]
    local nfeatures = f:read('numFeatures'):all():long()[1]

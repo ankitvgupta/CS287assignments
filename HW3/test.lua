@@ -1,7 +1,7 @@
 
 --sample_indices a tensor of dimension 1xK
 --probs is the distribution over all of the probabilities.
-function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta, bias, biasparams, biasgradparams)
+function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta, bias, biasparams, biasgradparams, K)
 	--dimension of z is minibatch_size x hidden_layer size
 	model:zeroGradParameters()
 	lookuptable:zeroGradParameters()
@@ -11,13 +11,17 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 
 	local minibatch_size = input_minibatch:size(1)
+	--print(minibatch_size)
+	--local K = sample_indices:size(1)
+
+	--print(minibatch_size*K)
 	--print("Size", minibatch_size)
 
-	local K = sample_indices:size(1)
 
 	-- Determine which rows to pick from lookuptable (each row of rows_wanted correspond to the indicies wanted for that minibatch)
 	local rows_wanted = torch.zeros(minibatch_size, K+1):long()
-	rows_wanted:narrow(2, 2, K):add(sample_indices:view(1, K):expand(minibatch_size,K))
+	--rows_wanted:narrow(2, 2, K):add(sample_indices:view(1, K):expand(minibatch_size,K))
+	rows_wanted:narrow(2, 2, K):add(sample_indices:view(minibatch_size, K))
 	rows_wanted:select(2,1):add(output_minibatch)
 	--print(rows_wanted)
 
@@ -28,12 +32,15 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	-- Set whether each of these are true word or sampled or not (all are sampled, except the first is true)
 	local classifications = torch.zeros(minibatch_size, K+1)
 	classifications:select(2,1):fill(1)
+	--print(classifications)
 
 
 	-- Get the p_ML for each of these words
 	pmls = torch.zeros(minibatch_size, K+1)
 	pmls:select(2,1):add(probs:index(1, output_minibatch))
-	pmls:narrow(2, 2, K):add(probs:index(1, sample_indices):view(1, K):expand(minibatch_size,K))
+	--pmls:narrow(2, 2, K):add(probs:index(1, sample_indices):view(1, K):expand(minibatch_size,K))
+	pmls:narrow(2, 2, K):add(probs:index(1, sample_indices):view(minibatch_size, K))
+	--print(pmls)
 
 	local z = torch.zeros(minibatch_size, K+1)
 	for i = 1, minibatch_size do

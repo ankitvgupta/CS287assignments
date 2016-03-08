@@ -154,10 +154,10 @@ function trainNCEModel(
 		    -- get the minibatch
 		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
-		    sample_batch = sample_indices:narrow(1, k_index, K)
-		    k_index = k_index + K
+		    sample_batch = sample_indices:narrow(1, k_index, minibatch_size*K)
+		    k_index = (k_index + minibatch_size*K) % (10000000 - minibatch_size*K)
 
-		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
+		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams, K)
 		end
 	end
 	--print(lookup.weight)
