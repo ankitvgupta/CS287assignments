@@ -1,0 +1,25 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/SMALL_2.hdf5	Classifier:	nce	Alpha:	0.001	Eta:	10	Lambda:	1	Minibatch size:	1024	Num Epochs:	20	Optimizer:	sgd	Hidden Layers:	50	Embedding size:	50	
+nclasses:	1000	nfeatures:	1000	d_win:	2	
+Making NCE neural network model	
+ 929589
+      2
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	39980.55287425	LookupParams:	40044.558316245	Biasparams:	806.74904099787	
+Accuracy, CrossEntropy, Perplexity:	0.17418397626113	6.0581402792843	427.57951850759	
+Epoch	2	L1 norm of model params:	40949.793538629	LookupParams:	41681.828171067	Biasparams:	890.77733791154	
+Accuracy, CrossEntropy, Perplexity:	0.34213649851632	11.350720570533	85026.697171839	
+Epoch	3	L1 norm of model params:	40734.559994847	LookupParams:	40909.461199867	Biasparams:	875.23229420339	
+Accuracy, CrossEntropy, Perplexity:	0.31394658753709	21.837668424459	3047746873.1604	
+Epoch	4	L1 norm of model params:	40506.350606163	LookupParams:	40407.557012785	Biasparams:	867.55946193833	
+Accuracy, CrossEntropy, Perplexity:	0.33115727002967	21.253932126022	1700064665.852	
+Epoch	5	L1 norm of model params:	40323.228166683	LookupParams:	40086.51048968	Biasparams:	864.14178909287	
+Accuracy, CrossEntropy, Perplexity:	0.32967359050445	20.968854574432	1278373718.2268	
+Epoch	6	L1 norm of model params:	40194.115569162	LookupParams:	39872.9502884	Biasparams:	862.54660891169	
+Accuracy, CrossEntropy, Perplexity:	0.34391691394659	20.601260367161	885143526.9438	
+Epoch	7	L1 norm of model params:	40097.513067601	LookupParams:	39704.274088344	Biasparams:	862.18763364855	
+Accuracy, CrossEntropy, Perplexity:	0.33620178041543	20.338938805606	680908712.27532	
+Epoch	8	L1 norm of model params:	40014.248290308	LookupParams:	39551.06269041	Biasparams:	862.80466555579	
+Accuracy, CrossEntropy, Perplexity:	0.33709198813056	20.473288216668	778818212.61121	
+Epoch	9	L1 norm of model params:	39933.074371023	LookupParams:	39415.436390943	Biasparams:	863.15321827453	
+Accuracy, CrossEntropy, Perplexity:	0.34272997032641	20.079034860481	525066175.13112	

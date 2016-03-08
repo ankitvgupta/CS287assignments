@@ -1,0 +1,31 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/SMALL_1.hdf5	Classifier:	nce	Alpha:	0.001	Eta:	100	Lambda:	1	Minibatch size:	1024	Num Epochs:	20	Optimizer:	sgd	Hidden Layers:	50	Embedding size:	100	
+nclasses:	1000	nfeatures:	1000	d_win:	1	
+Making NCE neural network model	
+ 929589
+      1
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	80226.316895232	LookupParams:	39923.07576343	Biasparams:	791.86484330838	
+Accuracy, CrossEntropy, Perplexity:	0.15727002967359	6.1166138658919	453.32706641956	
+Epoch	2	L1 norm of model params:	118832.43837479	LookupParams:	110819.4448576	Biasparams:	5715.2586209093	
+Accuracy, CrossEntropy, Perplexity:	0.24777448071217	236.17760649629	3.7207565114148e+102	
+Epoch	3	L1 norm of model params:	123932.79283909	LookupParams:	113064.00735691	Biasparams:	6443.4249892734	
+Accuracy, CrossEntropy, Perplexity:	0.25756676557864	258.67177933144	2.1863837342838e+112	
+Epoch	4	L1 norm of model params:	128260.15823406	LookupParams:	114145.366323	Biasparams:	6770.9107944517	
+Accuracy, CrossEntropy, Perplexity:	0.26083086053412	244.92540282961	2.3428847570284e+106	
+Epoch	5	L1 norm of model params:	129410.17249947	LookupParams:	114289.05228649	Biasparams:	6921.2326007172	
+Accuracy, CrossEntropy, Perplexity:	0.25341246290801	234.04926994723	4.4290076616889e+101	
+Epoch	6	L1 norm of model params:	130153.33252129	LookupParams:	113996.01122629	Biasparams:	7049.3660298633	
+Accuracy, CrossEntropy, Perplexity:	0.24480712166172	214.12950075851	9.8914643963579e+92	
+Epoch	7	L1 norm of model params:	130860.37887158	LookupParams:	113706.16200793	Biasparams:	7177.1133288711	
+Accuracy, CrossEntropy, Perplexity:	0.23738872403561	219.78354358049	2.8234505776879e+95	
+Epoch	8	L1 norm of model params:	131169.35356399	LookupParams:	113589.48236125	Biasparams:	7286.4776575439	
+Accuracy, CrossEntropy, Perplexity:	0.23679525222552	220.82245017661	7.9794249077861e+95	
+Epoch	9	L1 norm of model params:	131444.15922871	LookupParams:	113544.83873991	Biasparams:	7458.3436596521	
+Accuracy, CrossEntropy, Perplexity:	0.23560830860534	218.99348171614	1.2813290783789e+95	
+Epoch	10	L1 norm of model params:	131850.4552976	LookupParams:	113319.46655866	Biasparams:	7610.0076992238	
+Accuracy, CrossEntropy, Perplexity:	0.23382789317507	218.25872191556	6.145518851048e+94	
+Epoch	11	L1 norm of model params:	131957.01225483	LookupParams:	112793.38794646	Biasparams:	7720.5005572061	
+Accuracy, CrossEntropy, Perplexity:	0.22522255192878	216.75478180772	1.3658583601516e+94	
+Epoch	12	L1 norm of model params:	132260.2637032	LookupParams:	113003.0824105	Biasparams:	7828.2005063108	
+Accuracy, CrossEntropy, Perplexity:	0.23323442136499	220.19183705316	4.2471714437702e+95	

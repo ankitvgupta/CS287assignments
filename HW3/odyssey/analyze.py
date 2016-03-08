@@ -21,7 +21,7 @@ for line in sys.stdin:
 		continue
 	if line[0] == 'R' and line[1] == ".":
 		splitted = line.split('\t')
-		accuracies.append(splitted[1], splitted[2])
+		accuracies.append(splitted[1], splitted[2], splitted[3])
 	if line[0] == 'D':
 		splitted = line.split('\t')
 		sets.append([splitted[1].split("HW3/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
@@ -33,12 +33,13 @@ print len(accuracies), len(sets)
 
 sets = np.array(sets)
 accuracies = np.array(accuracies)
-alldata = np.append(sets, accuracies[:, np.newaxis], axis=1)
+#alldata = np.append(sets, accuracies[:, np.newaxis], axis=1)
+alldata = np.append(sets, accuracies, axis=1)
 
 df = pd.DataFrame(alldata)
-df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'Optimizer', 'HiddenLayers', 'EmbeddingSize','Accuracy']
+df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'Optimizer', 'HiddenLayers', 'EmbeddingSize','Accuracy', 'CrossEnt', 'Perplexity']
 
-df.sort(columns='Accuracy', ascending=False, inplace=True)
+df.sort(columns='Perplexity', ascending=False, inplace=True)
 if sys.argv[1] != "all":
     df = df[df['Datafile'].str.startswith(sys.argv[1])]
 

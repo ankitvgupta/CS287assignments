@@ -1,0 +1,25 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/PTB_2.hdf5	Classifier:	nce	Alpha:	0.001	Eta:	1	Lambda:	1	Minibatch size:	1024	Num Epochs:	20	Optimizer:	sgd	Hidden Layers:	100	Embedding size:	50	
+nclasses:	10001	nfeatures:	10001	d_win:	2	
+Making NCE neural network model	
+ 929589
+      2
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	399067.79292645	LookupParams:	797556.29170631	Biasparams:	7907.3026636374	
+Accuracy, CrossEntropy, Perplexity:	0.016913946587537	11.370119329436	86692.211799852	
+Epoch	2	L1 norm of model params:	399072.14427607	LookupParams:	797313.92795007	Biasparams:	7923.9170467655	
+Accuracy, CrossEntropy, Perplexity:	0.0094955489614243	22.686980870332	7125750353.5297	
+Epoch	3	L1 norm of model params:	398821.9449916	LookupParams:	797173.63451262	Biasparams:	7925.6684557516	
+Accuracy, CrossEntropy, Perplexity:	0.011275964391691	21.503975359468	2183020618.4307	
+Epoch	4	L1 norm of model params:	398704.49575238	LookupParams:	797016.58896445	Biasparams:	7925.1101825093	
+Accuracy, CrossEntropy, Perplexity:	0.01186943620178	20.524714774817	819917902.91734	
+Epoch	5	L1 norm of model params:	398633.39186006	LookupParams:	796890.80854993	Biasparams:	7923.948928583	
+Accuracy, CrossEntropy, Perplexity:	0.014836795252226	20.228167397686	609510904.54046	
+Epoch	6	L1 norm of model params:	398578.96003125	LookupParams:	796781.56219824	Biasparams:	7923.2716135539	
+Accuracy, CrossEntropy, Perplexity:	0.014243323442136	20.081614230142	526422263.06715	
+Epoch	7	L1 norm of model params:	398535.45735078	LookupParams:	796682.72576325	Biasparams:	7922.7760826356	
+Accuracy, CrossEntropy, Perplexity:	0.015430267062315	20.003933425698	487077314.78158	
+Epoch	8	L1 norm of model params:	398497.52175673	LookupParams:	796590.65876171	Biasparams:	7922.3542643753	
+Accuracy, CrossEntropy, Perplexity:	0.016320474777448	19.957906706618	465166845.45152	
+Epoch	9	L1 norm of model params:	398462.98145944	LookupParams:	796504.00539525	Biasparams:	7921.994819109	
+Accuracy, CrossEntropy, Perplexity:	0.017507418397626	19.924794256549	450016252.41257	

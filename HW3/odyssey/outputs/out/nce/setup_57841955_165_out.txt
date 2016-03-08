@@ -1,0 +1,25 @@
+[?1034hDatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW3/SMALL_2.hdf5	Classifier:	nce	Alpha:	0.001	Eta:	0.001	Lambda:	1	Minibatch size:	1024	Num Epochs:	20	Optimizer:	sgd	Hidden Layers:	100	Embedding size:	50	
+nclasses:	1000	nfeatures:	1000	d_win:	2	
+Making NCE neural network model	
+ 929589
+      2
+[torch.LongStorage of size 2]
+
+Epoch	1	L1 norm of model params:	40455.297795636	LookupParams:	79755.429929445	Biasparams:	807.24270034898	
+Accuracy, CrossEntropy, Perplexity:	0.16231454005935	7.1062310832812	1219.5425193712	
+Epoch	2	L1 norm of model params:	40445.926039566	LookupParams:	79754.821291818	Biasparams:	807.20707890555	
+Accuracy, CrossEntropy, Perplexity:	0.1186943620178	7.0267316447448	1126.343297709	
+Epoch	3	L1 norm of model params:	40438.812271072	LookupParams:	79754.397638774	Biasparams:	807.19196119624	
+Accuracy, CrossEntropy, Perplexity:	0.11097922848665	7.0569769126003	1160.9302618722	
+Epoch	4	L1 norm of model params:	40432.566477949	LookupParams:	79754.04249255	Biasparams:	807.18146683367	
+Accuracy, CrossEntropy, Perplexity:	0.1080118694362	7.0842051967165	1192.9746783887	
+Epoch	5	L1 norm of model params:	40426.776199671	LookupParams:	79753.729417599	Biasparams:	807.17200879303	
+Accuracy, CrossEntropy, Perplexity:	0.10682492581602	7.1021341112606	1214.5563089482	
+Epoch	6	L1 norm of model params:	40421.336551744	LookupParams:	79753.448013306	Biasparams:	807.16232505526	
+Accuracy, CrossEntropy, Perplexity:	0.10712166172107	7.1188933450548	1235.082866331	
+Epoch	7	L1 norm of model params:	40416.25883464	LookupParams:	79753.190360873	Biasparams:	807.15204130465	
+Accuracy, CrossEntropy, Perplexity:	0.10712166172107	7.141575467461	1263.4172947964	
+Epoch	8	L1 norm of model params:	40411.497558799	LookupParams:	79752.951890075	Biasparams:	807.14107793796	
+Accuracy, CrossEntropy, Perplexity:	0.10771513353116	7.1680197607583	1297.2731464031	
+Epoch	9	L1 norm of model params:	40406.950413203	LookupParams:	79752.728742632	Biasparams:	807.12974441545	
+Accuracy, CrossEntropy, Perplexity:	0.10563798219585	7.1933174030419	1330.5097294821	
