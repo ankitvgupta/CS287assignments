@@ -183,7 +183,8 @@ end
 function getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, sample_probs)
     local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options, sample_probs)
     --print(predictions:sum(2))
-    return get_result_accuracy(predictions, valid_input, valid_options, valid_true_outs), cross_entropy_loss(valid_true_outs, predictions, valid_options)
+    local cross_ent = cross_entropy_loss(valid_true_outs, predictions, valid_options)
+    return get_result_accuracy(predictions, valid_input, valid_options, valid_true_outs), cross_ent, torch.exp(cross_ent)
 end
 -- model, lookup, bias = NCE(10, 2, 10, 2, 3)
 -- modelparams, modelgradparams = model:getParameters()

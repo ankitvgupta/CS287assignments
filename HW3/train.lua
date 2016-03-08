@@ -142,7 +142,7 @@ function trainNCEModel(
 
 	for i = 1, num_epochs do
 		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
-		print("Accuracy and CrossEntropy:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out, p_ml_tensor))
+		print("Accuracy, CrossEntropy, Perplexity:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out, p_ml_tensor))
 
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 			--print(j)
