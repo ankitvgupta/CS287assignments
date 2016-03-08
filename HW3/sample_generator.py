@@ -3,14 +3,14 @@ from collections import Counter
 import numpy as np
 import h5py
 
-file = open("data/train.1000.txt")
+file = open("data/train.txt")
 
 samples_wanted = 10000000
 
 
 wordcount = Counter(file.read().split())
 
-dicti = pd.read_csv("data/words.1000.copy.dict", sep='\t',index_col="word")
+dicti = pd.read_csv("data/words.copy.dict", sep='\t',index_col="word")
 
 print dicti
 num_words = len(dicti.index)
