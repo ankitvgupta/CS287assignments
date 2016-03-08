@@ -167,7 +167,7 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 		values_wanted:div(values_wanted:sum())
 		predictions[i] = values_wanted
 	end
-	return predictions
+	return torch.log(predictions)
 end
 
 

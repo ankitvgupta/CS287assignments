@@ -77,6 +77,10 @@ function main()
 		--print("Accuracy:")
 		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
 	elseif opt.classifier == 'nce' then
+    local reverse_trie = fit(training_input, training_output)
+    local distribution = normalize_table(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
+    local p_ml_tensor = table_to_tensor(distribution, nclasses)
+
 		local model, lookup, bias = trainNCEModel(training_input, training_output,
 					valid_input, 
 					valid_options,
@@ -85,9 +89,9 @@ function main()
 					opt.epochs, 
 					opt.optimizer, 
 					opt.save_losses,
-					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K)
+					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K, p_ml_tensor)
 
-    local acc, cross_entropy_loss = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs)
+    local acc, cross_entropy_loss = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, p_ml_tensor)
 
     --local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options)
     --print(predictions:sum(2))
