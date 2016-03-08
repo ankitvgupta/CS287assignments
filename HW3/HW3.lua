@@ -91,7 +91,7 @@ function main()
 					opt.save_losses,
 					nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win, opt.alpha, opt.eta, samples, opt.K, p_ml_tensor)
 
-    local acc, cross_entropy_loss = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, p_ml_tensor)
+    local acc, cross_entropy_loss, perplexity = getNCEStats(model, lookup, bias, valid_input, valid_options, valid_true_outs, p_ml_tensor)
 
     --local predictions = NCE_predictions(model, lookup, bias, valid_input, valid_options)
     --print(predictions:sum(2))
@@ -100,7 +100,7 @@ function main()
     --local prediction_model = make_NCEPredict_model(model, lookup, bias, opt.hiddenlayers, nclasses)
     --local acc, cross_entropy_loss = getaccuracy2(prediction_model, valid_input, valid_options, valid_true_outs)
     printoptions(opt)
-    print("Results:", acc, cross_entropy_loss)
+    print("Results:", acc, cross_entropy_loss, perplexity)
 
 
     elseif opt.classifier == 'multinomial' then
@@ -115,7 +115,7 @@ function main()
 
     	local acc = get_result_accuracy(predicted_distributions, valid_input, valid_options, valid_true_outs)
     	printoptions(opt)
-    	print("Results:", acc, cross_entropy_loss)
+    	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     else
     	print("Error: classifier '", opt.classifier, "' not implemented")
     end

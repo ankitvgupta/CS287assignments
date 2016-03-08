@@ -125,7 +125,7 @@ function trainNCEModel(
 
    	
 
-	local model, lookup, bias = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
+	local model, embedding, lookup, bias = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	local modelparams, modelgradparams = model:getParameters()
 	--input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
 	--output_batch = torch.LongTensor{1, 2}
@@ -141,80 +141,22 @@ function trainNCEModel(
 	--print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
 	for i = 1, num_epochs do
+		-- renormalize embedding weights for regularization
+		embedding.weight:renorm(embedding.weight, 2, 1, 1)
+
 		print("Epoch", i, "L1 norm of model params:", torch.abs(modelparams):sum(), "LookupParams:", torch.abs(lookupparams):sum(), "Biasparams:", torch.abs(biasparams):sum())
 		print("Accuracy, CrossEntropy, Perplexity:", getNCEStats(model, lookup, bias, validation_input, validation_options, validation_true_out, p_ml_tensor))
-
+		print(NCE_predictions2(model, lookup, bias, validation_input, validation_true_out, D_hidden, D_output))
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
-			--print(j)
-		--for j = 1, training_input:size(1), 1 do
-			--if (j-1)%1000 == 0 then print(j) end
-		    -- zero out our gradients
-		    --gradParameters:zero()
-		    --model:zeroGradParameters()
+
 
 		    -- get the minibatch
 		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
 		    sample_batch = sample_indices:narrow(1, j, K)
-		    --print(minibatch_inputs:size(), minibatch_outputs:size(), sample_batch:size())
-		    -- minibatch_inputs = training_input:narrow(1, j, 1)
-		    -- minibatch_outputs = training_output:narrow(1, j, 1)
-		    -- sample_batch = sample_indices:narrow(1, j*K % (1000000 - K), K)
+
 		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams)
-
-
-
-		 --    -- Create a closure for optim
-		 --    local feval = function(x)
-			-- 	-- Inspired by this torch demo: https://github.com/andresy/torch-demos/blob/master/train-a-digit-classifier/train-on-mnist.lua
-			-- 	-- get new parameters
-			-- 	if x ~= parameters then
-			-- 		parameters:copy(x)
-			-- 	end
-			-- 	-- reset gradients
-			-- 	gradParameters:zero()
-
-			-- 	preds = model:forward(minibatch_inputs)
-			-- 	loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-			-- 	--print(loss)
-
-			-- 	-- backprop
-			-- 	dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
-			-- 	model:backward(minibatch_inputs, dLdpreds)
-
-			-- 	if j == 1 then
-			-- 		if save_losses ~= '' then
-			-- 			file:write(i, ',', loss, '\n')
-			-- 		else
-			-- 			print("Loss: ", loss)
-			-- 		end
-			-- 	end
-
-			-- 	return loss,gradParameters
-			-- end
-			
-			-- Do the update operation.
-	    	-- if optimizer == "adagrad" then
-	    	-- 	config =  {
-	    	-- 	learningRate = eta,
-	    	-- 	weightDecay = lambda,
-	    	-- 	learningRateDecay = 5e-7
-	    	-- }
-	    	-- optim.adagrad(feval, parameters, config)
-	    	-- elseif optimizer == "sgd" then
-	    	-- 	config = {
-	    	-- 	learningRate = eta, 
-	    	-- }
-
-	    	-- optim.sgd(feval, parameters, config)
-		    -- else 
-		    -- 	assert(false)
-		    -- end
-		    
-
 		end
-		--print("Epoch "..i.." Validation accuracy:", getaccuracy(model, validation_input, validation_options, validation_true_out))
-		--print("Epoch "..i.." Validation accuracy:", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 	end
 	--print(lookup.weight)
 	return model, lookup, bias

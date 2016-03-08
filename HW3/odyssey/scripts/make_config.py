@@ -1,17 +1,17 @@
 # Use this to quickly make configurations for experiments
 import itertools
-print_description = False
-datafiles=["SMALL_1.hdf5", "SMALL_2.hdf5", "PTB_1.hdf5", "PTB_2.hdf5", "PTB_5.hdf5"]
-classifier=["nce"]
-eta=[.001, .0001, .1, 1, 10, 100]
-minibatchsize=[512,1024]
+print_description = True
+datafiles=["SMALL_1.hdf5", "SMALL_2.hdf5", "SMALL_3.hdf5", "SMALL_4.hdf5", "SMALL_5.hdf5", "PTB_1.hdf5", "PTB_2.hdf5", "PTB_3.hdf5", "PTB_4.hdf5", "PTB_5.hdf5"]
+classifier=["multinomial"]
+eta=[1]
+minibatchsize=[1]
 numepochs=[20]
-alpha=[.001]
+alpha=[.001, .0001, .01, .1, 1, 2, 4, 10]
 lambdas=[1]
 optimizer=["sgd"]
-hiddenlayers=[50,100]
-embeddingsize=[50,100]
-K=[5,15,25]
+hiddenlayers=[50]
+embeddingsize=[50]
+K=[5]
 
 lists = [datafiles,classifier,eta,minibatchsize,numepochs,alpha,lambdas,optimizer,hiddenlayers,embeddingsize,K]
 if not print_description:
