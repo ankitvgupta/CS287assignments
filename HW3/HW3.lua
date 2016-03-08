@@ -73,11 +73,12 @@ function main()
    if opt.classifier == "nn" then
    		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
    		model = trainModel(model, criterion, training_input, training_output, valid_blanks_input, valid_blanks_options, valid_blanks_outputs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
-		local acc, cross_entropy_loss = getaccuracy2(model, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
+		  local acc, cross_entropy_loss = getaccuracy2(model, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
 		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
 		--local acc = get_result_accuracy(result, valid_input, valid_options, valid_true_outs)
+      local full_cross_ent = NNLM_CrossEntropy(model, valid_input, valid_output)
     	printoptions(opt)
-    	print("Results:", acc, cross_entropy_loss)
+    	print("Results (Accuracy,SmallCrossEntropy,SmallPerp, FullCrossEntropy, Fullperp):", acc, cross_entropy_loss, torch.exp(cross_entropy_loss), full_cross_ent, torch.exp(full_cross_ent))
 
     	--print(acc)
 

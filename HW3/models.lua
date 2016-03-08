@@ -25,95 +25,8 @@ function neuralNetwork(D_sparse_in, D_hidden, D_output, embedding_size, window_s
 
 end
 
---sample_indices a tensor of dimension 1xK
---probs is the distribution over all of the probabilities.
--- function forwardandBackwardPass(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta)
--- 	--dimension of z is minibatch_size x hidden_layer size
--- 	model:zeroGradParameters()
--- 	local z = model:forward(input_minibatch)
--- 	local K = sample_indices:size(1)
--- 	local minibatch_size, hidden_size = z:size(1), z:size(2)
--- 	--print(lookuptable.weight)
--- 	local total_gradient = torch.zeros(z:size())
 
-
--- 	lookuptablegradparameters:zero()
-
--- 	-- Grab the ML probabililities for each of the true words in the minibatch
--- 	local prob = probs:index(1, output_minibatch)
-
--- 	-- Grab the lookuptable rows for each of the true words. This is minibatchsize x hiddenlayer
--- 	local lookuptable_rows = lookuptable:forward(output_minibatch)
-
--- 	-- We now dot product the ith row of z with the ith row of lookuptable_rows (elementwise-mul and then sum left to right)
--- 	-- The product will be minibatchsize x 1
--- 	local dot_product = torch.cmul(z, lookuptable_rows):sum(2)
--- 	local subtracted = dot_product - torch.log(torch.mul(prob, K))
-
-
--- 	local sigmoid = nn.Sigmoid()
--- 	-- Calculate the prediction for each of the inputs
--- 	local predictions = sigmoid:forward(subtracted)
--- 	criterion = nn.BCECriterion()
--- 	-- Calculate the loss - note that these are all the correct ones, so the correct classes are all just 1
--- 	local loss = criterion:forward(predictions, torch.ones(predictions:size(1)))
--- 	--print(loss)
-
--- 	-- Calculate the gradient
--- 	dLdpreds = criterion:backward(predictions, torch.zeros(predictions:size(1))) -- gradients of loss wrt preds
--- 	sigmoid:backward(subtracted, dLdpreds)
-	
--- 	local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
--- 	-- Update the lookuptable 
--- 	local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
-
--- 	local overall_grad = torch.cmul(lookuptable_rows, resizedGrad:expand(minibatch_size, hidden_size))
--- 	-- Add that to the gradient to be passed back to the model
--- 	total_gradient:add(lookup_grad)
--- 	--print(lookup_grad)
--- 	lookuptable:backward(output_minibatch, lookup_grad)
--- 	lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
-
-
--- 	-- do the sampled cases
--- 	for sample_i =1, sample_indices:size(1) do
--- 		lookuptablegradparameters:zero()
--- 		local idx = sample_indices[sample_i]
--- 		local prob = probs[idx]
-
--- 		local lookuptable_row = lookuptable:forward(torch.LongTensor{idx}):squeeze()
-
--- 		-- minibatchsize x 1
--- 		local dot_product = torch.mv(z, lookuptable_row)
--- 		local subtracted = dot_product - torch.log(K*prob)
--- 		local sigmoid = nn.Sigmoid()
--- 		local predictions = sigmoid:forward(subtracted)
-
--- 		criterion = nn.BCECriterion()
--- 		local loss = criterion:forward(predictions, torch.zeros(predictions:size(1)))
-
--- 		dLdpreds = criterion:backward(predictions, torch.zeros(predictions:size(1))) -- gradients of loss wrt preds
--- 		sigmoid:backward(subtracted, dLdpreds)
-
--- 		local resizedGrad = (sigmoid.gradInput):view(minibatch_size, 1)
--- 		local lookup_grad = torch.cmul(z, resizedGrad:expand(minibatch_size, hidden_size))
-
--- 		--lookuptable_row:view(1, lookuptable_row:size(1)):expand(minibatch_size, hidden_size)
-
--- 		local overall_grad = torch.cmul(lookuptable_row:view(1, lookuptable_row:size(1)):expand(minibatch_size, hidden_size), resizedGrad:expand(minibatch_size, hidden_size))
-
--- 		total_gradient:add(lookup_grad)
--- 		--print(lookup_grad)
--- 		lookuptable:backward(torch.LongTensor{idx}, lookup_grad:sum(1))
--- 		lookuptableparameters:add(torch.mul(lookuptablegradparameters,-1*eta))
--- 	end
-
--- 	model:backward(input_minibatch, total_gradient)
--- 	modelparams:add(torch.mul(modelgradparams,-1*eta))
-
--- end
-
-
+-- Create an NCE model
 function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	print("Making NCE neural network model")
 
@@ -130,22 +43,23 @@ function NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 
 end
 
--- add the lookuptable weights to the model 
--- function make_NCEPredict_model(model, lookuptable, bias, D_hidden, D_output)
--- 	local linear_layer = nn.Linear(D_hidden, D_output)
--- 	model:add(linear_layer)
--- 	print(linear_layer.bias:size())
--- 	print(bias.weight:squeeze():size())
 
--- 	linear_layer.weight = lookuptable.weight
--- 	linear_layer.bias = bias.weight:squeeze()
+-- Returns the global cross-entropy of a standard NNLM.
+function NNLM_CrossEntropy(model, to_predict_input, true_outputs)
 
--- 	model:add(nn.LogSoftMax())
--- 	return model
--- end
+	model:zeroGradParameters()
+	local crit = nn.ClassNLLCriterion()
+	crit.sizeAverage = false
+	local total = 0
+	for i = 1, to_predict_input:size(1) - 100, 100 do
+		local preds = model:forward(to_predict_input:narrow(1, i, 100))
+		local cross_entropy_loss = crit:forward(preds, true_outputs:narrow(1, i, 100))
+		total = total + cross_entropy_loss
+	end
+	return total/to_predict_input:size(1)
+end
 
-
-
+-- Returns the global cross-entropy of a NCE model.
 function NCE_predictions2(model, lookuptable, bias, to_predict_input, true_outputs, D_hidden, D_output)
 
 	model:zeroGradParameters()
@@ -173,44 +87,10 @@ function NCE_predictions2(model, lookuptable, bias, to_predict_input, true_outpu
 		total = total + cross_entropy_loss
 	end
 	return total/to_predict_input:size(1)
-
-	-- local tanh_result = model:forward(to_predict_input)
-	-- local minibatch_size = to_predict_input:size(1)
-	-- local K = to_predict_options:size(2)
-
-	-- -- Determine which rows to pick from lookuptable (each row of rows_wanted correspond to the indicies wanted for that minibatch)
-	-- local rows_wanted = to_predict_options
-
-	-- local lookuptable_rows = lookuptable:forward(rows_wanted)
-	-- local bias_rows = bias:forward(rows_wanted)
-
-	-- -- Get the p_ML for each of these words
-	-- --pmls = torch.zeros(minibatch_size, K)
-	-- --for i = 1, minibatch_size do
-	-- --	pmls[i] = probs:index(1, to_predict_options[i])
-	-- --end
-
-	-- --pmls:select(2,1):add(probs:index(1, output_minibatch))
-	-- --pmls:add(probs:index(1, sample_indices):view(1, K):expand(minibatch_size,K))
-
-	-- local z = torch.zeros(minibatch_size, K)
-	-- for i = 1, minibatch_size do
-	-- 	--print(bias_rows[i]:t())
-	-- 	z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t()) + bias_rows[i]:t()
-	-- end
-
-	-- --z = z - pmls
-
-	-- predictions = nn:LogSoftMax():forward(z)
-	-- return predictions
 end
 
-
-
-
-
-
-
+-- For each validation input, returns a distribution over the options.
+-- This can be used to calculate the cross-entropy over the options.
 function NCE_predictions(model, lookuptable, bias, to_predict_input, to_predict_options, probs)
 
 	model:zeroGradParameters()
@@ -227,22 +107,11 @@ function NCE_predictions(model, lookuptable, bias, to_predict_input, to_predict_
 	local lookuptable_rows = lookuptable:forward(rows_wanted)
 	local bias_rows = bias:forward(rows_wanted)
 
-	-- Get the p_ML for each of these words
-	--pmls = torch.zeros(minibatch_size, K)
-	--for i = 1, minibatch_size do
-	--	pmls[i] = probs:index(1, to_predict_options[i])
-	--end
-
-	--pmls:select(2,1):add(probs:index(1, output_minibatch))
-	--pmls:add(probs:index(1, sample_indices):view(1, K):expand(minibatch_size,K))
-
 	local z = torch.zeros(minibatch_size, K)
 	for i = 1, minibatch_size do
 		--print(bias_rows[i]:t())
 		z[i] = torch.mm(tanh_result[i]:view(1, tanh_result:size(2)), lookuptable_rows[i]:t()) + bias_rows[i]:t()
 	end
-
-	--z = z - pmls
 
 	predictions = nn:LogSoftMax():forward(z)
 	return predictions

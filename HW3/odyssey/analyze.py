@@ -39,7 +39,7 @@ alldata = np.append(sets, accuracies, axis=1)
 
 df = pd.DataFrame(alldata)
 df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'Optimizer', 'HiddenLayers', 'EmbeddingSize','Accuracy', 'CrossEnt']
-df[['Accuract', 'CrossEnt']] = df[['Accuracy', 'CrossEnt']].astype(float)
+df[['Accuracy', 'CrossEnt']] = df[['Accuracy', 'CrossEnt']].astype(float)
 df.sort(columns='CrossEnt', ascending=True, inplace=True)
 if sys.argv[1] != "all":
     df = df[df['Datafile'].str.startswith(sys.argv[1])]

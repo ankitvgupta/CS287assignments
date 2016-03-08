@@ -133,18 +133,10 @@ function trainNCEModel(
 
 	local model, embedding, lookup, bias = NCE(D_sparse_in, D_hidden, D_output, embedding_size, window_size)
 	local modelparams, modelgradparams = model:getParameters()
-	--input_batch = torch.LongTensor{{7, 5, 2},{1, 3, 4}}
-	--output_batch = torch.LongTensor{1, 2}
-	--local sample_indices = torch.LongTensor{1, 72, 21, 341, 17, 8, 15}
-	--sample_probs = torch.Tensor{.1, .1, .1, .1, .1, .1, .1, .1, .1, .1}
+
 	local lookupparams, lookupgrads = lookup:getParameters()
 	local biasparams, biasgradparams = bias:getParameters()
 	print(training_input:size())
-
-   	--local parameters, gradParameters = model:getParameters()
-
-   	--print("Got params and grads")
-	--print("Starting Validation accuracy", getaccuracy2(model, validation_input, validation_options, validation_true_out))
 
 	local k_index = 1
 	for i = 1, num_epochs do
@@ -156,7 +148,6 @@ function trainNCEModel(
 		print(NCE_predictions2(model, lookup, bias, valid_input, valid_output, D_hidden, D_output))
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 
-
 		    -- get the minibatch
 		    minibatch_inputs = training_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = training_output:narrow(1, j, minibatch_size)
@@ -166,7 +157,7 @@ function trainNCEModel(
 		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams, K)
 		end
 	end
-	--print(lookup.weight)
+
 	return model, lookup, bias
 end
 
