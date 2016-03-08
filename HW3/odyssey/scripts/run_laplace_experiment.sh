@@ -4,16 +4,16 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=4000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 8:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 0:30:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/outputs/out/nce2/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/outputs/err/nce2/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/outputs/out/laplace/setup_%A_%a_out.txt            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/outputs/err/laplace/setup_%A_%a_err.txt            #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
 # Read the config files and get the appropriate config
-readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/scripts/nce_experiment_config.txt
+readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW3/odyssey/scripts/multinomial_laplace_config.txt
 selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
 # Extract params
@@ -27,7 +27,6 @@ lambda=${selected_config[6]}
 optimizer=${selected_config[7]}
 hiddenlayers=${selected_config[8]}
 embeddingsize=${selected_config[9]}
-K=${selected_config[10]}
 
 # Run the trainer
 cd /scratch
@@ -43,7 +42,6 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW3/HW3.lua \
   -optimizer $optimizer \
   -hiddenlayers $hiddenlayers \
   -embedding_size $embeddingsize \
-  -K $K \
   -odyssey
 
 
