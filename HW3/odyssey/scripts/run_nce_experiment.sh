@@ -27,6 +27,7 @@ lambda=${selected_config[6]}
 optimizer=${selected_config[7]}
 hiddenlayers=${selected_config[8]}
 embeddingsize=${selected_config[9]}
+K=${selected_config[10]}
 
 # Run the trainer
 cd /scratch
@@ -42,6 +43,7 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW3/HW3.lua \
   -optimizer $optimizer \
   -hiddenlayers $hiddenlayers \
   -embedding_size $embeddingsize \
+  -K $K
   -odyssey
 
 
