@@ -62,21 +62,25 @@ end
 -- Returns the global cross-entropy of a NCE model.
 function NCE_predictions2(model, lookuptable, bias, to_predict_input, true_outputs, D_hidden, D_output)
 
-	model:zeroGradParameters()
-	lookuptable:zeroGradParameters()
-	bias:zeroGradParameters()
+	--model:zeroGradParameters()
+	--lookuptable:zeroGradParameters()
+	--bias:zeroGradParameters()
 	--print("NumValidationInputs", to_predict_input:size(1))
 
 	local prediction_err = nn.Sequential()
 	local linear_layer = nn.Linear(D_hidden, D_output)
-	--print(linear_layer.bias:size())
-	--print(bias.weight:squeeze():size())
+	-- print(linear_layer.weight:size())
+	-- print(lookuptable.weight:size())
+	-- print(linear_layer.bias:size())
+	-- print(bias.weight:squeeze():size())
 
 	linear_layer.weight = lookuptable.weight
 	linear_layer.bias = bias.weight:squeeze()
 	prediction_err:add(linear_layer)
 	prediction_err:add(nn.LogSoftMax())
 	
+	--print(linear_layer.weight - lookuptable.weight)
+	--print(bias.weight)
 	local crit = nn.ClassNLLCriterion()
 	crit.sizeAverage = false
 	local total = 0

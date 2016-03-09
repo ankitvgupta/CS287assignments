@@ -8,16 +8,7 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 	bias:zeroGradParameters()
 	local tanh_result = model:forward(input_minibatch)
 
-
-
 	local minibatch_size = input_minibatch:size(1)
-	--print(minibatch_size)
-	--local K = sample_indices:size(1)
-
-	--print(minibatch_size*K)
-	--print("Size", minibatch_size)
-
-
 	-- Determine which rows to pick from lookuptable (each row of rows_wanted correspond to the indicies wanted for that minibatch)
 	local rows_wanted = torch.zeros(minibatch_size, K+1):long()
 	--rows_wanted:narrow(2, 2, K):add(sample_indices:view(1, K):expand(minibatch_size,K))

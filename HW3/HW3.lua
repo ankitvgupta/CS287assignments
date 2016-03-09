@@ -122,7 +122,7 @@ function main()
 
     	--result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
-    	local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_output)
+    	local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
     	printoptions(opt)
     	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     elseif opt.classifier == 'laplace' then
@@ -130,12 +130,25 @@ function main()
       --print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
       local predicted_distributions = getlaplacepredictions(reverse_trie, valid_blanks_input, valid_blanks_options, nclasses, opt.alpha)
       --print(predicted_distributions:sum(2))
-      local cross_entropy_loss = cross_entropy_loss(valid_blanks_output, predicted_distributions, valid_blanks_options)
+      local cross_entropy_loss = cross_entropy_loss(valid_blanks_outputs, predicted_distributions, valid_blanks_options)
       print("Cross-entropy loss", cross_entropy_loss)
 
       --result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
-      local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_output)
+      local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
+      printoptions(opt)
+      print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
+    elseif opt.classifier == 'mle' then
+      local reverse_trie = fit(training_input, training_output)
+      --print(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
+      local predicted_distributions = getmlepredictions(reverse_trie, valid_blanks_input, valid_blanks_options, nclasses, opt.alpha)
+      --print(predicted_distributions:sum(2))
+      local cross_entropy_loss = cross_entropy_loss(valid_blanks_outputs, predicted_distributions, valid_blanks_options)
+      print("Cross-entropy loss", cross_entropy_loss)
+
+      --result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
+
+      local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
       printoptions(opt)
       print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     else
