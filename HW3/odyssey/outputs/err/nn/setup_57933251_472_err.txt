@@ -2,4 +2,11 @@
 The following have been reloaded with a version change:
   1) mpc/1.0.1-fasrc01 => mpc/1.0.3-fasrc02
 
-slurmstepd: error: *** JOB 57940120 ON holy2a23106 CANCELLED AT 2016-03-09T16:40:35 DUE TO PREEMPTION ***
+/n/home09/ankitgupta/torch/install/bin/luajit: ...09/ankitgupta/torch/install/share/lua/5.1/trepl/init.lua:383: ...me09/ankitgupta/torch/install/share/lua/5.1/hdf5/ffi.lua:29: libosmcomp.so.3: cannot open shared object file: No such file or directory
+stack traceback:
+	[C]: in function 'error'
+	...09/ankitgupta/torch/install/share/lua/5.1/trepl/init.lua:383: in function 'require'
+	/n/home09/ankitgupta/CS287/CS287assignments/HW3/HW3.lua:2: in main chunk
+	[C]: in function 'dofile'
+	...upta/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:145: in main chunk
+	[C]: at 0x00405800
