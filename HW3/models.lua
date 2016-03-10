@@ -13,7 +13,8 @@ function neuralNetwork(D_sparse_in, D_hidden, D_output, embedding_size, window_s
 	print("Making neural network model")
 
 	local model = nn.Sequential()
-	model:add(nn.LookupTable(D_sparse_in, embedding_size))
+	local embedding = nn.LookupTable(D_sparse_in, embedding_size)
+	model:add(embedding)
 	model:add(nn.View(-1):setNumInputDims(2))
 	model:add(nn.Linear(embedding_size*window_size, D_hidden))
 	model:add(nn.HardTanh())
@@ -21,7 +22,7 @@ function neuralNetwork(D_sparse_in, D_hidden, D_output, embedding_size, window_s
 	model:add(nn.LogSoftMax())
 	criterion = nn.ClassNLLCriterion()
 
-	return model, criterion
+	return model, criterion, embedding
 
 end
 
