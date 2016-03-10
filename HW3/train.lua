@@ -158,7 +158,7 @@ function trainNCEModel(
 		end
 	end
 
-	return model, lookup, bias
+	return model, lookup, bias, embedding
 end
 
 

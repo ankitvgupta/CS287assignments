@@ -62,8 +62,8 @@ def main(arguments):
     vocab_file = args.vocab
     embedding_file = args.datafile
 
-    K = 5
-    sim = cosine
+    K = 100
+    sim = lambda v1, v2: 1-cosine(v1, v2)
     words = ["tuesday", "francisco", "september", "japan"]
 
 
@@ -75,21 +75,21 @@ def main(arguments):
     with h5py.File(embedding_file, "r") as f:
     	embeddings = f['embedding'][:]
 
-    	# top_pairs = find_top_pairs(embeddings, K, sim)
-    	# for tp in top_pairs:
-    	# 	idx1 = tp[1]
-    	# 	idx2 = tp[2]
-    	# 	print idx_to_words[idx1],
-    	# 	print idx_to_words[idx2]
+    	top_pairs = find_top_pairs(embeddings, K, sim)
+    	for tp in top_pairs:
+    		idx1 = tp[1]
+    		idx2 = tp[2]
+    		print idx_to_words[idx1],
+    		print idx_to_words[idx2]
     	
-    	for word in words:
-    		word_idx = words_to_idx[word]
-    		print word
-	    	nearest_idxs = k_nearest(word_idx, K, embeddings, sim)
-	    	for i in nearest_idxs:
-	    		wordidx = i[1]
-	    		print idx_to_words[wordidx]
-	    	print
+    	# for word in words:
+    	# 	word_idx = words_to_idx[word]
+    	# 	print word
+	    # 	nearest_idxs = k_nearest(word_idx, K, embeddings, sim)
+	    # 	for i in nearest_idxs:
+	    # 		wordidx = i[1]
+	    # 		print idx_to_words[wordidx]
+	    # 	print
 
 
 if __name__ == '__main__':
