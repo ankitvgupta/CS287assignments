@@ -25,6 +25,24 @@ cmd:option('-K', 10, 'for NCE only')
 -- Hyperparameters
 -- ...
 
+function sampler(dist)
+  -- Do this to remove <unk> values.
+  dist[2] = 0
+  dist:div(dist:sum())
+
+  --local _, ind = torch.max(dist, 1)
+  --return ind:squeeze()
+
+  local sample = torch.uniform()
+  total = 0
+  for i =1, dist:size(1) do
+    total = total + dist[i]
+    if total > sample then
+      return i
+    end
+  end
+  return dist:size(1)
+end
 
 function main() 
    -- Parse input params
@@ -170,6 +188,35 @@ function main()
       local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
       printoptions(opt)
       print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
+    elseif opt.classifier == 'babbler' then
+      local reverse_trie = fit(training_input, training_output)
+      --print("Trained")
+      
+      local len_wanted = 1000
+      local sentence = torch.LongTensor(len_wanted)
+      -- Initialize the sentence.
+      print("Train", training_input[80])
+      sentence:narrow(1, 1, d_win):add(training_input[80]:squeeze())
+
+      --local sentence_length = 5
+      
+      local context_size = d_win
+      for sentence_length = 6, len_wanted do
+        if (sentence_length % 10 == 0) then
+          collectgarbage()
+        end
+        local dist = table_to_tensor(predict(reverse_trie, sentence:narrow(1, sentence_length-d_win, d_win), nclasses, opt.alpha), nclasses)
+        --local _, ind = torch.max(dist, 1) 
+        ind = sampler(dist)
+        if ind == 4 then
+          ind = 3
+        end
+        print(ind)
+        --print(dist)
+        --sentence_length = sentence_length + 1
+        sentence[sentence_length] = ind
+      end
+      --print(sentence)
     else
     	print("Error: classifier '", opt.classifier, "' not implemented")
     end
