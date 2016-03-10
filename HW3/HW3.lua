@@ -9,6 +9,7 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-testfile', '', 'test file')
 cmd:option('-save_losses', '', 'file to save loss per epoch to (leave blank if not wanted)')
+cmd:option('-save_weights', '', 'file to save lookuptable weights to (nce only)')
 cmd:option('-classifier', 'nn', 'classifier to use (mle, nn)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-eta', .1, 'Learning rate (.1 for adagrad, 500 for sgd, 10 for nn sgd)')
@@ -71,7 +72,7 @@ function main()
 
    -- Train neural network.
    if opt.classifier == "nn" then
-   		local model, criterion = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
+   		local model, criterion, embedding = neuralNetwork(nfeatures, opt.hiddenlayers, nclasses, opt.embedding_size, d_win)
    		model = trainModel(model, criterion, training_input, training_output, valid_blanks_input, valid_blanks_options, valid_blanks_outputs, opt.minibatch, opt.epochs, opt.optimizer, opt.save_losses)
 		  local acc, cross_entropy_loss = getaccuracy2(model, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
 		--result = predictall_and_subset(model, valid_input, valid_options, nclasses, opt.alpha)
@@ -81,6 +82,15 @@ function main()
     	print("Results (Accuracy,SmallCrossEntropy,SmallPerp, FullCrossEntropy, Fullperp):", acc, cross_entropy_loss, torch.exp(cross_entropy_loss), full_cross_ent, torch.exp(full_cross_ent))
 
     	--print(acc)
+    	if (opt.save_weights ~= '') then
+	    	print(embedding.weight)
+	    	print("saving weights to", opt.save_weights, "...")
+	    	local fsave = hdf5.open(opt.save_weights, 'w')
+	    	fsave:write('embedding', embedding.weight)
+	    	print("done")
+
+	    end
+
 
 		--print("Accuracy:")
 		--print(getaccuracy(model, valid_input, valid_options, valid_true_outs))
@@ -89,7 +99,7 @@ function main()
     local distribution = normalize_table(get_word_counts_for_context(reverse_trie, torch.LongTensor{}, nclasses, opt.alpha))
     local p_ml_tensor = table_to_tensor(distribution, nclasses)
 
-		local model, lookup, bias = trainNCEModel(training_input, training_output,
+		local model, lookup, bias, embedding = trainNCEModel(training_input, training_output,
 					valid_blanks_input, 
 					valid_blanks_options,
 					valid_blanks_outputs,
@@ -111,6 +121,14 @@ function main()
     printoptions(opt)
     print("Results(Acc,Cross,Perp,FullCross,FullPerp):", acc, cross_entropy_loss, perplexity, full_cross_ent, torch.exp(full_cross_ent) )
 
+    if (opt.save_weights ~= '') then
+    	print(embedding.weight)
+    	print("saving weights to", opt.save_weights, "...")
+    	local fsave = hdf5.open(opt.save_weights, 'w')
+    	fsave:write('embedding', embedding.weight)
+    	print("done")
+
+    end
 
     elseif opt.classifier == 'multinomial' then
     	local reverse_trie = fit(training_input, training_output)
@@ -123,6 +141,7 @@ function main()
     	--result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
     	local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
+      result = torch.exp(predictall_and_subset(reverse_trie, test_blanks_input, test_blanks_options, nclasses, opt.alpha))
     	printoptions(opt)
     	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     elseif opt.classifier == 'laplace' then
