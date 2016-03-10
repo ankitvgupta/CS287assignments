@@ -154,7 +154,7 @@ function trainNCEModel(
 		    sample_batch = sample_indices:narrow(1, k_index, minibatch_size*K)
 		    k_index = (k_index + minibatch_size*K) % (10000000 - minibatch_size*K)
 
-		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams, K)
+		    forwardandBackwardPass3(model, modelparams, modelgradparams,lookup, lookupparams, lookupgrads, minibatch_inputs, minibatch_outputs, sample_batch, p_ml_tensor, eta, bias, biasparams, biasgradparams, K, file, save_losses)
 		end
 	end
 

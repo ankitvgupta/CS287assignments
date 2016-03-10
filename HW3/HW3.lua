@@ -123,6 +123,7 @@ function main()
     	--result = predictall_and_subset(reverse_trie, test_context, test_options, nclasses, opt.alpha)
 
     	local acc = get_result_accuracy(predicted_distributions, valid_blanks_input, valid_blanks_options, valid_blanks_outputs)
+      result = torch.exp(predictall_and_subset(reverse_trie, test_blanks_input, test_blanks_options, nclasses, opt.alpha))
     	printoptions(opt)
     	print("Results:", acc, cross_entropy_loss, torch.exp(cross_entropy_loss))
     elseif opt.classifier == 'laplace' then

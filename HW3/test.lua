@@ -1,7 +1,7 @@
 
 --sample_indices a tensor of dimension 1xK
 --probs is the distribution over all of the probabilities.
-function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta, bias, biasparams, biasgradparams, K)
+function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptable, lookuptableparameters, lookuptablegradparameters, input_minibatch, output_minibatch, sample_indices, probs, eta, bias, biasparams, biasgradparams, K, file, save_losses)
 	--dimension of z is minibatch_size x hidden_layer size
 	model:zeroGradParameters()
 	lookuptable:zeroGradParameters()
@@ -49,6 +49,9 @@ function forwardandBackwardPass3(model, modelparams, modelgradparams, lookuptabl
 
 	-- Calculate the loss
 	local loss = criterion:forward(predictions, classifications)
+	if save_losses ~= '' then
+		file:write(loss, '\n')
+	end
 	--print(loss)
 
 	-- Calculate the gradient

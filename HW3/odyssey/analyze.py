@@ -15,7 +15,7 @@ assert(len(sys.argv) == 2)
 print(sys.argv)
 
 
-moreoutput=True
+moreoutput=False
 
 
 for line in sys.stdin:
