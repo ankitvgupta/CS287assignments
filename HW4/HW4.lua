@@ -40,8 +40,8 @@ function main()
    	valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
 
    	local reverse_trie = fit(training_input, training_output)
-	local space_probs = getlaplacepredictions(reverse_trie, valid_input, space_idx, nfeatures, nclasses, opt.alpha)
-	local cross_entropy_loss = cross_entropy_loss(valid_output, space_probs)
+	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
+	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
 	print("Cross-entropy loss", cross_entropy_loss)
 
 

@@ -187,12 +187,28 @@ end
 -- Calculates cross-entropy loss. This is the sum of the log
 -- probabilities that were predicted for the true class.
 function cross_entropy_loss(true_outputs, log_predicted_distribution)
-	assert(true_outputs:size(1) == log_predicted_distribution:size(1))
 	local loss = 0.0
 	for i = 1, true_outputs:size(1) do
-		local cross_loss = log_predicted_distribution[i]*true_outputs[i]
+		c = true_outputs[i]
+		local cross_loss = log_predicted_distribution[i][c]
 		loss = loss - cross_loss
+		--print(log_predicted_distribution[i])
+		--print(cross_loss)
+		--print(predicted_distribution[i]:index(1, matched_indicies)[1])
+		--print(loss)
+		--if loss > 100 then
+		--	assert(false)
+		--end
+		--loss = loss + torch.log(predicted_distribution[i]:index(1, matched_indicies):sum())
+		
+		--loss = loss + logged_probabilities[i]:index(1, matched_indicies):sum()
+		--local predicted_distribution_index = find(options[i], true_outputs[i])
+		
+		--print(i, true_outputs[i], predicted_distribution_index, options[i])
+		--assert(predicted_distribution_index ~= -1)
+		--loss = loss + logged_probabilities[i][predicted_distribution_index]
 	end
+	--print(loss)
 	return loss/true_outputs:size(1)
 end
 

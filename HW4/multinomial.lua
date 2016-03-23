@@ -189,37 +189,50 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 	return torch.log(predictions)
 end
 
-function getlaplacepredictions(trie, valid_input, space_idx, vocab_size, alpha)
+function getlaplacepredictions(trie, valid_input, num_classes, alpha)
 	print("Starting predictions")
-	local predictions = torch.zeros(valid_input:size(1))
+	local predictions = torch.zeros(valid_input:size(1), num_classes)
 	print("Initialized predictions tensor")
 	for i = 1, valid_input:size(1) do
 		if i % 100 == 0 then
 			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
 			collectgarbage()
 		end
-		local prediction = table_to_tensor(predict_laplace(trie, valid_input[i], vocab_size, alpha), vocab_size)
-		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
-		predictions[i] = prediction[space_idx]
+		--local prediction = table_to_tensor(predict_laplace(trie, valid_input[i], 2, alpha), 2)
+		--assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
+		predictions[i] = table_to_tensor(predict_laplace(trie, valid_input[i], num_classes, alpha), num_classes)
 	end
 	return torch.log(predictions)
 end
 
-function getmlepredictions(trie, valid_input, valid_options, vocab_size, alpha)
-	assert(valid_input:size(1) == valid_options:size(1))
+-- baseline
+function getrandompredictions(trie, valid_input, num_classes, alpha)
 	print("Starting predictions")
-	local predictions = torch.zeros(valid_input:size(1), valid_options:size(2))
+	local predictions = torch.zeros(valid_input:size(1), num_classes)
+	for i=1, valid_input:size(1) do
+		if i % 100 == 0 then
+			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
+			collectgarbage()
+		end
+		space_prob = torch.rand(1)[1]
+		predictions[i][1] = 1-space_prob
+		predictions[i][2] = space_prob
+	end
+	return torch.log(predictions)
+end
+
+function getmlepredictions(trie, valid_input, num_classes, alpha)
+	print("Starting predictions")
+	local predictions = torch.zeros(valid_input:size(1), num_classes)
 	print("Initialized predictions tensor")
 	for i = 1, valid_input:size(1) do
 		if i % 100 == 0 then
 			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
 			collectgarbage()
 		end
-		local prediction = table_to_tensor(predict_multinomial_mle(trie, vocab_size), vocab_size)
+		local prediction = table_to_tensor(predict_multinomial_mle(trie, num_classes), num_classes)
 		assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
-		local values_wanted = prediction:index(1, valid_options[i])
-		values_wanted:div(values_wanted:sum())
-		predictions[i] = values_wanted
+		predictions[i] = prediction[space_idx]
 	end
 	return torch.log(predictions)
 end
