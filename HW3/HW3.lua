@@ -25,24 +25,7 @@ cmd:option('-K', 10, 'for NCE only')
 -- Hyperparameters
 -- ...
 
-function sampler(dist)
-  -- Do this to remove <unk> values.
-  dist[2] = 0
-  dist:div(dist:sum())
 
-  --local _, ind = torch.max(dist, 1)
-  --return ind:squeeze()
-
-  local sample = torch.uniform()
-  total = 0
-  for i =1, dist:size(1) do
-    total = total + dist[i]
-    if total > sample then
-      return i
-    end
-  end
-  return dist:size(1)
-end
 
 function main() 
    -- Parse input params
