@@ -17,20 +17,23 @@ function rnn(vocab_size, embed_dim, output_dim)
 	return batchLSTM, crit
 end
 
-r, crit = rnn(100, 5, 2)
+function example()
+	r, crit = rnn(100, 5, 2)
 
--- batchsize = 5. SequenceLength = 3. 
-inputs = (torch.abs(torch.randn(5,3)*10) + 1):long()
--- batchSize = 5. These outputs will be either 1 or 2.
--- There are 3 of these, since ther eis one for every element in sequence.
-batch_output = torch.round(torch.rand(5)) + 1
-outputs = {batch_output, batch_output, batch_output}
--- Make some predictions
-res = r:forward(inputs:t())
-print(res)
-loss = crit:forward(res, outputs)
-print(loss)
-dLdPreds = crit:backward(res, outputs)
-print(dLdPreds)
-r:backward(inputs:t(), dLdPreds)
+	-- batchsize = 5. SequenceLength = 3. 
+	inputs = (torch.abs(torch.randn(5,3)*10) + 1):long()
+	-- batchSize = 5. These outputs will be either 1 or 2.
+	-- There are 3 of these, since ther eis one for every element in sequence.
+	batch_output = torch.round(torch.rand(5)) + 1
+	outputs = {batch_output, batch_output, batch_output}
+	-- Make some predictions
+	res = r:forward(inputs:t())
+	print(res)
+	loss = crit:forward(res, outputs)
+	print(loss)
+	dLdPreds = crit:backward(res, outputs)
+	print(dLdPreds)
+	r:backward(inputs:t(), dLdPreds)
+end
+example()
 

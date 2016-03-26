@@ -7,10 +7,10 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'laplace', 'classifier to use')
 cmd:option('-window_size', 5, 'Size of the window to split the full matrix')
-cmd:option('-minibatch', 2000, 'Minibatch size (500 for nn, 2000 for lr)')
+cmd:option('-b', 2000, 'Total number of sequences to split into (batch)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
-
+cmd:option('-l', 100, 'Length of sequence in batch')
 -- Hyperparameters
 -- ...
 
@@ -35,6 +35,8 @@ function main()
    	flat_train_output = f:read('train_output'):all():long()
    	flat_valid_input = f:read('valid_input'):all():long()
    	flat_valid_output = f:read('valid_output'):all():long()
+      print(flat_train_input:size())
+      print(flat_train_output:size())
    	
    	training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
    	valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)

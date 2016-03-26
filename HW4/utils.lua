@@ -1,3 +1,7 @@
+function create_nn_inputs(flat_inputs, flat_outputs)
+	return
+end
+
 function unroll_inputs(flat_inputs, flat_outputs, window_size)
 	local numWords = flat_inputs:size(1)
    	input = torch.Tensor(numWords-window_size, window_size)
