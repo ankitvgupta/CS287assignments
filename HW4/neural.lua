@@ -1,5 +1,6 @@
 require 'nn'
 require 'rnn'
+require 'optim'
 function rnn(vocab_size, embed_dim, output_dim)
 	batchLSTM = nn.Sequential()
 	batchLSTM:add(nn.LookupTable(vocab_size, embed_dim)) --will return a sequence-length x batch-size x embedDim tensor
@@ -18,7 +19,7 @@ function rnn(vocab_size, embed_dim, output_dim)
 end
 
 function trainRNN(model,
-				crit,
+				criterion,
 				training_input,
 				training_output,
 				l, 
@@ -26,6 +27,7 @@ function trainRNN(model,
 				optimizer)
 	local parameters, gradParameters = model:getParameters()
 	for i = 1, num_epochs do
+		print("Beginning epoch", i)
 		for j = 1, training_input:size(2)-l, l do
 
 		    -- zero out our gradients
@@ -48,7 +50,7 @@ function trainRNN(model,
 
 				preds = model:forward(minibatch_inputs)
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-				print(loss)
+				print("    ", loss)
 
 				-- backprop
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
