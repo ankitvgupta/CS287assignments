@@ -60,14 +60,21 @@ function main()
       trainNN(model, crit, training_input, training_output, opt.minibatch_size, opt.epochs, opt.optimizer, opt.b)
       local predictions = nn_greedily_segment(flat_valid_input, model, opt.window_size, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
-   	  local precision = prediction_precision(predictions, flat_valid_output)
+   	local precision = prediction_precision(predictions, flat_valid_output)
    	print("Accuracy:", accuracy)
    	print("Precision:", precision)
    elseif opt.classifier == 'rnn' then
       print("RNN")
       local model, crit = rnn(nfeatures, opt.embedding_size, 2)
+      model:remember("both")
+      model:training()
       local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
       trainRNN(model, crit, training_input, training_output, opt.sequence_length,  opt.epochs, opt.optimizer)
+      local predictions = rnn_greedily_segment(flat_valid_input, model, space_idx)
+      local accuracy = prediction_accuracy(predictions, flat_valid_output)
+      local precision = prediction_precision(predictions, flat_valid_output)
+      print("Accuracy:", accuracy)
+      print("Precision:", precision)
    end
 
 

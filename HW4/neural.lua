@@ -125,7 +125,9 @@ function trainRNN(model,
 
 				preds = model:forward(minibatch_inputs)
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-				print("    ", loss)
+				if j == 1 then
+					print("    ", loss)
+				end
 
 				-- backprop
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
@@ -193,7 +195,40 @@ function nn_greedily_segment(flat_valid_input, model, window_size, space_idx)
 
 end
 
+function rnn_greedily_segment(flat_valid_input, model, space_idx)
 
+	print("Starting predictions")
+	model:evaluate()
+	local valid_input_count = flat_valid_input:size(1)
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	local next_word_idx = 1
+	local char = flat_valid_input:narrow(1, next_word_idx, 1)
+
+	while next_word_idx < valid_input_count do 
+
+		if next_word_idx % 1000 == 0 then
+			print("Reached word", next_word_idx)
+		end
+
+		local predictions = model:forward(char)[1]
+		--print(predictions)
+
+		-- predicting a space
+		if (predictions[2] > torch.log(0.5)) then
+			--print('Space Found')
+			valid_output_predictions[next_word_idx] = 2
+			char = torch.LongTensor{space_idx}
+		-- predicting a non-space, so grab the next valid input
+		else
+			next_word_idx = next_word_idx + 1
+			char = flat_valid_input:narrow(1, next_word_idx, 1)
+		end
+
+	end
+
+	return valid_output_predictions
+
+end
 
 function example()
 	r, crit = rnn(100, 5, 2)
