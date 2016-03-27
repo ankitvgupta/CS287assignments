@@ -1,5 +1,10 @@
-function create_nn_inputs(flat_inputs, flat_outputs)
-	return
+function create_nn_inputs(flat_inputs, flat_outputs, b)
+	-- This reduces the input to a length that is divisible by b
+	local desired_length = math.floor(flat_inputs:size(1)/b)*b
+
+	local reshaped_inputs = flat_inputs:narrow(1, 1, desired_length):reshape(b, desired_length/b)
+	local reshaped_outputs = flat_outputs:narrow(1, 1, desired_length):reshape(b, desired_length/b)
+	return reshaped_inputs, reshaped_outputs
 end
 
 function unroll_inputs(flat_inputs, flat_outputs, window_size)

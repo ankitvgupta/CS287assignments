@@ -17,6 +17,70 @@ function rnn(vocab_size, embed_dim, output_dim)
 	return batchLSTM, crit
 end
 
+function trainRNN(model,
+				crit,
+				training_input,
+				training_output,
+				l, 
+				num_epochs,
+				optimizer)
+	local parameters, gradParameters = model:getParameters()
+	for i = 1, num_epochs do
+		for j = 1, training_input:size(2)-l, l do
+
+		    -- zero out our gradients
+		    gradParameters:zero()
+		    model:zeroGradParameters()
+
+		   	minibatch_inputs = training_input:narrow(2, j, l)
+		    minibatch_outputs = training_output:narrow(2, j, l)
+
+		    -- Create a closure for optim
+		    local feval = function(x)
+				-- Inspired by this torch demo: https://github.com/andresy/torch-demos/blob/master/train-a-digit-classifier/train-on-mnist.lua
+				-- get new parameters
+				if x ~= parameters then
+					parameters:copy(x)
+				end
+
+				-- reset gradients
+				gradParameters:zero()
+
+				preds = model:forward(minibatch_inputs)
+				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
+				print(loss)
+
+				-- backprop
+				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
+				model:backward(minibatch_inputs, dLdpreds)
+
+
+				return loss,gradParameters
+			end
+
+			-- Do the update operation.
+	    	if optimizer == "adagrad" then
+	    		config =  {
+		    		learningRate = eta,
+		    		weightDecay = lambda,
+		    		learningRateDecay = 5e-7
+	    		}
+	    		optim.adagrad(feval, parameters, config)
+	    	elseif optimizer == "sgd" then
+	    		config = {
+	    			learningRate = eta, 
+	    		}
+	    		optim.sgd(feval, parameters, config)
+		    else 
+		    	assert(false)
+		    end
+
+		end
+	end
+end
+
+
+
 function example()
 	r, crit = rnn(100, 5, 2)
 
@@ -35,5 +99,5 @@ function example()
 	print(dLdPreds)
 	r:backward(inputs:t(), dLdPreds)
 end
-example()
+--example()
 
