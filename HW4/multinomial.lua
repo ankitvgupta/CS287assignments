@@ -189,20 +189,37 @@ function predictall_and_subset(trie, valid_input, valid_options, vocab_size, alp
 	return torch.log(predictions)
 end
 
-function getlaplacepredictions(trie, valid_input, num_classes, alpha)
+function laplace_greedily_segment(flat_valid_input, trie, alpha, window_size, space_idx)
+
 	print("Starting predictions")
-	local predictions = torch.zeros(valid_input:size(1), num_classes)
-	print("Initialized predictions tensor")
-	for i = 1, valid_input:size(1) do
-		if i % 100 == 0 then
-			--print("Iteration", i, "MemUsage", collectgarbage("count")*1024)
-			collectgarbage()
+	local valid_input_count = flat_valid_input:size(1)
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	local next_window = torch.Tensor(window_size):copy(flat_valid_input:narrow(1, 1, window_size))
+	local next_word_idx = window_size+1
+
+	while next_word_idx < valid_input_count do 
+
+		local predictions = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
+		
+		-- shift the window
+		for i=1, window_size-1 do
+			next_window[i] = next_window[i+1]
 		end
-		--local prediction = table_to_tensor(predict_laplace(trie, valid_input[i], 2, alpha), 2)
-		--assert(prediction:sum() > .99999 and prediction:sum() < 1.000001)
-		predictions[i] = table_to_tensor(predict_laplace(trie, valid_input[i], num_classes, alpha), num_classes)
+
+		-- predicting a space
+		if (predictions[2] > 0.5) then
+			valid_output_predictions[next_word_idx-window_size] = 2
+			next_window[window_size] = space_idx
+		-- predicting a non-space, so grab the next valid input
+		else
+			next_window[window_size] = flat_valid_input[next_word_idx]
+			next_word_idx = next_word_idx + 1
+		end
+
 	end
-	return torch.log(predictions)
+
+	return valid_output_predictions
+
 end
 
 -- baseline

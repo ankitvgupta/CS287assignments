@@ -20,6 +20,16 @@ function unroll_inputs(flat_inputs, flat_outputs, window_size)
    	return input, output
 end
 
+function prediction_accuracy(preds, true_vals)
+	local total_matches = torch.eq(preds, true_vals):sum()
+	return total_matches/preds:size(1)
+end
+
+function prediction_precision(preds, true_vals)
+	local total_matches = torch.cmul(preds-1, true_vals-1):sum()
+	return total_matches/(preds-1):sum()
+end
+
 function getaccuracy(model, validation_input, validation_options, validation_true_outs)
 	local scores = model:forward(validation_input)
 	local n = validation_input:size(1)

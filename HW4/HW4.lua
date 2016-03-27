@@ -40,18 +40,20 @@ function main()
 	flat_train_input = f:read('train_input'):all():long()
 	flat_train_output = f:read('train_output'):all():long()
 	flat_valid_input = f:read('valid_input'):all():long()
-	flat_valid_output = f:read('valid_output'):all():long()
+	flat_valid_output = f:read('valid_output'):all():long()	
    print(flat_train_input:size())
    print(flat_train_output:size())
+   print(flat_valid_output:size())
 	
    if opt.classifier == 'laplace' then
    	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
    	local valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
 
    	local reverse_trie = fit(training_input, training_output)
-   	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
-   	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
-   	print("Cross-entropy loss", cross_entropy_loss)
+   	local predictions = laplace_greedily_segment(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
+   	local accuracy = prediction_accuracy(predictions, flat_valid_output)
+   	local precision = prediction_precision(predictions, flat_valid_output)
+   	print("Accuracy:", precision)
    elseif opt.classifier == 'neural' then
       local model, crit = nn_model(nfeatures, opt.embedding_size, opt.window_size, opt.hidden, 2)
    elseif opt.classifier == 'rnn' then
