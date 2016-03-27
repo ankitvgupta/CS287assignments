@@ -47,17 +47,22 @@ function main()
 	
    if opt.classifier == 'laplace' then
    	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
-   	local valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
 
    	local reverse_trie = fit(training_input, training_output)
    	local predictions = laplace_greedily_segment(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
    	local accuracy = prediction_accuracy(predictions, flat_valid_output)
    	local precision = prediction_precision(predictions, flat_valid_output)
-   	print("Accuracy:", precision)
+   	print("Accuracy:", accuracy)
+   	print("Precision:", precision)
    elseif opt.classifier == 'neural' then
       local model, crit = nn_model(nfeatures, opt.embedding_size, opt.window_size, opt.hidden, 2)
       local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
       trainNN(model, crit, training_input, training_output, opt.minibatch_size, opt.epochs, opt.optimizer, opt.b)
+      local predictions = nn_greedily_segment(flat_valid_input, model, opt.window_size, space_idx)
+      local accuracy = prediction_accuracy(predictions, flat_valid_output)
+   	  local precision = prediction_precision(predictions, flat_valid_output)
+   	print("Accuracy:", accuracy)
+   	print("Precision:", precision)
    elseif opt.classifier == 'rnn' then
       print("RNN")
       local model, crit = rnn(nfeatures, opt.embedding_size, 2)

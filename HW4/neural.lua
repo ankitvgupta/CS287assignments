@@ -156,6 +156,43 @@ function trainRNN(model,
 	end
 end
 
+function nn_greedily_segment(flat_valid_input, model, window_size, space_idx)
+
+	print("Starting predictions")
+	local valid_input_count = flat_valid_input:size(1)
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	local next_window = torch.Tensor(window_size):copy(flat_valid_input:narrow(1, 1, window_size))
+	local next_word_idx = window_size+1
+
+	while next_word_idx < valid_input_count do 
+
+		if next_word_idx % 1000 == 0 then
+			print("Reached word", next_word_idx)
+		end
+
+		local predictions = model:forward(next_window)
+		
+		-- shift the window
+		for i=1, window_size-1 do
+			next_window[i] = next_window[i+1]
+		end
+
+		-- predicting a space
+		if (predictions[2] > torch.log(0.5)) then
+			valid_output_predictions[next_word_idx-window_size] = 2
+			next_window[window_size] = space_idx
+		-- predicting a non-space, so grab the next valid input
+		else
+			next_window[window_size] = flat_valid_input[next_word_idx]
+			next_word_idx = next_word_idx + 1
+		end
+
+	end
+
+	return valid_output_predictions
+
+end
+
 
 
 function example()

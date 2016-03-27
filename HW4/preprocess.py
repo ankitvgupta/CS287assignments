@@ -22,7 +22,7 @@ FILE_PATHS = {"PTB": ("data/train_chars.txt",
                       )}
 args = {}
 
-def file_to_input(file_path):
+def file_to_input(file_path, remove_spaces=True):
     space_index = VOCAB['<space>']
     with open(file_path, 'r') as f:
         full_sample = f.next()
@@ -32,6 +32,9 @@ def file_to_input(file_path):
         next_spaces = spaces-1
         Y = np.ones(X.shape, dtype=int)
         Y[next_spaces] = 2
+        if remove_spaces:
+            X = np.delete(X, spaces)
+            Y = np.delete(Y, spaces)
         return X, Y
 
 
@@ -48,7 +51,7 @@ def main(arguments):
     train, valid, test = FILE_PATHS[dataset]
 
     train_input, train_output = file_to_input(train)
-    valid_input, valid_output = file_to_input(valid)
+    valid_input, valid_output = file_to_input(valid, remove_spaces=True)
 
     # TODO
     test_input = np.array([])
