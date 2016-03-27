@@ -18,8 +18,8 @@ cmd:option('-epochs', 10, 'Number of epochs')
 
 
 function main() 
-   	-- Parse input params
-   	opt = cmd:parse(arg)
+   -- Parse input params
+   opt = cmd:parse(arg)
 
 	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW3/' or ''
 
@@ -29,33 +29,33 @@ function main()
 
 
 
-   	local f = hdf5.open(opt.datafile, 'r')
-   	nclasses = f:read('nclasses'):all():long()[1]
-   	nfeatures = f:read('nfeatures'):all():long()[1]
-   	space_idx = f:read('spaceIdx'):all():long()[1]
+	local f = hdf5.open(opt.datafile, 'r')
+	nclasses = f:read('nclasses'):all():long()[1]
+	nfeatures = f:read('nfeatures'):all():long()[1]
+	space_idx = f:read('spaceIdx'):all():long()[1]
 
-   	-- Count based laplace
-   	flat_train_input = f:read('train_input'):all():long()
-   	flat_train_output = f:read('train_output'):all():long()
-   	flat_valid_input = f:read('valid_input'):all():long()
-   	flat_valid_output = f:read('valid_output'):all():long()
-      print(flat_train_input:size())
-      print(flat_train_output:size())
-   	
-      if opt.classifier == 'laplace' then
-      	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.sequence_length)
-      	local valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.sequence_length)
+	-- Count based laplace
+	flat_train_input = f:read('train_input'):all():long()
+	flat_train_output = f:read('train_output'):all():long()
+	flat_valid_input = f:read('valid_input'):all():long()
+	flat_valid_output = f:read('valid_output'):all():long()
+   print(flat_train_input:size())
+   print(flat_train_output:size())
+	
+   if opt.classifier == 'laplace' then
+   	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.sequence_length)
+   	local valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.sequence_length)
 
-      	local reverse_trie = fit(training_input, training_output)
-      	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
-      	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
-      	print("Cross-entropy loss", cross_entropy_loss)
-      elseif opt.classifier == 'rnn' then
-         print("RNN")
-         local model, crit = rnn(nfeatures, opt.embedding_size, 2)
-         local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
-         trainRNN(model, crit, training_input, training_output, opt.l,  opt.epochs, opt.optimizer)
-      end
+   	local reverse_trie = fit(training_input, training_output)
+   	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
+   	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
+   	print("Cross-entropy loss", cross_entropy_loss)
+   elseif opt.classifier == 'rnn' then
+      print("RNN")
+      local model, crit = rnn(nfeatures, opt.embedding_size, 2)
+      local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
+      trainRNN(model, crit, training_input, training_output, opt.l,  opt.epochs, opt.optimizer)
+   end
 
 
 
