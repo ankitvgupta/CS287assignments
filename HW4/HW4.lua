@@ -23,6 +23,8 @@ function main()
 
 	dofile(_G.path..'multinomial.lua')
 	dofile(_G.path..'utils.lua')
+   dofile(_G.path..'neural.lua')
+
 
 
    	local f = hdf5.open(opt.datafile, 'r')
@@ -38,13 +40,16 @@ function main()
       print(flat_train_input:size())
       print(flat_train_output:size())
    	
-   	training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
-   	valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
+      if opt.classifier == 'laplace' then
+      	training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
+      	valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
 
-   	local reverse_trie = fit(training_input, training_output)
-	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
-	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
-	print("Cross-entropy loss", cross_entropy_loss)
+      	local reverse_trie = fit(training_input, training_output)
+      	local log_predictions = getlaplacepredictions(reverse_trie, valid_input, nclasses, opt.alpha)
+      	local cross_entropy_loss = cross_entropy_loss(valid_output, log_predictions)
+      	print("Cross-entropy loss", cross_entropy_loss)
+      end
+      
 
 
    -- Train.
