@@ -1,6 +1,20 @@
 require 'nn'
 require 'rnn'
 require 'optim'
+
+function nn_model(vocab_size, embedding_dim, window_size, hidden_size, output_dim)
+	local model = nn.Sequential()
+	local embedding = nn.LookupTable(vocab_size, embedding_dim)
+	model:add(embedding)
+	model:add(nn.View(-1):setNumInputDims(2))
+	model:add(nn.Linear(embedding_dim*window_size, hidden_size))
+	model:add(nn.HardTanh())
+	model:add(nn.Linear(hidden_size, output_dim))
+	model:add(nn.LogSoftMax())
+	criterion = nn.ClassNLLCriterion()
+	return model, criterion, embedding
+
+end
 function rnn(vocab_size, embed_dim, output_dim)
 	batchLSTM = nn.Sequential()
 	batchLSTM:add(nn.LookupTable(vocab_size, embed_dim)) --will return a sequence-length x batch-size x embedDim tensor
