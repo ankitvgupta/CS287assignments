@@ -7,7 +7,7 @@ cmd = torch.CmdLine()
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'laplace', 'classifier to use')
 cmd:option('-window_size', 5, 'Window size (does not apply to rnn)')
-cmd:option('-b', 50, 'Total number of sequences to split into (batch)')
+cmd:option('-b', 50, 'Total number of sequences to split into (minibatch_size for nn)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
 cmd:option('-sequence_length', 100, 'Length of sequence in batch (for rnn only)')
@@ -56,11 +56,13 @@ function main()
    	print("Accuracy:", precision)
    elseif opt.classifier == 'neural' then
       local model, crit = nn_model(nfeatures, opt.embedding_size, opt.window_size, opt.hidden, 2)
+      local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
+      trainNN(model, crit, training_input, training_output, opt.minibatch_size, opt.epochs, opt.optimizer, opt.b)
    elseif opt.classifier == 'rnn' then
       print("RNN")
       local model, crit = rnn(nfeatures, opt.embedding_size, 2)
       local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
-      trainRNN(model, crit, training_input, training_output, opt.l,  opt.epochs, opt.optimizer)
+      trainRNN(model, crit, training_input, training_output, opt.sequence_length,  opt.epochs, opt.optimizer)
    end
 
 
