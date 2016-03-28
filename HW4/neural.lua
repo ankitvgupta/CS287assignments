@@ -32,7 +32,7 @@ function rnn(vocab_size, embed_dim, output_dim)
 	return batchLSTM, crit
 end
 
-function trainNN(model, crit, training_input, training_output, minibatch_size, num_epochs, optimizer, minibatch_size)
+function trainNN(model, crit, training_input, training_output, minibatch_size, num_epochs, optimizer, minibatch_size, eta)
 	local parameters, gradParameters = model:getParameters()
 
 	for i = 1, num_epochs do
@@ -99,7 +99,8 @@ function trainRNN(model,
 				training_output,
 				l, 
 				num_epochs,
-				optimizer)
+				optimizer,
+				eta)
 	local parameters, gradParameters = model:getParameters()
 	for i = 1, num_epochs do
 		print("Beginning epoch", i)
