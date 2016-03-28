@@ -15,7 +15,7 @@ cmd:option('-embedding_size', 50, 'Size of embeddings')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
-cmd:option('-eta', 50, 'Learning rate (for nn and rnn)')
+cmd:option('-eta', 1, 'Learning rate (for nn and rnn)')
 -- Hyperparameters
 -- ...
 
@@ -62,8 +62,9 @@ function main()
       local predictions = nn_greedily_segment(flat_valid_input, model, opt.window_size, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
    	local precision = prediction_precision(predictions, flat_valid_output)
-   	print("Accuracy:", accuracy)
-   	print("Precision:", precision)
+      printoptions(opt)
+      print("Results:", accuracy, precision)
+
    elseif opt.classifier == 'rnn' then
       print("RNN")
       local model, crit = rnn(nfeatures, opt.embedding_size, 2)
@@ -74,8 +75,8 @@ function main()
       local predictions = rnn_greedily_segment(flat_valid_input, model, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
       local precision = prediction_precision(predictions, flat_valid_output)
-      print("Accuracy:", accuracy)
-      print("Precision:", precision)
+      printoptions(opt)
+      print("Results:", accuracy, precision)
    end
 
 

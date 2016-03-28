@@ -97,7 +97,7 @@ function find_matching(tensor, num)
 end
 
 function printoptions(opt)
-	print("Datafile:", opt.datafile, "Classifier:", opt.classifier, "Alpha:", opt.alpha, "Eta:", opt.eta, "Lambda:", opt.lambda, "Minibatch size:", opt.minibatch, "Num Epochs:", opt.epochs, "Optimizer:", opt.optimizer, "Hidden Layers:", opt.hiddenlayers, "Embedding size:", opt.embedding_size, "K:", opt.K)
+	print("datafile:", opt.datafile, "classifier:", opt.classifier, "window_size:", opt.window_size, "b:", opt.b, "alpha:", opt.alpha, "sequence_length:", opt.sequence_length, "embedding_size:", opt.embedding_size, "optimizer:", opt.optimizer, "epochs:", opt.epochs, "hidden", opt.hidden, "eta:", opt.eta)
 end
 
 function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)

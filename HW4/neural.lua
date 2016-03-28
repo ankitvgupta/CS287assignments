@@ -170,7 +170,7 @@ function nn_greedily_segment(flat_valid_input, model, window_size, space_idx)
 	while next_word_idx < valid_input_count do 
 
 		if next_word_idx % 1000 == 0 then
-			print("Reached word", next_word_idx)
+			print("Word", next_word_idx)
 		end
 
 		local predictions = model:forward(next_window)
@@ -208,7 +208,7 @@ function rnn_greedily_segment(flat_valid_input, model, space_idx)
 	while next_word_idx < valid_input_count do 
 
 		if next_word_idx % 1000 == 0 then
-			print("Reached word", next_word_idx)
+			print("Word", next_word_idx)
 		end
 
 		local predictions = model:forward(char)[1]
