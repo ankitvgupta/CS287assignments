@@ -4,7 +4,7 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=1500                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 2:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 3:30:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW4/odyssey/outputs/out/rnn_exp1/setup_%A_%a_out.txt            #File to which standard out will be written
@@ -36,9 +36,9 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW4/HW4.lua \
   -datafile /n/home09/ankitgupta/CS287/CS287assignments/HW4/$datafile \
   -classifier $classifier \
   -window_size $window_size \
-  -b $b
-  -alpha $alpha
-  -sequence_length $sequence_length
+  -b $b \
+  -alpha $alpha \
+  -sequence_length $sequence_length \
   -embedding_size $embedding_size \
   -optimizer $optimizer \
   -epochs $epochs \

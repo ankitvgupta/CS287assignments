@@ -1,12 +1,12 @@
 # Use this to quickly make configurations for experiments
 import itertools
-print_description = True
+print_description = False
 datafiles=["PTB.hdf5"]
 classifier=["rnn"]
 window_size=[2]
 b=[32, 64, 128]
 alpha=[1]
-sequence_length=[10, 32, 64, 128]
+sequence_length=[10, 20,  32, 64, 128]
 embedding_size=[15,25,35,45,55]
 optimizer=["sgd","adagrad"]
 epochs=[100]
