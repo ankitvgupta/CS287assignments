@@ -2,10 +2,10 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=4000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=1500                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 0:15:00              #Indicate duration using HH:MM:SS
-#SBATCH -p serial_requeue               #Partition to submit to
+#SBATCH -t 2:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -p general               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW4/odyssey/outputs/out/rnn_exp1/setup_%A_%a_out.txt            #File to which standard out will be written
 #SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/HW4/odyssey/outputs/err/rnn_exp1/setup_%A_%a_err.txt            #File to which standard err will be written
