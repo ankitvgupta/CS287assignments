@@ -14,7 +14,7 @@ cmd:option('-sequence_length', 100, 'Length of sequence in batch (for rnn only)'
 cmd:option('-embedding_size', 50, 'Size of embeddings')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
-cmd:option('-hidden', 50, 'Hidden layer')
+cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
 cmd:option('-eta', 50, 'Learning rate (for nn and rnn)')
 -- Hyperparameters
 -- ...
@@ -24,7 +24,7 @@ function main()
    -- Parse input params
    opt = cmd:parse(arg)
 
-	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW3/' or ''
+	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/HW4/' or ''
 
 	dofile(_G.path..'multinomial.lua')
 	dofile(_G.path..'utils.lua')
