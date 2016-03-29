@@ -54,6 +54,7 @@ function main()
    if opt.classifier == 'laplace' then
    	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
    	local reverse_trie = fit(training_input, training_output)
+      print(table_to_tensor(predict_laplace(trie, torch.LongTensor{space_idx}, 2, alpha), 2))
    	local predictions = laplace_viterbi_segment(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
    	local accuracy = prediction_accuracy(predictions, flat_valid_output)
    	local precision = prediction_precision(predictions, flat_valid_output)
