@@ -1,4 +1,4 @@
-function create_nn_inputs(flat_inputs, flat_outputs, b)
+function create_rnn_inputs(flat_inputs, flat_outputs, b)
 	-- This reduces the input to a length that is divisible by b
 	local desired_length = math.floor(flat_inputs:size(1)/b)*b
 

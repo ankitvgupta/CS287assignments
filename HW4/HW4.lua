@@ -17,6 +17,7 @@ cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
 cmd:option('-eta', 1, 'Learning rate (for nn and rnn)')
 cmd:option('-hacks_wanted', false, 'Enable the hacks')
+cmd:option('-rnn_unit', 'lstm', 'Determine which recurrent unit to use (lstm or gru) - for classifier=rnn only')
 -- Hyperparameters
 -- ...
 
@@ -68,10 +69,10 @@ function main()
 
    elseif opt.classifier == 'rnn' then
       print("RNN")
-      local model, crit, embedding = rnn(nfeatures, opt.embedding_size, 2)
+      local model, crit, embedding = rnn(nfeatures, opt.embedding_size, 2, opt.rnn_unit)
       model:remember("both")
       model:training()
-      local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
+      local training_input, training_output = create_rnn_inputs(flat_train_input, flat_train_output, opt.b)
       trainRNN(model, crit, embedding, training_input, training_output, opt.sequence_length,  opt.epochs, opt.optimizer, opt.eta, opt.hacks_wanted)
       local predictions = rnn_greedily_segment(flat_valid_input, model, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)

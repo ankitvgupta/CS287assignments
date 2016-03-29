@@ -15,7 +15,7 @@ function nn_model(vocab_size, embedding_dim, window_size, hidden_size, output_di
 	return model, criterion, embedding
 
 end
-function rnn(vocab_size, embed_dim, output_dim)
+function rnn(vocab_size, embed_dim, output_dim, rnn_unit)
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
@@ -23,7 +23,14 @@ function rnn(vocab_size, embed_dim, output_dim)
 	-- 1 indicates the dimension we are splitting along. 3 indicates the number of dimensions in the input (allows for batching)
 	batchLSTM:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
 	-- now let's add the LSTM stuff
-	batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
+	if rnn_unit == 'lstm' then
+		batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
+	elseif rnn_unit == 'gru' then 
+		batchLSTM:add(nn.Sequencer(nn.GRU(embed_dim, embed_dim)))
+	else
+		print("Invalid unit")
+		assert(false)
+	end
 	batchLSTM:add(nn.Sequencer(nn.Linear(embed_dim, output_dim)))
 	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 
