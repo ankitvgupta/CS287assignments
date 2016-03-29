@@ -22,7 +22,7 @@ FILE_PATHS = {"PTB": ("data/train_chars.txt",
                       )}
 args = {}
 
-def file_to_input(file_path, remove_spaces=True):
+def file_to_input(file_path, remove_spaces=False):
     space_index = VOCAB['<space>']
     with open(file_path, 'r') as f:
         full_sample = f.next()
