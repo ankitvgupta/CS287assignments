@@ -277,7 +277,7 @@ function laplace_viterbi_segment(flat_valid_input, trie, alpha, window_size, spa
 	end
 
 	print("Numspaces", (valid_output_predictions - 1):sum())
-	print(valid_output_predictions:narrow(1, 1, 20))
+	--print(valid_output_predictions:narrow(1, 1, 20))
 
 	return valid_output_predictions
 
