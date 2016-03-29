@@ -51,7 +51,8 @@ print df
 print ""
 df.sort(columns='Precision', ascending=False, inplace=True)
 print df
-
+df.sort(columns='Precision2', ascending=False, inplace=True)
+print df
 
 
 print "Best nnpre ones"
