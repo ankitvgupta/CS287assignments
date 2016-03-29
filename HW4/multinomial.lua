@@ -374,24 +374,26 @@ function laplace_viterbi_segment_try3(flat_valid_input, trie, alpha, window_size
 
 	-- BIGRAMS ONLY
 	local next_window = torch.Tensor(1)
+	next_window[1] = flat_valid_input[1]
 
 	local pi = torch.ones(valid_input_count, 2):mul(-1e+31)
-	pi[1][1] = 0
-	pi[1][2] = 0
+	pi[1] = torch.log(table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2))
+	--pi[1][1] = 0
+	--pi[1][2] = 0
 
 	for i = 2, valid_input_count do
 
-		next_window[1] = flat_valid_input[i-1]
+		next_window[1] = flat_valid_input[i]
 		local yci11 = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
 			
 		-- Last one was not a space, and next is not a space.
 		local score1 = pi[i-1][1] + torch.log(yci11[1])
 
 		-- Last one was not a space, and next is a space.
-		local score2 = pi[i-1][1] + torch.log(yci11[2])
+		local score3 = pi[i-1][1] + torch.log(yci11[2])
 
 		-- Last one was a space, and next is not a space.
-		local score3 = pi[i-1][2] + torch.log(yci11[1])
+		local score2 = pi[i-1][2] + torch.log(yci11[1])
 
 		-- Last one was a space, and next one is a space.
 		local score4 = pi[i-1][2] + torch.log(yci11[2])
