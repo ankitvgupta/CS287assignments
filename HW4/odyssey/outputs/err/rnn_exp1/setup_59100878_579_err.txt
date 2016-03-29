@@ -346,3 +346,5 @@ stack traceback:
 	[C]: in function 'require'
 	/n/sw/fasrcsw/apps/lmod/lmod/libexec/lmod:71: in main chunk
 	[C]: ?
+/var/slurmd/spool/slurmd/job59101763/slurm_script: line 47: 25238 Killed                  th /n/home09/ankitgupta/CS287/CS287assignments/HW4/HW4.lua -datafile /n/home09/ankitgupta/CS287/CS287assignments/HW4/$datafile -classifier $classifier -window_size $window_size -b $b -alpha $alpha -sequence_length $sequence_length -embedding_size $embedding_size -optimizer $optimizer -epochs $epochs -hidden $hidden -eta $eta -odyssey
+slurmstepd: error: Exceeded step memory limit at some point.
