@@ -30,6 +30,11 @@ function prediction_precision(preds, true_vals)
 	return total_matches/(preds-1):sum()
 end
 
+function prediction_precision2(preds, true_vals)
+    local total_matches = torch.cmul(preds-1, true_vals-1):sum()
+    return total_matches/(true_vals-1):sum()
+end
+
 function getaccuracy(model, validation_input, validation_options, validation_true_outs)
 	local scores = model:forward(validation_input)
 	local n = validation_input:size(1)
