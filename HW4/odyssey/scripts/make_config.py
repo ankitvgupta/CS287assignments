@@ -2,20 +2,23 @@
 import itertools
 print_description = True
 datafiles=["PTB.hdf5"]
-classifier=["neural"]
-window_size=[2, 3, 5]
-b=[32, 128]
+classifier=["rnn"]
+window_size=[2]
+b=[32, 64]
 alpha=[1]
-sequence_length=[10]
-embedding_size=[15,25,45,55]
+sequence_length=[16, 32]
+embedding_size=[35,45,55]
 optimizer=["sgd","adagrad"]
-epochs=[100]
-hidden=[15, 25]
-eta=[.001, .0001, .01, .1]
+epochs=[50]
+hidden=[15]
+eta=[.001, .01, .1]
+rnn1=["gru", "lstm"]
+rnn2=["gru", "lstm", "none"]
+dropout=[.5, .25]
 
-lists = [datafiles,classifier,window_size, b, alpha, sequence_length, embedding_size, optimizer, epochs, hidden, eta]
+lists = [datafiles,classifier,window_size, b, alpha, sequence_length, embedding_size, optimizer, epochs, hidden, eta, rnn1, rnn2, dropout]
 if not print_description:
-    print "#datafile, classifier, window_size, b, alpha, sequence_length, embedding_size, optimizer, epochs, hidden, eta"
+    print "#datafile, classifier, window_size, b, alpha, sequence_length, embedding_size, optimizer, epochs, hidden, eta, rnn1, rnn2, dropout"
     for element in itertools.product(*lists):
         print ' '.join(map(str,element))
 else:
