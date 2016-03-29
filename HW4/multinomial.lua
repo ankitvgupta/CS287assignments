@@ -222,6 +222,44 @@ function laplace_greedily_segment(flat_valid_input, trie, alpha, window_size, sp
 
 end
 
+function laplace_viterbi_segment(flat_valid_input, trie, alpha, space_idx)
+
+	print("Starting viterbi")
+	local valid_input_count = flat_valid_input:size(1)
+
+	-- BIGRAMS ONLY
+	local next_window = torch.Tensor(1)
+
+	local pi = torch.ones(valid_input_count, 2):mul(-1e+32)
+	pi[1][1] = 0
+	pi[1][2] = 0
+
+	for i=2, valid_input_count do
+		next_window[1] = flat_valid_input[i-1]
+		yci1 = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
+		for ci1 = 1, 2 do
+			for ci = 1, 2 do
+				local score = pi[i-1][ci1] + torch.log(yci1[ci])
+				if score > pi[i][ci] then
+					pi[i][ci] = score
+				end
+			end
+		end
+	end
+
+
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	
+	for i=1, valid_input_count do
+		if pi[i][2] > pi[i][1] then
+			valid_output_predictions[i] = 2
+		end
+	end
+
+	return valid_output_predictions
+
+end
+
 -- baseline
 function getrandompredictions(trie, valid_input, num_classes, alpha)
 	print("Starting predictions")
