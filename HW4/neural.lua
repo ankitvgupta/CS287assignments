@@ -15,21 +15,43 @@ function nn_model(vocab_size, embedding_dim, window_size, hidden_size, output_di
 	return model, criterion, embedding
 
 end
-function rnn(vocab_size, embed_dim, output_dim, rnn_unit)
+function rnn(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout)
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
 
 	-- 1 indicates the dimension we are splitting along. 3 indicates the number of dimensions in the input (allows for batching)
 	batchLSTM:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
-	-- now let's add the LSTM stuff
-	if rnn_unit == 'lstm' then
+
+	-- Add the first layer rnn unit
+	if rnn_unit1 == 'lstm' then
 		batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
-	elseif rnn_unit == 'gru' then 
+		print("Unit1: LSTM added")
+	elseif rnn_unit1 == 'gru' then 
 		batchLSTM:add(nn.Sequencer(nn.GRU(embed_dim, embed_dim)))
+		print("Unit1: GRU added")
 	else
-		print("Invalid unit")
+		print("Invalid unit 1")
 		assert(false)
+	end
+
+	-- If there is a second layer, add dropout and the layer.
+	if rnn_unit2 ~= 'none' then
+		batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+		print("Dropout added", dropout)
+		-- Add second layer 
+		if rnn_unit2 == 'lstm' then
+			batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
+			print("Unit2: LSTM added")
+		elseif rnn_unit2 == 'gru' then 
+			batchLSTM:add(nn.Sequencer(nn.GRU(embed_dim, embed_dim)))
+			print("Unit2: GRU added")
+		else
+			print("Invalid unit 2")
+			assert(false)
+		end
+	else
+		print("No unit 2")
 	end
 	batchLSTM:add(nn.Sequencer(nn.Linear(embed_dim, output_dim)))
 	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
