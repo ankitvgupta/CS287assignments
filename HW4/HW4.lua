@@ -58,7 +58,7 @@ function main()
    elseif opt.classifier == 'neural' then
       local model, crit = nn_model(nfeatures, opt.embedding_size, opt.window_size, opt.hidden, 2)
       local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
-      trainNN(model, crit, training_input, training_output, opt.minibatch_size, opt.epochs, opt.optimizer, opt.b, opt.eta)
+      trainNN(model, crit, training_input, training_output, opt.b, opt.epochs, opt.optimizer, opt.b, opt.eta)
       local predictions = nn_greedily_segment(flat_valid_input, model, opt.window_size, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
       local precision = prediction_precision(predictions, flat_valid_output)
