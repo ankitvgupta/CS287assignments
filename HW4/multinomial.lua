@@ -217,6 +217,7 @@ function laplace_greedily_segment(flat_valid_input, trie, alpha, window_size, sp
 		end
 
 	end
+	print("Numspaces", (valid_output_predictions - 1):sum())
 
 	print(valid_output_predictions:narrow(1, 1, 20))
 
@@ -230,31 +231,35 @@ function laplace_viterbi_segment(flat_valid_input, trie, alpha, window_size, spa
 	local valid_input_count = flat_valid_input:size(1)
 	local backpointers = torch.ones(valid_input_count, 2):long()
 
+	-- This is the probabilities if the last one was a space.
+	local post_space_probs = table_to_tensor(predict_laplace(trie, torch.Tensor{space_idx}, 2, alpha), 2)	
+
 	-- BIGRAMS ONLY
 	local next_window = torch.Tensor(1)
 
 	local pi = torch.ones(valid_input_count, 2):mul(-1e+32)
-	pi[1][1] = 0
-	pi[1][2] = 0
+	pi[1][1] = torch.log(.5)
+	pi[1][2] = torch.log(.5)
 
-	for i=2, valid_input_count do
+
+	for i = 2, valid_input_count do
+
 		next_window[1] = flat_valid_input[i-1]
-		ci1 = 1
-		yci11 = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
-		for ci = 1, 2 do
-			local score = pi[i-1][ci1] + torch.log(yci11[ci])
-			if score > pi[i][ci] then
-				pi[i][ci] = score
-				backpointers[i][ci] = ci1
+		local yci11 = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
+		for ci = 1,2 do
+			-- Last one was not a space.
+			local pos1 = pi[i-1][1] + torch.log(yci11[ci])
+			-- Last one was a space.
+			--print(ci, post_space_probs[ci])
+			local pos2 = pi[i-1][2] + torch.log(post_space_probs[ci]) + torch.log(yci11[ci])
+			-- The argmax thing.
+			if pos1 > pos2 then
+				pi[i][ci] = pos1
+				backpointers[i][ci] = 1
+			else 
+				pi[i][ci] = pos2
+				backpointers[i][ci] = 2
 			end
-		end
-		ci1 = 2
-		-- only possibility
-		ci = 1
-		local score = pi[i-1][ci1]
-		if score > pi[i][ci] then
-			pi[i][ci] = score
-			backpointers[i][ci] = ci1
 		end
 	end
 
@@ -268,9 +273,10 @@ function laplace_viterbi_segment(flat_valid_input, trie, alpha, window_size, spa
 	valid_output_predictions[valid_input_count] = last_class
 
 	for i=valid_input_count-1, 1, -1 do
-		valid_output_predictions[i] = backpointers[i][valid_output_predictions[i+1]]
+		valid_output_predictions[i] = backpointers[i+1][valid_output_predictions[i+1]]
 	end
 
+	print("Numspaces", (valid_output_predictions - 1):sum())
 	print(valid_output_predictions:narrow(1, 1, 20))
 
 	return valid_output_predictions
@@ -348,7 +354,7 @@ function laplace_viterbi_segment_try2(flat_valid_input, trie, alpha, window_size
 	valid_output_predictions[valid_input_count] = last_class
 
 	for i=valid_input_count-1, 1, -1 do
-		valid_output_predictions[i] = backpointers[i][valid_output_predictions[i+1]]
+		valid_output_predictions[i] = backpointers[i+1][valid_output_predictions[i+1]]
 	end
 
 	print(valid_output_predictions:narrow(1, 1, 20))
