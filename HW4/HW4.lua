@@ -16,6 +16,7 @@ cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
 cmd:option('-eta', 1, 'Learning rate (for nn and rnn)')
+cmd:option('-hacks_wanted', false, 'Enable the hacks')
 -- Hyperparameters
 -- ...
 
@@ -42,19 +43,18 @@ function main()
 	flat_train_output = f:read('train_output'):all():long()
 	flat_valid_input = f:read('valid_input'):all():long()
 	flat_valid_output = f:read('valid_output'):all():long()	
+   printoptions(opt)
    print(flat_train_input:size())
    print(flat_train_output:size())
    print(flat_valid_output:size())
-	
    if opt.classifier == 'laplace' then
    	local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
-
    	local reverse_trie = fit(training_input, training_output)
    	local predictions = laplace_greedily_segment(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
    	local accuracy = prediction_accuracy(predictions, flat_valid_output)
    	local precision = prediction_precision(predictions, flat_valid_output)
-    local precision2 = prediction_precision2(predictions, flat_valid_output)
-    print("Results:", accuracy, precision, precision2)
+      local precision2 = prediction_precision2(predictions, flat_valid_output)
+      print("Results:", accuracy, precision, precision2)
    elseif opt.classifier == 'neural' then
       local model, crit = nn_model(nfeatures, opt.embedding_size, opt.window_size, opt.hidden, 2)
       local training_input, training_output = unroll_inputs(flat_train_input, flat_train_output, opt.window_size)
@@ -68,11 +68,11 @@ function main()
 
    elseif opt.classifier == 'rnn' then
       print("RNN")
-      local model, crit = rnn(nfeatures, opt.embedding_size, 2)
+      local model, crit, embedding = rnn(nfeatures, opt.embedding_size, 2)
       model:remember("both")
       model:training()
       local training_input, training_output = create_nn_inputs(flat_train_input, flat_train_output, opt.b)
-      trainRNN(model, crit, training_input, training_output, opt.sequence_length,  opt.epochs, opt.optimizer, opt.eta)
+      trainRNN(model, crit, embedding, training_input, training_output, opt.sequence_length,  opt.epochs, opt.optimizer, opt.eta, opt.hacks_wanted)
       local predictions = rnn_greedily_segment(flat_valid_input, model, space_idx)
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
       local precision = prediction_precision(predictions, flat_valid_output)

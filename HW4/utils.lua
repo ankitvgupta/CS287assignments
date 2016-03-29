@@ -102,7 +102,7 @@ function find_matching(tensor, num)
 end
 
 function printoptions(opt)
-	print("datafile:", opt.datafile, "classifier:", opt.classifier, "window_size:", opt.window_size, "b:", opt.b, "alpha:", opt.alpha, "sequence_length:", opt.sequence_length, "embedding_size:", opt.embedding_size, "optimizer:", opt.optimizer, "epochs:", opt.epochs, "hidden", opt.hidden, "eta:", opt.eta)
+	print("datafile:", opt.datafile, "classifier:", opt.classifier, "window_size:", opt.window_size, "b:", opt.b, "alpha:", opt.alpha, "sequence_length:", opt.sequence_length, "embedding_size:", opt.embedding_size, "optimizer:", opt.optimizer, "epochs:", opt.epochs, "hidden", opt.hidden, "eta:", opt.eta, "hacks", opt.hacks_wanted)
 end
 
 function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)

@@ -17,7 +17,8 @@ function nn_model(vocab_size, embedding_dim, window_size, hidden_size, output_di
 end
 function rnn(vocab_size, embed_dim, output_dim)
 	batchLSTM = nn.Sequential()
-	batchLSTM:add(nn.LookupTable(vocab_size, embed_dim)) --will return a sequence-length x batch-size x embedDim tensor
+	local embedding = nn.LookupTable(vocab_size, embed_dim)
+	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
 
 	-- 1 indicates the dimension we are splitting along. 3 indicates the number of dimensions in the input (allows for batching)
 	batchLSTM:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
@@ -29,7 +30,7 @@ function rnn(vocab_size, embed_dim, output_dim)
 	-- Add a criterion
 	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
 
-	return batchLSTM, crit
+	return batchLSTM, crit, embedding
 end
 
 function trainNN(model, crit, training_input, training_output, minibatch_size, num_epochs, optimizer, minibatch_size, eta)
@@ -95,13 +96,23 @@ end
 
 function trainRNN(model,
 				criterion,
+				embedding,
 				training_input,
 				training_output,
 				l, 
 				num_epochs,
 				optimizer,
-				eta)
+				eta,
+				hacks_wanted)
 	local parameters, gradParameters = model:getParameters()
+
+	-- initialize the parameters between -.05 and .05
+	if hacks_wanted then
+		parameters:copy(torch.rand(parameters:size())*.1 - .05)
+	end
+	--embedding.weight:renorm(2, 1, 5)
+
+
 	for i = 1, num_epochs do
 		print("Beginning epoch", i)
 		for j = 1, training_input:size(2)-l, l do
@@ -133,6 +144,10 @@ function trainRNN(model,
 				-- backprop
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
 				model:backward(minibatch_inputs, dLdpreds)
+
+				if gradParameters:norm() > 5 then
+					gradParameters:div(gradParameters:norm()/5)
+				end
 
 
 				return loss,gradParameters
