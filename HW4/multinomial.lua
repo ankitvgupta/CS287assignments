@@ -375,7 +375,7 @@ function laplace_viterbi_segment_try3(flat_valid_input, trie, alpha, window_size
 	-- BIGRAMS ONLY
 	local next_window = torch.Tensor(1)
 
-	local pi = torch.ones(valid_input_count, 2):mul(-1e+32)
+	local pi = torch.ones(valid_input_count, 2):mul(-1e+31)
 	pi[1][1] = 0
 	pi[1][2] = 0
 
@@ -391,10 +391,10 @@ function laplace_viterbi_segment_try3(flat_valid_input, trie, alpha, window_size
 		local score2 = pi[i-1][1] + torch.log(yci11[2])
 
 		-- Last one was a space, and next is not a space.
-		local score3 = pi[i-1][2] + torch.log(post_space_probs[1])
+		local score3 = pi[i-1][2] + torch.log(yci11[1])
 
 		-- Last one was a space, and next one is a space.
-		local score4 = pi[i-1][2] + torch.log(post_space_probs[2])
+		local score4 = pi[i-1][2] + torch.log(yci11[2])
 
 		-- The argmax thing.
 		if score1 > pi[i][1] then
