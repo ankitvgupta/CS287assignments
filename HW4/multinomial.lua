@@ -300,7 +300,9 @@ function laplace_viterbi_segment_try2(flat_valid_input, trie, alpha, window_size
 		next_window[1] = flat_valid_input[i-1]
 		local yci11 = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
 		for ci = 1,2 do
+			-- Last one was not a space.
 			local pos1 = pi[i-1][1] + torch.log(yci11[ci])
+			-- Last one was a space.
 			local pos2 = pi[i-1][2] + torch.log(post_space_probs[ci])
 			if pos1 > pos2 then
 				pi[i][ci] = pos1
