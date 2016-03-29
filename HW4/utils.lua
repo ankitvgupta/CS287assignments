@@ -1,4 +1,4 @@
-function create_nn_inputs(flat_inputs, flat_outputs, b)
+function create_rnn_inputs(flat_inputs, flat_outputs, b)
 	-- This reduces the input to a length that is divisible by b
 	local desired_length = math.floor(flat_inputs:size(1)/b)*b
 
@@ -102,7 +102,20 @@ function find_matching(tensor, num)
 end
 
 function printoptions(opt)
-	print("datafile:", opt.datafile, "classifier:", opt.classifier, "window_size:", opt.window_size, "b:", opt.b, "alpha:", opt.alpha, "sequence_length:", opt.sequence_length, "embedding_size:", opt.embedding_size, "optimizer:", opt.optimizer, "epochs:", opt.epochs, "hidden", opt.hidden, "eta:", opt.eta, "hacks", opt.hacks_wanted)
+	print("datafile:", opt.datafile, 
+		"classifier:", opt.classifier, 
+		"window_size:", opt.window_size, 
+		"b:", opt.b, "alpha:", opt.alpha, 
+		"sequence_length:", opt.sequence_length, 
+		"embedding_size:", opt.embedding_size, 
+		"optimizer:", opt.optimizer, 
+		"epochs:", opt.epochs, 
+		"hidden", opt.hidden, 
+		"eta:", opt.eta, 
+		"hacks", opt.hacks_wanted,
+		"rnn1", opt.rnn_unit1,
+		"rnn2", opt.rnn_unit2,
+		"dropout", opt.dropout)
 end
 
 function get_result_accuracy(result, validation_input, validation_options, validation_true_outs)
