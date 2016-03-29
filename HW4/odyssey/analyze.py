@@ -23,11 +23,10 @@ for line in sys.stdin:
         continue
     if line[0] == 'R' and line[1] == "e":
         splitted = line.split('\t')
-        print(splitted)
         accuracies.append([float(splitted[1]), float(splitted[2])])
     if line[0] == 'd':
         splitted = line.split('\t')
-        sets.append([splitted[1].split("HW3/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21])
+        sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21]])
 
 print len(accuracies), len(sets)
 
@@ -41,20 +40,20 @@ print sets.shape, accuracies.shape
 alldata = np.append(sets, accuracies, axis=1)
 
 df = pd.DataFrame(alldata)
+df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Accuracy', 'Precision']
+df[['Accuracy', 'Precision']] = df[['Accuracy', 'Precision']].astype(float)
 
-if moreoutput:
-    df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Precision', 'Accuracy']
-    df[['Precision', 'Accuracy']] = df[['Precision', 'Accuracy']].astype(float)
-else:
-    df.columns = ['Datafile', 'Classifier', 'Alpha', 'Eta', 'Lambda','MinibatchSize','NumEpochs', 'Optimizer', 'HiddenLayers', 'EmbeddingSize','Accuracy', 'SubsetCrossEnt']
-    df[['Accuracy', 'SubsetCrossEnt']] = df[['Accuracy', 'SubsetCrossEnt']].astype(float)
-
-df.sort(columns='SubsetCrossEnt', ascending=True, inplace=True)
+df.sort(columns='Accuracy', ascending=False, inplace=True)
 if sys.argv[1] != "all":
     df = df[df['Datafile'].str.startswith(sys.argv[1])]
 
 print df
 print ""
+df.sort(columns='Precision', ascending=False, inplace=True)
+print df
+
+
+
 print "Best nnpre ones"
 print df[df['Classifier'] == 'nnpre']
 
