@@ -1,0 +1,221 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW4/PTB.hdf5	classifier:	rnn	window_size:	2	b:	64	alpha:	1	sequence_length:	16	embedding_size:	35	optimizer:	sgd	epochs:	50	hidden	15	eta:	0.001	hacks	false	rnn1	lstm	rnn2	gru	dropout	0.5	
+ 498944
+[torch.LongStorage of size 1]
+
+ 498944
+[torch.LongStorage of size 1]
+
+ 95823
+[torch.LongStorage of size 1]
+
+RNN	
+Unit1: LSTM added	
+Dropout added	0.5	
+Unit2: GRU added	
+Beginning epoch	1	
+    	12.031331850798	
+Beginning epoch	2	
+    	7.9613513054061	
+Beginning epoch	3	
+    	7.9135571211956	
+Beginning epoch	4	
+    	7.887907222776	
+Beginning epoch	5	
+    	7.8195618979601	
+Beginning epoch	6	
+    	7.7925676271081	
+Beginning epoch	7	
+    	7.722564079279	
+Beginning epoch	8	
+    	7.637465048767	
+Beginning epoch	9	
+    	7.5396757104686	
+Beginning epoch	10	
+    	7.5066764636332	
+Beginning epoch	11	
+    	7.4543131662422	
+Beginning epoch	12	
+    	7.3878500217542	
+Beginning epoch	13	
+    	7.3236262051028	
+Beginning epoch	14	
+    	7.2501513847519	
+Beginning epoch	15	
+    	7.1585057944338	
+Beginning epoch	16	
+    	7.0344251202744	
+Beginning epoch	17	
+    	6.9763670546706	
+Beginning epoch	18	
+    	6.9819332426271	
+Beginning epoch	19	
+    	6.7880767180361	
+Beginning epoch	20	
+    	6.752501580533	
+Beginning epoch	21	
+    	6.7516264300998	
+Beginning epoch	22	
+    	6.6366038470068	
+Beginning epoch	23	
+    	6.6355615202341	
+Beginning epoch	24	
+    	6.5471144800926	
+Beginning epoch	25	
+    	6.6597017379661	
+Beginning epoch	26	
+    	6.549965267304	
+Beginning epoch	27	
+    	6.4764298693745	
+Beginning epoch	28	
+    	6.4093197234992	
+Beginning epoch	29	
+    	6.394723451932	
+Beginning epoch	30	
+    	6.4602706410607	
+Beginning epoch	31	
+    	6.3756724196663	
+Beginning epoch	32	
+    	6.343943095098	
+Beginning epoch	33	
+    	6.3847500346297	
+Beginning epoch	34	
+    	6.4996909148493	
+Beginning epoch	35	
+    	6.3006048403972	
+Beginning epoch	36	
+    	6.3429899153521	
+Beginning epoch	37	
+    	6.4053693935493	
+Beginning epoch	38	
+    	6.2213885433928	
+Beginning epoch	39	
+    	6.3649224893305	
+Beginning epoch	40	
+    	6.1848906372781	
+Beginning epoch	41	
+    	6.150332097832	
+Beginning epoch	42	
+    	5.9778296952896	
+Beginning epoch	43	
+    	6.0414716735409	
+Beginning epoch	44	
+    	6.0476729475247	
+Beginning epoch	45	
+    	6.239841427488	
+Beginning epoch	46	
+    	6.325421749184	
+Beginning epoch	47	
+    	6.0663600875331	
+Beginning epoch	48	
+    	6.2562461995266	
+Beginning epoch	49	
+    	6.2267689005943	
+Beginning epoch	50	
+    	6.0319865567082	
+Starting predictions	
+Word	1000	
+Word	2000	
+Word	3000	
+Word	4000	
+Word	5000	
+Word	6000	
+Word	7000	
+Word	7000	
+Word	8000	
+Word	8000	
+Word	9000	
+Word	10000	
+Word	11000	
+Word	12000	
+Word	13000	
+Word	14000	
+Word	15000	
+Word	16000	
+Word	17000	
+Word	18000	
+Word	19000	
+Word	20000	
+Word	21000	
+Word	21000	
+Word	22000	
+Word	23000	
+Word	24000	
+Word	24000	
+Word	25000	
+Word	26000	
+Word	27000	
+Word	28000	
+Word	29000	
+Word	30000	
+Word	31000	
+Word	32000	
+Word	33000	
+Word	34000	
+Word	35000	
+Word	36000	
+Word	37000	
+Word	38000	
+Word	39000	
+Word	40000	
+Word	40000	
+Word	41000	
+Word	42000	
+Word	43000	
+Word	44000	
+Word	44000	
+Word	45000	
+Word	46000	
+Word	47000	
+Word	48000	
+Word	49000	
+Word	50000	
+Word	51000	
+Word	51000	
+Word	52000	
+Word	53000	
+Word	54000	
+Word	55000	
+Word	56000	
+Word	57000	
+Word	58000	
+Word	59000	
+Word	60000	
+Word	61000	
+Word	62000	
+Word	63000	
+Word	64000	
+Word	65000	
+Word	66000	
+Word	67000	
+Word	68000	
+Word	69000	
+Word	70000	
+Word	71000	
+Word	72000	
+Word	73000	
+Word	74000	
+Word	75000	
+Word	76000	
+Word	77000	
+Word	78000	
+Word	79000	
+Word	80000	
+Word	81000	
+Word	82000	
+Word	83000	
+Word	84000	
+Word	85000	
+Word	85000	
+Word	86000	
+Word	87000	
+Word	88000	
+Word	89000	
+Word	90000	
+Word	91000	
+Word	92000	
+Word	93000	
+Word	94000	
+Word	94000	
+Word	95000	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW4/PTB.hdf5	classifier:	rnn	window_size:	2	b:	64	alpha:	1	sequence_length:	16	embedding_size:	35	optimizer:	sgd	epochs:	50	hidden	15	eta:	0.001	hacks	false	rnn1	lstm	rnn2	gru	dropout	0.5	
+Results:	0.84805318138651	0.76129348358648	0.39053938571357	
