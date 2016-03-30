@@ -41,6 +41,7 @@ function main()
 	nclasses = f:read('nclasses'):all():long()[1]
 	nfeatures = f:read('nfeatures'):all():long()[1]
 	space_idx = f:read('spaceIdx'):all():long()[1]
+   padding_idx = f:read('paddingIdx'):all():long()[1]
 
 	-- Count based laplace
 	flat_train_input = f:read('train_input'):all():long()
@@ -93,7 +94,7 @@ function main()
 
     if (opt.testfile ~= '') then
       --print("Writing to test file")
-      local test_numbers = rnn_segment_and_count(test_input, model, space_idx)
+      local test_numbers = rnn_segment_and_count(test_input, model, space_idx, padding_idx)
       write_predictions(test_numbers, opt.testfile)
     end
       
