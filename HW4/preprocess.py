@@ -13,7 +13,7 @@ import string
 
 # Your preprocessing, features construction, and word2vec code.
 
-legal_chars = ['<space>', '</s>', '</s>\n']+list(string.printable)
+legal_chars = ['<space>', '</s>', '</s>\n', '<PADDING>']+list(string.printable)
 VOCAB = dict([(v, k+1) for k, v in enumerate(legal_chars)])
 
 FILE_PATHS = {"PTB": ("data/train_chars.txt",
@@ -37,8 +37,7 @@ def file_to_input(file_path, remove_spaces=False):
             Y = np.delete(Y, spaces)
         return X, Y
 
-def test_file_to_input(file_path, padding_char='</s>'):
-    space_index = VOCAB['<space>']
+def test_file_to_input(file_path, padding_char='<PADDING>'):
     max_chars = 0
     char_sequences = []
     X = []
@@ -92,6 +91,7 @@ def main(arguments):
         f['nfeatures'] = np.array([V], dtype=np.int32)
         f['nclasses'] = np.array([C], dtype=np.int32)
         f['spaceIdx'] = np.array([VOCAB['<space>']], dtype=np.int32)
+        f['paddingIdx'] = np.array([VOCAB['<PADDING>']], dtype=np.int32)
 
 
 if __name__ == '__main__':
