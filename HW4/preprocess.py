@@ -37,6 +37,28 @@ def file_to_input(file_path, remove_spaces=False):
             Y = np.delete(Y, spaces)
         return X, Y
 
+def test_file_to_input(file_path, padding_char='</s>'):
+    space_index = VOCAB['<space>']
+    max_chars = 0
+    char_sequences = []
+    X = []
+    with open(file_path, 'r') as f:
+        for sequence in f:
+            all_chars = sequence.split(' ')
+            max_chars = max(len(all_chars), max_chars)
+            char_sequences.append(all_chars)
+
+        for char_sequence in char_sequences:
+            # pad sequence
+            diff = max_chars - len(char_sequence)
+            for _ in range(diff):
+                char_sequence.append(padding_char)
+
+            x = np.array([VOCAB[c] for c in char_sequence])            
+            X.append(x)
+        
+        return np.array(X)
+
 
 
 def main(arguments):
@@ -53,8 +75,7 @@ def main(arguments):
     train_input, train_output = file_to_input(train)
     valid_input, valid_output = file_to_input(valid, remove_spaces=True)
 
-    # TODO
-    test_input = np.array([])
+    test_input = test_file_to_input(test)
 
     V = len(VOCAB)
     C = 2
