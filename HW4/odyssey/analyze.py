@@ -26,7 +26,8 @@ for line in sys.stdin:
         accuracies.append([float(splitted[1]), float(splitted[2]), float(splitted[3])])
     if line[0] == 'd':
         splitted = line.split('\t')
-        sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23]])
+        #sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23]])
+        sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23], splitted[25], splitted[27], splitted[29]])
 
 print len(accuracies), len(sets)
 
@@ -40,7 +41,8 @@ print sets.shape, accuracies.shape
 alldata = np.append(sets, accuracies, axis=1)
 
 df = pd.DataFrame(alldata)
-df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', 'Accuracy', 'Precision', 'Precision2']
+#df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', 'Accuracy', 'Precision', 'Precision2']
+df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', "RNN1", "RNN2", "Dropout", 'Accuracy', 'Precision', 'Precision2']
 df[['Accuracy', 'Precision', 'Precision2']] = df[['Accuracy', 'Precision', 'Precision2']].astype(float)
 
 df.sort(columns='Accuracy', ascending=False, inplace=True)
