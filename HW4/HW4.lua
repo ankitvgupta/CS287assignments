@@ -20,6 +20,7 @@ cmd:option('-hacks_wanted', false, 'Enable the hacks')
 cmd:option('-rnn_unit1', 'lstm', 'Determine which recurrent unit to use (lstm or gru) for 1st layer - for classifier=rnn only')
 cmd:option('-rnn_unit2', 'none', 'Determine which recurrent unit to use (none lstm or gru) for 2nd layer - for classifier=rnn only')
 cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if rnn_unit2 is not none')
+cmd:option('-testfile', '', 'test file')
 -- Hyperparameters
 -- ...
 
@@ -45,7 +46,10 @@ function main()
 	flat_train_input = f:read('train_input'):all():long()
 	flat_train_output = f:read('train_output'):all():long()
 	flat_valid_input = f:read('valid_input'):all():long()
-	flat_valid_output = f:read('valid_output'):all():long()	
+	flat_valid_output = f:read('valid_output'):all():long()
+
+   local test_input = f:read('test_input'):all():long()	
+
    printoptions(opt)
    print(flat_train_input:size())
    print(flat_train_output:size())
@@ -57,7 +61,7 @@ function main()
    	local reverse_trie = fit(training_input, training_output)
       print(table_to_tensor(predict_laplace(reverse_trie, torch.LongTensor{space_idx}, 2, opt.alpha), 2))
       print("Got here")
-   	local predictions = laplace_viterbi_segment_try3(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
+   	local predictions = laplace_viterbi_segment(flat_valid_input, reverse_trie, opt.alpha, opt.window_size, space_idx)
    	local accuracy = prediction_accuracy(predictions, flat_valid_output)
    	local precision = prediction_precision(predictions, flat_valid_output)
       local precision2 = prediction_precision2(predictions, flat_valid_output)
@@ -86,6 +90,15 @@ function main()
       local precision2 = prediction_precision2(predictions, flat_valid_output)
       printoptions(opt)
       print("Results:", accuracy, precision, precision2)
+
+    if (opt.testfile ~= '') then
+      --print("Writing to test file")
+      local test_numbers = rnn_segment_and_count(test_input, model, space_idx)
+      write_predictions(result, opt.testfile)
+    end
+      
+
+
    end
 
 

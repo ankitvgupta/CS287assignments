@@ -209,15 +209,10 @@ end
 
 function write_predictions(results, outfile)
 	io.output(outfile)
-	io.write("ID,Class1,Class2,Class3,Class4,Class5,Class6,Class7,Class8,Class9,Class10,Class11,Class12,Class13,Class14,Class15,Class16,Class17,Class18,Class19,Class20,Class21,Class22,Class23,Class24,Class25,Class26,Class27,Class28,Class29,Class30,Class31,Class32,Class33,Class34,Class35,Class36,Class37,Class38,Class39,Class40,Class41,Class42,Class43,Class44,Class45,Class46,Class47,Class48,Class49,Class50\n")
+	io.write("ID,Class\n")
 	for test_i = 1, results:size(1) do
-		io.write(test_i)
-		for binary_i = 1, results:size(2) do
-			io.write(',', results[test_i][binary_i])
-		end
-		io.write('\n')
+		io.write(test_i, ',', results[test_i], '\n')
 	end
-
 end
 
 

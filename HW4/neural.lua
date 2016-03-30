@@ -249,7 +249,7 @@ function rnn_greedily_segment(flat_valid_input, model, space_idx)
 	local next_word_idx = 1
 	local char = flat_valid_input:narrow(1, next_word_idx, 1)
 
-	while next_word_idx < valid_input_count do 
+	while next_word_idx < valid_input_count and char[1] ~= 2 do 
 
 		if next_word_idx % 1000 == 0 then
 			print("Word", next_word_idx)
@@ -273,6 +273,17 @@ function rnn_greedily_segment(flat_valid_input, model, space_idx)
 
 	return valid_output_predictions
 
+end
+
+function rnn_segment_and_count(test_input, model, space_idx) 
+	local counts = torch.LongTensor(test_input:size(1))
+	for i = 1, test_input:size(1) do
+		local predictions = rnn_greedily_segment(test_input[i],model, space_idx)
+		-- Since predictions is all 1s and 2s, where 2s are the spaces, just subtract 1 and sum it to get
+		-- the number of spaces
+		counts[i] = (predictions - 1):sum()
+	end
+	return counts
 end
 
 function example()
