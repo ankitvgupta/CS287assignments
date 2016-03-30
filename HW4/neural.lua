@@ -242,7 +242,7 @@ end
 
 function rnn_greedily_segment(flat_valid_input, model, space_idx)
 
-	print("Starting predictions")
+	--print("Starting predictions")
 	model:evaluate()
 	local valid_input_count = flat_valid_input:size(1)
 	local valid_output_predictions = torch.ones(valid_input_count):long()

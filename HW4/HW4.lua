@@ -94,7 +94,7 @@ function main()
     if (opt.testfile ~= '') then
       --print("Writing to test file")
       local test_numbers = rnn_segment_and_count(test_input, model, space_idx)
-      write_predictions(result, opt.testfile)
+      write_predictions(test_numbers, opt.testfile)
     end
       
 
