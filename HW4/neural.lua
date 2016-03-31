@@ -25,7 +25,7 @@ function rnn(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout)
 
 	-- Add the first layer rnn unit
 	if rnn_unit1 == 'lstm' then
-		batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
+		batchLSTM:add(nn.Sequencer(nn.FastLSTM(embed_dim, embed_dim)))
 		print("Unit1: LSTM added")
 	elseif rnn_unit1 == 'gru' then 
 		batchLSTM:add(nn.Sequencer(nn.GRU(embed_dim, embed_dim)))
@@ -41,7 +41,7 @@ function rnn(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout)
 		print("Dropout added", dropout)
 		-- Add second layer 
 		if rnn_unit2 == 'lstm' then
-			batchLSTM:add(nn.Sequencer(nn.LSTM(embed_dim, embed_dim)))
+			batchLSTM:add(nn.Sequencer(nn.FastLSTM(embed_dim, embed_dim)))
 			print("Unit2: LSTM added")
 		elseif rnn_unit2 == 'gru' then 
 			batchLSTM:add(nn.Sequencer(nn.GRU(embed_dim, embed_dim)))
