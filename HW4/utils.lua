@@ -209,7 +209,7 @@ end
 
 function write_predictions(results, outfile)
 	io.output(outfile)
-	io.write("ID,Number\n")
+	io.write("ID,Count\n")
 	for test_i = 1, results:size(1) do
 		io.write(test_i, ',', results[test_i], '\n')
 	end

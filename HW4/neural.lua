@@ -53,6 +53,11 @@ function rnn(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout)
 	else
 		print("No unit 2")
 	end
+	
+	-- batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	-- batchLSTM:add(nn.Sequencer(nn.FastLSTM(embed_dim, embed_dim)))
+	-- print("Added another dropout and LSTM layer")
+	
 	batchLSTM:add(nn.Sequencer(nn.Linear(embed_dim, output_dim)))
 	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 
@@ -67,6 +72,7 @@ function trainNN(model, crit, training_input, training_output, minibatch_size, n
 
 	for i = 1, num_epochs do
 		print("Beginning epoch", i)
+
 		for j = 1, training_input:size(1)-minibatch_size, minibatch_size do
 
 		    -- zero out our gradients
@@ -128,6 +134,10 @@ function trainRNN(model,
 				embedding,
 				training_input,
 				training_output,
+				valid_kaggle_input,
+				valid_kaggle_output,
+				space_idx,
+				padding_idx,
 				l, 
 				num_epochs,
 				optimizer,
@@ -143,7 +153,10 @@ function trainRNN(model,
 
 
 	for i = 1, num_epochs do
-		print("Beginning epoch", i)
+		--print("Beginning epoch", i)
+		--local valid_numbers = rnn_segment_and_count(valid_kaggle_input:narrow(1, 1, 500), model, space_idx, padding_idx)
+      	--local mse = (valid_numbers - valid_kaggle_output:narrow(1, 1, 500)):double():pow(2):mean()
+      	--print("MSE", mse)
 		for j = 1, training_input:size(2)-l, l do
 
 		    -- zero out our gradients
