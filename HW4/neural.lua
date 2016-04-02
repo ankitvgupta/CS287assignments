@@ -308,8 +308,6 @@ function nn_viterbi_segment(flat_valid_input, model, window_size, space_idx)
 
 	end
 
-	print(backpointers:narrow(1, 1, 20))
-
 	local valid_output_predictions = torch.ones(valid_input_count):long()
 
 	local last_class = 1
@@ -324,6 +322,19 @@ function nn_viterbi_segment(flat_valid_input, model, window_size, space_idx)
 	end
 
 	return valid_output_predictions
+
+end
+
+function nn_log_probs(flat_valid_input, model, window_size)
+	local valid_input_count = flat_valid_input:size(1)
+	local log_probs = torch.Tensor(valid_input_count-1, 2)
+
+	for i=1, valid_input_count-window_size-1 do
+		next_window = flat_valid_input:narrow(1, i, window_size)
+		log_probs[i] = model:forward(next_window)
+	end
+
+	return log_probs
 
 end
 

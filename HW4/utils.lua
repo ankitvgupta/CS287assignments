@@ -67,6 +67,18 @@ function getaccuracy(model, validation_input, validation_options, validation_tru
 	return total_acc/n
 end
 
+function perplexity(valid_log_probs, valid_true_classes)
+	numSamples = valid_log_probs:size(1)
+	nll = 0
+
+	for i=1, numSamples do
+		c = valid_true_classes[i]
+		nll = nll + valid_log_probs[i][c]
+	end
+
+	return torch.exp(-nll/numSamples)
+end
+
 function sampler(dist)
   -- Do this to remove <unk> values.
   dist[2] = 0

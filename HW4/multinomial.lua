@@ -225,6 +225,153 @@ function laplace_greedily_segment(flat_valid_input, trie, alpha, window_size, sp
 
 end
 
+function wb_greedily_segment(flat_valid_input, trie, alpha, window_size, space_idx)
+
+	print("Starting predictions")
+	local valid_input_count = flat_valid_input:size(1)
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	local next_window = torch.Tensor(window_size):copy(flat_valid_input:narrow(1, 1, window_size))
+	local next_word_idx = window_size+1
+
+	while next_word_idx < valid_input_count do 
+
+		local predictions = table_to_tensor(predict(trie, next_window, 2, alpha), 2)
+		
+		-- shift the window
+		for i=1, window_size-1 do
+			next_window[i] = next_window[i+1]
+		end
+
+		-- predicting a space
+		if (predictions[2] > 0.5) then
+			valid_output_predictions[next_word_idx-window_size] = 2
+			next_window[window_size] = space_idx
+		-- predicting a non-space, so grab the next valid input
+		else
+			next_window[window_size] = flat_valid_input[next_word_idx]
+			next_word_idx = next_word_idx + 1
+		end
+
+	end
+	print("Numspaces", (valid_output_predictions - 1):sum())
+
+	print(valid_output_predictions:narrow(1, 1, 20))
+
+	return valid_output_predictions
+
+end
+
+function laplace_greedily_segment(flat_valid_input, trie, alpha, window_size, space_idx)
+
+	print("Starting predictions")
+	local valid_input_count = flat_valid_input:size(1)
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+	local next_window = torch.Tensor(window_size):copy(flat_valid_input:narrow(1, 1, window_size))
+	local next_word_idx = window_size+1
+
+	while next_word_idx < valid_input_count do 
+
+		local predictions = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
+		
+		-- shift the window
+		for i=1, window_size-1 do
+			next_window[i] = next_window[i+1]
+		end
+
+		-- predicting a space
+		if (predictions[2] > 0.5) then
+			valid_output_predictions[next_word_idx-window_size] = 2
+			next_window[window_size] = space_idx
+		-- predicting a non-space, so grab the next valid input
+		else
+			next_window[window_size] = flat_valid_input[next_word_idx]
+			next_word_idx = next_word_idx + 1
+		end
+
+	end
+	print("Numspaces", (valid_output_predictions - 1):sum())
+
+	print(valid_output_predictions:narrow(1, 1, 20))
+
+	return valid_output_predictions
+
+end
+
+
+
+function wb_viterbi_segment(flat_valid_input, trie, alpha, window_size, space_idx)
+
+	print("Starting viterbi")
+	local valid_input_count = flat_valid_input:size(1)
+	local backpointers = torch.ones(valid_input_count, 2):long()
+
+	-- This is the probabilities if the last one was a space.
+	local post_space_probs = table_to_tensor(predict(trie, torch.Tensor{space_idx}, 2, alpha), 2)	
+
+	-- BIGRAMS ONLY
+	local next_window = torch.Tensor(1)
+	next_window[1] = flat_valid_input[1]
+
+	local pi = torch.ones(valid_input_count, 2):mul(-1e+31)
+	pi[1] = torch.log(table_to_tensor(predict(trie, next_window, 2, alpha), 2))
+	--pi[1][1] = 0
+	--pi[1][2] = 0
+
+	for i = 2, valid_input_count do
+
+		next_window[1] = flat_valid_input[i]
+		local yci11 = table_to_tensor(predict(trie, next_window, 2, alpha), 2)
+			
+		-- Last one was not a space, and next is not a space.
+		local score1 = pi[i-1][1] + torch.log(yci11[1])
+
+		-- Last one was not a space, and next is a space.
+		local score3 = pi[i-1][1] + torch.log(yci11[2])
+
+		-- Last one was a space, and next is not a space.
+		local score2 = pi[i-1][2] + torch.log(yci11[1])
+
+		-- Last one was a space, and next one is a space.
+		local score4 = pi[i-1][2] + torch.log(yci11[2])
+
+		-- The argmax thing.
+		if score1 > pi[i][1] then
+			pi[i][1] = score1
+			backpointers[i][1] = 1
+		end
+		if score2 > pi[i][1] then
+			pi[i][1] = score2
+			backpointers[i][1] = 2
+		end
+		if score3 > pi[i][2] then
+			pi[i][2] = score3
+			backpointers[i][2] = 1
+		end
+		if score4 > pi[i][2] then
+			pi[i][2] = score4
+			backpointers[i][2] = 2
+		end
+
+	end
+
+	print(backpointers:narrow(1, 1, 20))
+
+	local valid_output_predictions = torch.ones(valid_input_count):long()
+
+	local last_class = 1
+	if pi[valid_input_count][2] > pi[valid_input_count][1] then
+		last_class = 2
+	end
+
+	valid_output_predictions[valid_input_count] = last_class
+
+	for i=valid_input_count-1, 1, -1 do
+		valid_output_predictions[i] = backpointers[i+1][valid_output_predictions[i+1]]
+	end
+
+	return valid_output_predictions
+
+end
 
 
 function laplace_viterbi_segment(flat_valid_input, trie, alpha, window_size, space_idx)
@@ -298,6 +445,34 @@ function laplace_viterbi_segment(flat_valid_input, trie, alpha, window_size, spa
 	end
 
 	return valid_output_predictions
+
+end
+
+function laplace_log_probs(flat_valid_input, trie, alpha, window_size)
+	local valid_input_count = flat_valid_input:size(1)
+	local log_probs = torch.Tensor(valid_input_count-1, 2)
+
+	for i=1, valid_input_count-window_size-1 do
+		next_window = flat_valid_input:narrow(1, i, window_size)
+		predictions = table_to_tensor(predict_laplace(trie, next_window, 2, alpha), 2)
+		log_probs[i] = torch.log(predictions)
+	end
+
+	return log_probs
+
+end
+
+function wb_log_probs(flat_valid_input, trie, alpha, window_size)
+	local valid_input_count = flat_valid_input:size(1)
+	local log_probs = torch.Tensor(valid_input_count-1, 2)
+
+	for i=1, valid_input_count-window_size-1 do
+		next_window = flat_valid_input:narrow(1, i, window_size)
+		predictions = table_to_tensor(predict(trie, next_window, 2, alpha), 2)
+		log_probs[i] = torch.log(predictions)
+	end
+
+	return log_probs
 
 end
 
