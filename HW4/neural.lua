@@ -348,7 +348,10 @@ function rnn_greedily_segment(flat_valid_input, model, space_idx, padding_idx)
 	model:evaluate()
 	local valid_input_count = flat_valid_input:size(1)
 	local valid_output_predictions = torch.ones(valid_input_count):long()
-	local valid_output_probs = torch.zeros(valid_input_count, 2)
+	local valid_output_probs = torch.ones(valid_input_count, 2)
+	-- The last one will never be followed by a space.
+	--valid_output_probs[valid_input_count] = torch.log(torch.Tensor{0,1})
+
 	local next_word_idx = 1
 	local char = flat_valid_input:narrow(1, next_word_idx, 1)
 
