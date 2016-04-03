@@ -94,15 +94,17 @@ function main()
       local accuracy = prediction_accuracy(predictions, flat_valid_output)
       local precision = prediction_precision(predictions, flat_valid_output)
       local precision2 = prediction_precision2(predictions, flat_valid_output)
-      local log_probs = nn_log_probs(flat_valid_input, model, opt.window_size)
-      local perp = perplexity(log_probs, flat_valid_output)
+      local valid_input, valid_output = unroll_inputs(flat_valid_input, flat_valid_output, opt.window_size)
+
+	local log_probs = nn_log_probs(valid_input, model, opt.window_size)
+      local perp = perplexity(log_probs, valid_output)
       print("Results from greedy:", accuracy, precision, precision2, perp)
       if (opt.window_size == 1) then 
 	      local predictions = nn_viterbi_segment(flat_valid_input, model, opt.window_size, space_idx)
 	      local accuracy = prediction_accuracy(predictions, flat_valid_output)
 	      local precision = prediction_precision(predictions, flat_valid_output)
 	      local precision2 = prediction_precision2(predictions, flat_valid_output)      
-	      print("Results from viterbi:", accuracy, precision, precision2, perp)
+	      print("Viterbi Results:", accuracy, precision, precision2, perp)
       end
       printoptions(opt)
 
