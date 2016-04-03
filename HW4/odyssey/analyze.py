@@ -60,7 +60,9 @@ print df
 df.sort(columns='MSEPerp', ascending=True, inplace=True)
 print "Full, sorted by MSEPerp"
 print df
-
+#df.sort(columns='Perp', ascending=True, inplace=True)
+#print "Full, sorted by Perp"
+#print df
 df = df[df['RNN1'] == 'lstm']
 df = df[df['RNN2'] == 'none']
 print "Single LSTM, sorted by MSE/Perp"

@@ -1,0 +1,15 @@
+
+The following have been reloaded with a version change:
+  1) mpc/1.0.1-fasrc01 => mpc/1.0.3-fasrc02
+
+/n/home09/ankitgupta/torch/install/bin/luajit: ...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:69: not enough memory
+stack traceback:
+	[C]: in function 'error'
+	...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:69: in function 'rethrowErrors'
+	...e09/ankitgupta/.luarocks/share/lua/5.1/nn/Sequential.lua:44: in function 'forward'
+	/n/home09/ankitgupta/CS287/CS287assignments/HW4/neural.lua:360: in function 'rnn_greedily_segment'
+	/n/home09/ankitgupta/CS287/CS287assignments/HW4/HW4.lua:119: in function 'main'
+	/n/home09/ankitgupta/CS287/CS287assignments/HW4/HW4.lua:147: in main chunk
+	[C]: in function 'dofile'
+	...upta/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:145: in main chunk
+	[C]: at 0x00405800
