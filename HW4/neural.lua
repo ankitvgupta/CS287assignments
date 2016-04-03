@@ -220,6 +220,7 @@ function nn_greedily_segment(flat_valid_input, model, window_size, space_idx)
 
 	print("Starting predictions")
 	local valid_input_count = flat_valid_input:size(1)
+	print("Total vinput", valid_input_count)
 	local valid_output_predictions = torch.ones(valid_input_count):long()
 	local next_window = torch.Tensor(window_size):copy(flat_valid_input:narrow(1, 1, window_size))
 	local next_word_idx = window_size+1
@@ -231,7 +232,9 @@ function nn_greedily_segment(flat_valid_input, model, window_size, space_idx)
 		end
 
 		local predictions = model:forward(next_window)
-		
+		if next_window[window_size] == space_idx then
+			predictions = torch.log(torch.Tensor{.999,.001})
+		end
 		-- shift the window
 		for i=1, window_size-1 do
 			next_window[i] = next_window[i+1]
@@ -325,13 +328,14 @@ function nn_viterbi_segment(flat_valid_input, model, window_size, space_idx)
 
 end
 
-function nn_log_probs(flat_valid_input, model, window_size)
-	local valid_input_count = flat_valid_input:size(1)
-	local log_probs = torch.Tensor(valid_input_count-1, 2)
+function nn_log_probs(valid_input, model, window_size)
+	
+	
+	local valid_input_count = valid_input:size(1)
+	local log_probs = torch.Tensor(valid_input_count, 2)
 
-	for i=1, valid_input_count-window_size-1 do
-		next_window = flat_valid_input:narrow(1, i, window_size)
-		log_probs[i] = model:forward(next_window)
+	for i=1, valid_input_count do
+		log_probs[i] = model:forward(valid_input[i])
 	end
 
 	return log_probs

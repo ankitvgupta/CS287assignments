@@ -21,9 +21,10 @@ moreoutput=True
 for line in sys.stdin:
     if line[0] == "=" or len(line) == 1 or line[0] == "W":
         continue
-    if line[0] == 'R' and line[1] == "e":
+    if line[0] == 'R' and line[1] == "e" or line[0] == 'V':
         splitted = line.split('\t')
-        accuracies.append([float(splitted[1]), float(splitted[2]), float(splitted[3]), float(splitted[4])])
+        accuracies.append(map(float, splitted[1:-1]))
+	#accuracies.append([float(splitted[1]), float(splitted[2]), float(splitted[3]), float(splitted[4])])
     if line[0] == 'd':
         splitted = line.split('\t')
         #sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23]])
@@ -42,32 +43,30 @@ alldata = np.append(sets, accuracies, axis=1)
 
 df = pd.DataFrame(alldata)
 #df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', 'Accuracy', 'Precision', 'Precision2']
-df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', "RNN1", "RNN2", "Dropout", 'Accuracy', 'Precision', 'Precision2', 'MSE']
-df[['Accuracy', 'Precision', 'Precision2', 'MSE']] = df[['Accuracy', 'Precision', 'Precision2', 'MSE']].astype(float)
+#df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', "RNN1", "RNN2", "Dropout", 'Accuracy', 'Precision', 'Precision2']
+#df[['Accuracy', 'Precision', 'Precision2']] = df[['Accuracy', 'Precision', 'Precision2']].astype(float)
+df.columns = ['Datafile', 'Classifier', 'Window Size', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', 'Hacks', "RNN1", "RNN2", "Dropout", 'Accuracy', 'Precision', 'Precision2', 'MSEPerp']
+df[['Accuracy', 'Precision', 'Precision2', 'MSEPerp']] = df[['Accuracy', 'Precision', 'Precision2', 'MSEPerp']].astype(float)
 
-df.sort(columns='Accuracy', ascending=False, inplace=True)
 if sys.argv[1] != "all":
     df = df[df['Datafile'].str.startswith(sys.argv[1])]
 
-print df
-print ""
-df.sort(columns='Precision', ascending=False, inplace=True)
+df.sort(columns='Accuracy', ascending=False, inplace=True)
+print "Full, sorted by Accuracy"
 print df
 df.sort(columns='Precision2', ascending=False, inplace=True)
+print "Full, sorted by PercentRealsPredicted"
 print df
-df.sort(columns='MSE', ascending=True, inplace=True)
+df.sort(columns='MSEPerp', ascending=True, inplace=True)
+print "Full, sorted by MSEPerp"
 print df
 
-
-print "Best nnpre ones"
-print df[df['Classifier'] == 'nnpre']
-
-print ""
-print "Best lr ones"
-print df[df['Classifier'] == 'lr']
-
-print ""
-print "Best nnfig1 ones"
-print df[df['Classifier'] == 'nnfig1']
+df = df[df['RNN1'] == 'lstm']
+df = df[df['RNN2'] == 'none']
+print "Single LSTM, sorted by MSE/Perp"
+print df
+df.sort(columns='Accuracy', ascending=False, inplace=True)
+print "Single LSTM, sorted by Accuracy"
+print df
 
 
