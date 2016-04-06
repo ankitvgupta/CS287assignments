@@ -4,6 +4,8 @@
 """
 from nltk.stem.wordnet import WordNetLemmatizer
 from stemming.porter2 import stem as porterStem
+from textblob import Blobber, TextBlob, Word
+from textblob.taggers import PatternTagger
 
 class Feature(object):
 
@@ -116,7 +118,7 @@ class LemmaFeature(Feature):
 		return True
 
 	def maxFeatIdx(self):
-		return max(self.lemma_to_idx.values())
+		return self.rare_idx
 
 	def numFeats(self):
 		return self.numLemmas
@@ -162,10 +164,80 @@ class StemFeature(Feature):
 		return True
 
 	def maxFeatIdx(self):
-		return max(self.stem_to_idx.values())
+		return self.rare_idx
 
 	def numFeats(self):
 		return self.numStems
+
+
+
+class POSFeature(Feature):
+
+	def initialize(self):
+		self.tagger = Blobber(pos_tagger=PatternTagger())
+		parts_of_speech = ['DT', 'NN', 'VBZ', 'TO', 'VB', 'CD', 'POS', 'JJ', 'CC', 'IN', 'PRP', 'VBG', 'RB', 'JJR', 'NNS', 'MD']
+		self.pos_to_idx = {}
+		for i,pos in enumerate(parts_of_speech):
+			self.pos_to_idx[pos] = i+self.index_offset
+		self.rare_idx = max(self.pos_to_idx.values())+1
+
+	def recover_original_sentence(self, padded_sentence):
+		start = self.dwin/2
+		end = len(padded_sentence)-self.dwin/2
+		center = padded_sentence[start:end]
+		sent_str = ' '.join(center)
+		return sent_str
+
+
+	def convert(self, padded_sentence, word_idx):
+		self.validate_sentence(padded_sentence, word_idx)
+
+		sentence_str = self.recover_original_sentence(padded_sentence)
+		blob = self.tagger(sentence_str)
+
+		padded_idx = -1
+		pad_word = None
+		l = len(padded_sentence)
+		parts_of_speech = [None for _ in range(l)]
+
+		for (word, pos) in blob.tags:
+			last_found_idx = padded_idx
+			found_new_word = True
+			while word != pad_word:
+				padded_idx += 1
+				# word does not exist in original sentence
+				if padded_idx >= l:
+					padded_idx = last_found_idx
+					found_new_word = False
+					break
+
+				pad_word = padded_sentence[padded_idx]
+			
+			if found_new_word:
+				parts_of_speech[padded_idx] = pos
+
+		feat = []
+		start = word_idx - self.dwin/2
+		end = word_idx + self.dwin/2
+
+		for idx, i in enumerate(range(start, end+1)):
+			pos = parts_of_speech[i]
+			try:
+				feat.append(self.pos_to_idx[pos])
+			except KeyError:
+				feat.append(self.rare_idx)
+
+		return feat
+
+	def isSparse(self):
+		return True
+
+	def maxFeatIdx(self):
+		return self.rare_idx
+
+	def numFeats(self):
+		return len(self.pos_to_idx)
+
 
 
 class CapitalizationFeature(Feature):
