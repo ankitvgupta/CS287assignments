@@ -25,7 +25,7 @@ Feature converters take in padded sentence, index, and window size
     -'test_input_dense'
 """
 from collections import defaultdict
-from features import CapitalizationFeature, UnigramFeature
+from features import *
 
 import numpy as np
 import h5py
@@ -77,6 +77,7 @@ def init_features(feature_list):
     inited_features = []
     numSparseFeatures = 0
     numDenseFeatures = 0
+    index_offset = 1
 
     for feature in feature_list:
         if type(feature) is tuple:
@@ -85,12 +86,15 @@ def init_features(feature_list):
         else:
             kwargs = {}
 
+        kwargs['index_offset'] = index_offset
+
         inited_feature = feature(**kwargs)
         inited_feature.initialize()
         inited_features.append(inited_feature)
 
         if inited_feature.isSparse():
             numSparseFeatures += inited_feature.numFeats()
+            index_offset += inited_feature.maxFeatIdx()
         else:
             numDenseFeatures += inited_feature.numFeats()
 
@@ -126,13 +130,19 @@ def create_input(data_file, dwin, features, sep='\t'):
         end = len(sentence)-dwin/2-1
         for i in range(start, end+1):
 
+            these_sparse_feats = []
             for sparse_feat in sparse_features:
                 feat = sparse_feat.convert(sentence, i)
-                sparse_X.append(feat)
+                these_sparse_feats.extend(feat)
+            
+            sparse_X.append(these_sparse_feats)
 
+            these_dense_feats = []
             for dense_feat in dense_features:
                 feat = dense_feat.convert(sentence, i)
-                dense_X.append(feat)
+                these_dense_feats.extend(feat)
+            
+            dense_X.append(these_dense_feats)
 
     return sparse_X, dense_X
 
@@ -171,12 +181,15 @@ def main(arguments):
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('dataset', help="Data set",
                         type=str)
+    parser.add_argument('dwin', help="Window size",
+                        type=int, nargs='?', default=1)
     args = parser.parse_args(arguments)
     dataset = args.dataset
+    dwin = args.dwin
     train, valid, test, tag_file = FILE_PATHS[dataset]
 
-    # hack to continue using old code...
-    dwin = 1
+    # Force window size odd
+    assert dwin > 0 and dwin % 2 == 1
 
     # Load tag dict
     print "Loading tag dict..."
@@ -191,7 +204,7 @@ def main(arguments):
         word_embeddings = None
     # Initialize features
     print "Initializing features..."
-    features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
+    features, numSparseFeatures, numDenseFeatures = init_features([(StemFeature, {'vocab': vocab, 'dwin': dwin}), (UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
 
     numClasses = len(tag_dict)
     print "sparse, dense, classes:"
