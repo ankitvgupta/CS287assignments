@@ -36,12 +36,15 @@ import re
 import codecs
 
 
-def load_tag_dict(file_path):
+def load_tag_dict(file_path, front_tag="<t>", back_tag="</t>"):
     tag_dict = {}
     with open(file_path, 'r') as f:
         for line in f:
             tag, idx = line.strip().split(' ')
             tag_dict[tag] = int(idx)
+
+    tag_dict[front_tag] = max(tag_dict.values())+1
+    tag_dict[back_tag] = max(tag_dict.values())+1
 
     return tag_dict
 
@@ -100,7 +103,7 @@ def init_features(feature_list):
 
     return inited_features, numSparseFeatures, numDenseFeatures
 
-def load_padded_sentences(data_file, dwin, sep):
+def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s>", front_tag="<t>", back_tag="</t>"):
     all_sentences = []
     this_sentence = ['PADDING' for _ in range(dwin/2)]
 
@@ -204,7 +207,7 @@ def main(arguments):
         word_embeddings = None
     # Initialize features
     print "Initializing features..."
-    features, numSparseFeatures, numDenseFeatures = init_features([(POSFeature, {'dwin': dwin}), (StemFeature, {'vocab': vocab, 'dwin': dwin}), (UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
+    features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
 
     numClasses = len(tag_dict)
     print "sparse, dense, classes:"
