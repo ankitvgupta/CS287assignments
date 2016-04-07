@@ -69,7 +69,3 @@ function test_viterbi(viterbi_alg)
 	local yhat = viterbi_alg(x, predictor, numClasses, start_class, true)
 	print(yhat)
 end
-
-
-test_viterbi(viterbi)
-
