@@ -9,7 +9,7 @@ function viterbi(x, predictor, numClasses, start_class, debugger)
 
 	for i=2, n do
 		for ci1=1, numClasses do
-			local yci1 = predictor(ci1, x[i-1])
+			local yci1 = predictor(ci1, x[i])
 			for ci=1, numClasses do
 				local v = pi[i-1][ci1] + torch.log(yci1[ci])
 				if v > pi[i][ci] then
@@ -69,3 +69,5 @@ function test_viterbi(viterbi_alg)
 	local yhat = viterbi_alg(x, predictor, numClasses, start_class, true)
 	print(yhat)
 end
+
+test_viterbi(viterbi)
