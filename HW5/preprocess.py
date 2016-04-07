@@ -63,7 +63,7 @@ def parse_line(s, num_sub="NUMBER", lowercase=False, sep='\t'):
     return word, tag
 
 
-def init_vocab(file_path, top_n=100000):
+def init_vocab(file_path, top_n=100000, front_word="<s>", back_word="</s>"):
     vocab_dict = defaultdict(int)
 
     with open(file_path, 'r') as f:
@@ -73,7 +73,7 @@ def init_vocab(file_path, top_n=100000):
                 vocab_dict[word] += 1    
 
     top_n_words = sorted(vocab_dict, key=vocab_dict.get, reverse=True)[:top_n]
-    return top_n_words+['RARE', 'PADDING']
+    return [front_word, back_word]+top_n_words+['RARE', 'PADDING']
 
 
 def init_features(feature_list):
@@ -105,7 +105,7 @@ def init_features(feature_list):
 
 def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s>", front_tag="<t>", back_tag="</t>"):
     all_sentences = []
-    this_sentence = ['PADDING' for _ in range(dwin/2)]
+    this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
 
     with open(data_file, 'r') as f:
         for line in f:
@@ -115,9 +115,9 @@ def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s
             # NEW SENTENCE!
             else:
                 # finish the old
-                this_sentence = this_sentence + ['PADDING' for _ in range(dwin/2)]
+                this_sentence = this_sentence + ['</s>']+['PADDING' for _ in range(dwin/2)]
                 all_sentences.append(this_sentence)
-                this_sentence = ['PADDING' for _ in range(dwin/2)]
+                this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
 
     return all_sentences
 
@@ -151,7 +151,7 @@ def create_input(data_file, dwin, features, sep='\t'):
 
 
 def create_output(data_file, tag_dict):
-    Y = []
+    Y = [tag_dict['<t>']]
 
     with open(data_file, 'r') as f:
         for line in f:
@@ -163,6 +163,9 @@ def create_output(data_file, tag_dict):
                     print line
                     print tag
                     assert False
+            else:
+                Y.append(tag_dict['</t>'])
+                Y.append(tag_dict['<t>'])
 
     return Y
 
