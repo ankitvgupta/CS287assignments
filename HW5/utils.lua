@@ -1,47 +1,50 @@
 -- x is a sequence of inputs
 -- predictor is a function that takes in xi and past class and
 --   provides a
--- for testing 
-function slow_viterbi(x, predictor, classes, start_class, debugger)
+function viterbi(x, predictor, numClasses, start_class, debugger)
 	local n = x:size(1)
-	local numClasses = classes:size(1)
-
-	local pi = torch.ones(n+1, numClasses):mul(-1e+31)
+	local pi = torch.ones(n, numClasses):mul(-1e+31)
+	local bp = torch.ones(n, numClasses)
 	pi[1][start_class] = 0
 
 	for i=2, n do
-		for ci=1, numClasses do
-			local maxval = -1e+31
-			for ci1=1, numClasses do
-				local v = pi[i-1][ci1] + torch.log(predictor(ci1, x[i-1])[ci])
-				if v > maxval then
-					maxval = v
+		for ci1=1, numClasses do
+			local yci1 = predictor(ci1, x[i-1])
+			for ci=1, numClasses do
+				local v = pi[i-1][ci1] + torch.log(yci1[ci])
+				if v > pi[i][ci] then
+					pi[i][ci] = v
+					bp[i][ci] = ci1
 				end
 			end
-			pi[i][ci] = maxval
 		end
 	end
 
 	local yhat = torch.Tensor(n)
-	for i=1, n do
-		local bestClass = 1
-		local bestScore = pi[i][1]
-		for ci=2, numClasses do
-			if pi[i][ci] > bestScore then
-				bestClass = ci
-				bestScore = pi[i][ci]
-			end
+
+	local lastBestClass = 1
+	local lastBestScore = pi[n][1]
+	for ci=2, numClasses do
+		local score = pi[n][ci]
+		if score > lastBestScore then
+			lastBestScore = score
+			lastBestClass = ci
 		end
-		yhat[i] = classes[bestClass]
+	end
+
+	yhat[n] = lastBestClass
+
+	for i=n-1, 1,-1 do
+		yhat[i] = bp[i+1][yhat[i+1]]
 	end
 
 	if debugger ~= nil then
+		print("bp:", bp)
 		print("pi:", pi)
 	end
 
 	return yhat
 end
-
 
 -- expected output:
 -- pi:	 0.0000e+00 -1.0000e+31 -1.0000e+31
@@ -52,8 +55,8 @@ end
 -- [torch.DoubleTensor of size 5x3]
 
 --  1
---  1
---  1
+--  3
+--  3
 --  1
 function test_viterbi(viterbi_alg)
 	local x = torch.Tensor{1, 3, 2, 3}:resize(4, 1)
@@ -61,12 +64,12 @@ function test_viterbi(viterbi_alg)
 						return torch.Tensor{torch.exp(ci1*x[1]-1),
 											torch.exp(ci1*x[1]-2),
 											torch.exp(ci1*x[1]-3)} end
-	local classes = torch.Tensor{1, 2, 3}
+	local numClasses = 3
 	local start_class = 1
-	local yhat = viterbi_alg(x, predictor, classes, start_class, true)
+	local yhat = viterbi_alg(x, predictor, numClasses, start_class, true)
 	print(yhat)
 end
 
 
-test_viterbi(slow_viterbi)
+test_viterbi(viterbi)
 
