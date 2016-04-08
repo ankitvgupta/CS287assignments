@@ -46,12 +46,12 @@ function make_predictor_function(F_transition, F_emission)
 	return predictor
 end
 
-words = torch.Tensor{1,3,3,5,2,1,4,2,1}
-classes = torch.Tensor{1,3,3,3,2,3,3,2,3}
-numwords = 5
-numclasses = 3
+-- words = torch.Tensor{1,3,3,5,2,1,4,2,1}
+-- classes = torch.Tensor{1,3,3,3,2,3,3,2,3}
+-- numwords = 5
+-- numclasses = 3
 
-F_transition = transition_F_matrix(classes, numclasses) + 1
-F_emission = emission_F_matrix(words, classes, numwords, numclasses) + 1
-x = make_predictor_function(F_transition, F_emission)
+-- F_transition = transition_F_matrix(classes, numclasses) + 1
+-- F_emission = emission_F_matrix(words, classes, numwords, numclasses) + 1
+-- x = make_predictor_function(F_transition, F_emission)
 
