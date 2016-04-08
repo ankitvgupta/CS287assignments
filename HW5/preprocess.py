@@ -189,9 +189,12 @@ def main(arguments):
                         type=str)
     parser.add_argument('dwin', help="Window size",
                         type=int, nargs='?', default=1)
+    parser.add_argument('-u', help="Unigram features only",
+                        action="store_true", default=False)
     args = parser.parse_args(arguments)
     dataset = args.dataset
     dwin = args.dwin
+    unigrams_only = args.u
     train, valid, test, tag_file = FILE_PATHS[dataset]
 
     # Force window size odd
@@ -210,7 +213,11 @@ def main(arguments):
         word_embeddings = None
     # Initialize features
     print "Initializing features..."
-    features, numSparseFeatures, numDenseFeatures = init_features([(StemFeature, {'vocab': vocab, 'dwin': dwin}), (POSFeature, {'dwin': dwin}), (UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
+    if unigrams_only:
+        feat_list = [(UnigramFeature, {'vocab': vocab, 'dwin': dwin})]
+    else:
+        feat_list = [(StemFeature, {'vocab': vocab, 'dwin': dwin}), (POSFeature, {'dwin': dwin}), (UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})]
+    features, numSparseFeatures, numDenseFeatures = init_features(feat_list)
 
     numClasses = len(tag_dict)
     print "sparse, dense, classes:"
