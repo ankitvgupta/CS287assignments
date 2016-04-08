@@ -11,6 +11,7 @@ cmd:option('-classifier', 'hmm', 'classifier to use')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-beta', 1, 'F score parameter')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
+cmd:option('-testfile', '', 'test file (must be HDF5)')
 
 -- Hyperparameters
 -- ...
@@ -61,6 +62,21 @@ function main()
 		print("Done. Computing statistics...")
 		local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
 		print("F-Score:", f_score)
+
+		if (opt.testfile ~= '') then
+			print("Starting Viterbi on test set...")
+			local test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
+
+			print("Done. Converting to Kaggle-ish format...")
+			local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, o_class)
+		
+			print("Done. Writing out to HDF5...")
+			local f = hdf5.open(opt.testfile, 'w')
+			f:write('test_outputs', test_pred_kaggle:long())
+			print("Done. Wrote to ", opt.testfile, ".")
+
+		end
+			
 		-- for i=1, validation_output:size(1) do
 		-- 	print(i, valid_predicted_output[i], validation_output[i])
 		-- end

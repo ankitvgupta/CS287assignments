@@ -89,16 +89,17 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 		end
 	end
 
-	-- generate sentences x max_classes x max_span tensor for kaggle :'(
+	-- generate sentences x max_classes x max_span+1 tensor for kaggle :'(
+	-- the first entry will be the id of the class
 	-- [i][j][k] = the kth index in the span of the jth named entity of the ith sentence
 	-- zeros are padding
 
-	kaggle_output = torch.zeros(sentences, max_classes, max_span)
+	kaggle_output = torch.zeros(sentences, max_classes, max_span+1)
 
 	previous_class = o_class
 	local this_sentence_idx = 0
 	local this_class_idx = 1
-	local this_span_idx = 1
+	local this_span_idx = 2
 
 	for i=1, n do
 		local this_class = output[i]
@@ -106,10 +107,10 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 		if (this_class == start_class) then
 			this_sentence_idx = this_sentence_idx + 1
 			this_class_idx = 1
-			this_span_idx = 1
+			this_span_idx = 2
 		-- finish last span
 		elseif (this_class == o_class) then
-			this_span_idx = 1
+			this_span_idx = 2
 		-- some nontrivial class
 		else
 			-- ongoing span
@@ -118,8 +119,9 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 				this_span_idx = this_span_idx + 1
 			-- new span
 			else
-				this_span_idx = 1
-				kaggle_output[this_sentence_idx][this_class_idx][this_span_idx] = i
+				kaggle_output[this_sentence_idx][this_class_idx][1] = this_class
+				kaggle_output[this_sentence_idx][this_class_idx][2] = i
+				this_span_idx = 3
 				this_class_idx = this_class_idx + 1
 			end
 		end
