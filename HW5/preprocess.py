@@ -119,6 +119,10 @@ def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s
                 all_sentences.append(this_sentence)
                 this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
 
+        # don't forget the last sentence
+        if len(this_sentence) > 0:
+            all_sentences.append(this_sentence)
+
     return all_sentences
 
 def create_input(data_file, dwin, features, sep='\t'):
@@ -166,9 +170,6 @@ def create_output(data_file, tag_dict):
             else:
                 Y.append(tag_dict['</t>'])
                 Y.append(tag_dict['<t>'])
-
-    # remove the last open tag
-    Y.pop()
 
     return Y
 
@@ -267,6 +268,7 @@ def main(arguments):
         f['numDenseFeatures'] = np.array([numDenseFeatures], dtype=np.int32)
         f['numClasses'] = np.array([numClasses], dtype=np.int32)
         f['startClass'] = np.array([tag_dict['<t>']], dtype=np.int32)
+        f['endClass'] = np.array([tag_dict['</t>']], dtype=np.int32)
 
 
 if __name__ == '__main__':
