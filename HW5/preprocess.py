@@ -210,7 +210,7 @@ def main(arguments):
         word_embeddings = None
     # Initialize features
     print "Initializing features..."
-    features, numSparseFeatures, numDenseFeatures = init_features([(UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
+    features, numSparseFeatures, numDenseFeatures = init_features([(StemFeature, {'vocab': vocab, 'dwin': dwin}), (POSFeature, {'dwin': dwin}), (UnigramFeature, {'vocab': vocab, 'dwin': dwin}), (CapitalizationFeature, {'dwin': dwin})])
 
     numClasses = len(tag_dict)
     print "sparse, dense, classes:"
