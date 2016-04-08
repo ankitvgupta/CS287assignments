@@ -263,6 +263,7 @@ def main(arguments):
         f['numSparseFeatures'] = np.array([numSparseFeatures], dtype=np.int32)
         f['numDenseFeatures'] = np.array([numDenseFeatures], dtype=np.int32)
         f['numClasses'] = np.array([numClasses], dtype=np.int32)
+        f['startClass'] = np.array([tag_dict['<t>']], dtype=np.int32)
 
 
 if __name__ == '__main__':
