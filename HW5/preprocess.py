@@ -167,6 +167,9 @@ def create_output(data_file, tag_dict):
                 Y.append(tag_dict['</t>'])
                 Y.append(tag_dict['<t>'])
 
+    # remove the last open tag
+    Y.pop()
+
     return Y
 
 
