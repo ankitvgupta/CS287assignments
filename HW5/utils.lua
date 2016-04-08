@@ -1,5 +1,5 @@
 -- x is a sequence of inputs
--- predictor is a function that takes in xi and past class and
+-- predictor is a function that takes in past class and xi and
 --   provides a
 function viterbi(x, predictor, numClasses, start_class, debugger)
 	local n = x:size(1)
