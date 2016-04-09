@@ -38,6 +38,7 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 
 	-- Grab ntrainingsamples of the inputs (all but the first), and concatenate the classes.
 	local sparse_input = torch.cat(sparse_training_input:narrow(1, 2, ntrainingsamples), transformed_outputs, 2)
+	--print(sparse_input)
 	-- Grab the associated rows of the others.
 	local dense_input = dense_training_input:narrow(1, 2, ntrainingsamples)
 	local output = training_output:narrow(1, 2, ntrainingsamples)
@@ -117,13 +118,14 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 end
 
 
-function make_predictor_function_memm(model)
+function make_predictor_function_memm(model, nsparsefeatures)
 
 	local predictor = function(c_prev, x_i_sparse, x_i_dense)
 		--print()
 		local sparse = torch.zeros(x_i_sparse:size(1) + 1):long()
 		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
-		sparse[-1] = c_prev
+		sparse[-1] = c_prev + nsparsefeatures
+		--print(sparse)
 
 		return torch.exp(model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))})):squeeze()
 	end

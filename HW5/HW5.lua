@@ -69,7 +69,7 @@ function main()
 						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, 
 						opt.dwin, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
 
-		predictor = make_predictor_function_memm(model)
+		predictor = make_predictor_function_memm(model, nsparsefeatures)
 		include_dense_feats = true
 
 	else
