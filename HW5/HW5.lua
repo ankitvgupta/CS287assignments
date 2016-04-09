@@ -32,6 +32,7 @@ function main()
 	local nsparsefeatures = f:read('numSparseFeatures'):all():long()[1]
 	local ndensefeatures = f:read('numDenseFeatures'):all():long()[1]
 	local start_class = f:read('startClass'):all():long()[1]
+	local end_class = f:read('endClass'):all():long()[1]
 
 	local o_class = 1
 
@@ -56,8 +57,8 @@ function main()
 		local valid_predicted_output = viterbi(sparse_validation_input:squeeze(), predictor, nclasses, start_class)
 		
 		print("Done. Converting to Kaggle-ish format...")
-		local valid_true_kaggle, ms, mc, s = kagglify_output(validation_output, start_class, o_class)
-		local valid_pred_kaggle, _, _, _ = kagglify_output(valid_predicted_output, start_class, o_class, ms, mc, s)
+		local valid_true_kaggle, ms, mc, s = kagglify_output(validation_output, start_class, end_class, o_class)
+		local valid_pred_kaggle, _, _, _ = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
 
 		print("Done. Computing statistics...")
 		local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
@@ -68,17 +69,19 @@ function main()
 			local test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
 
 			print("Done. Converting to Kaggle-ish format...")
-			local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, o_class)
+			local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class)
 		
 			print("Done. Writing VALIDATION out to HDF5...")
 			local f = hdf5.open(opt.testfile, 'w')
-			f:write('test_outputs', valid_true_kaggle:long())
+			f:write('test_outputs', valid_pred_kaggle:long())
 			print("Done. Wrote to ", opt.testfile, ".")
 
 		end
 			
 		-- for i=1, validation_output:size(1) do
-		-- 	print(i, valid_predicted_output[i], validation_output[i])
+		-- 	if (validation_output[i] > 1) then
+		-- 		print(i, valid_predicted_output[i], validation_output[i])
+		-- 	end
 		-- end
 
 	else
