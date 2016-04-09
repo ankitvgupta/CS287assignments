@@ -106,3 +106,13 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 	end
 
 end
+
+
+function make_predictor_function_memm(model)
+
+	local predictor = function(c_prev, x_i_sparse, x_i_dense)
+		return torch.exp(model:forward({x_i_sparse, x_i_dense}))
+	end
+	return predictor
+
+end
