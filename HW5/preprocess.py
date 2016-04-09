@@ -270,6 +270,7 @@ def main(arguments):
         f['numClasses'] = np.array([numClasses], dtype=np.int32)
         f['startClass'] = np.array([tag_dict['<t>']], dtype=np.int32)
         f['endClass'] = np.array([tag_dict['</t>']], dtype=np.int32)
+        f['dwin'] = np.array([dwin], dtype=np.int32)
 
 
 if __name__ == '__main__':

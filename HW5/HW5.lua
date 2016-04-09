@@ -14,7 +14,6 @@ cmd:option('-odyssey', false, 'Set to true if running on odyssey')
 cmd:option('-testfile', '', 'test file (must be HDF5)')
 cmd:option('-embedding_size', 50, 'Size of embeddings')
 cmd:option('-minibatch_size', 320, 'Size of minibatches')
-cmd:option('-dwin', 1, 'Window size')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
@@ -41,6 +40,7 @@ function main()
 	local ndensefeatures = f:read('numDenseFeatures'):all():long()[1]
 	local start_class = f:read('startClass'):all():long()[1]
 	local end_class = f:read('endClass'):all():long()[1]
+	local dwin = f:read('dwin'):all():long()[1]
 
 	local o_class = 1
 
