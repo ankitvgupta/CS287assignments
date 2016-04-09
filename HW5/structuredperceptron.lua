@@ -20,3 +20,26 @@ function strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsi
 	return model
 end
 
+
+function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev)
+
+	local sparse_true = torch.cat(input_sparse, torch.LongTensor{c_iprev + nsparsefeatures})
+	local sparse_pred = torch.cat(input_sparse, torch.LongTensor{c_istarprev + nsparsefeatures})
+
+	-- Two sparse inputs - one with c_{i-1}, and one with c_{i-1}^*
+	local batch_sparse = torch.cat(sparse_true, sparse_pred, 2):t()
+	-- The dense inputs are the same for both.
+	local batch_dense = torch.cat(input_dense, input_dense, 2):t()
+	assert(batch_sparse:size(1) == 2)
+	assert(batch_dense:size(1) == 2)
+
+	local preds = model:forward({batch_sparse, batch_dense})
+
+	local grad = torch.zeros(preds:size())
+	grad[1][c_i] = -1
+	grad[2][c_istar] = 1
+
+	model:backward({batch_sparse, batch_dense}, grad)
+
+
+end

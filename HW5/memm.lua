@@ -88,6 +88,7 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 
 				-- backprop
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
+				--print(dLdpreds)
 				model:backward({minibatch_sparse_inputs, minibatch_dense_inputs}, dLdpreds)
 
 
