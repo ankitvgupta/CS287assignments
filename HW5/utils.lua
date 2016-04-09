@@ -87,14 +87,14 @@ function find_kaggle_dims(output, start_class, end_class, o_class)
 		previous_class = this_class
 	end
 
-	return max_span, max_classes
+	return max_span, max_classes, sentences
 end
 
 -- generate sentences x max_classes x max_span+1 tensor for kaggle
 -- the first entry will be the id of the class
 -- [i][j][k] = the kth index in the span of the jth named entity of the ith sentence
 -- zeros are padding
-function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes)
+function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes, sentences)
 
 	kaggle_output = torch.zeros(sentences, max_classes, max_span+1)
 
@@ -122,6 +122,9 @@ function kagglify_output(output, start_class, end_class, o_class, max_span, max_
 			-- new span
 			else
 				this_class_idx = this_class_idx + 1
+				if (this_class_idx > max_classes) then
+					print(this_class_idx, max_classes, i, this_sentence_idx)
+				end
 				kaggle_output[this_sentence_idx][this_class_idx][1] = this_class
 				kaggle_output[this_sentence_idx][this_class_idx][2] = i
 				this_span_idx = 3
