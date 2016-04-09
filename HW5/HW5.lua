@@ -12,6 +12,13 @@ cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-beta', 1, 'F score parameter')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
 cmd:option('-testfile', '', 'test file (must be HDF5)')
+cmd:option('-embedding_size', 50, 'Size of embeddings')
+cmd:option('-minibatch_size', 320, 'Size of minibatches')
+cmd:option('-dwin', 1, 'Window size')
+cmd:option('-optimizer', 'sgd', 'optimizer to use')
+cmd:option('-epochs', 10, 'Number of epochs')
+cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
+cmd:option('-eta', 1, 'Learning rate')
 
 -- Hyperparameters
 -- ...
@@ -53,57 +60,54 @@ function main()
 	local dense_test_input = f:read('test_dense_input'):all():long()
 
 	if opt.classifier == "hmm" then
-		local predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
-		
-		print("Starting Viterbi on validation set...")
-		local valid_predicted_output = viterbi(sparse_validation_input:squeeze(), predictor, nclasses, start_class)
-		
-		print("Done. Converting to Kaggle-ish format...")
-		local valid_true_kaggle, ms, mc, s = kagglify_output(validation_output, start_class, end_class, o_class)
-		local valid_pred_kaggle, _, _, _ = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
-
-		print("Done. Computing statistics...")
-		local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
-		print("F-Score:", f_score)
-
-		if (opt.testfile ~= '') then
-			print("Starting Viterbi on test set...")
-			local test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
-
-			print("Done. Converting to Kaggle-ish format...")
-			local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class)
-		
-			print("Done. Writing test out to HDF5...")
-			local f = hdf5.open(opt.testfile, 'w')
-			f:write('test_outputs', test_pred_kaggle:long())
-			print("Done. Wrote to ", opt.testfile, ".")
-			print("\x1B[32m".."To finish this process, now run `python write_to_kaggle.py "..opt.testfile.."`".."\x1b[0m")
-
-		end
-			
-		-- for i=1, validation_output:size(1) do
-		-- 	if (validation_output[i] > 1) then
-		-- 		print(i, valid_predicted_output[i], validation_output[i])
-		-- 	end
-		-- end
+		predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
+		include_dense_feats = false
 
 	elseif (opt.classifier == 'memm') then
-		-- TEMP
-		local embeddingsize = 50
-		local dwin = 1
-		local num_epochs = 1
-		local minibatch_size = 320
-		local eta = 1
-		local optimizer = "sgd"
 
 		local model = train_memm(sparse_training_input, dense_training_input, training_output, 
-						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, 
-						dwin, num_epochs, minibatch_size, eta, optimizer)
+						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, 
+						opt.dwin, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
 
-		local predictor = make_predictor_function_memm(model)
+		predictor = make_predictor_function_memm(model)
+		include_dense_feats = true
 
 	else
 		print("error: ", opt.classifier, " is not implemented!")
+	end
+
+	print("Starting Viterbi on validation set...")
+	if include_dense_feats then
+		valid_predicted_output = viterbi(sparse_validation_input, predictor, nclasses, start_class, dense_validation_input)
+	else
+		valid_predicted_output = viterbi(sparse_validation_input:squeeze(), predictor, nclasses, start_class)
+	end
+
+	print("Done. Converting to Kaggle-ish format...")
+	local valid_true_kaggle, ms, mc, s = kagglify_output(validation_output, start_class, end_class, o_class)
+	local valid_pred_kaggle, _, _, _ = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
+
+	print("Done. Computing statistics...")
+	local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
+	print("F-Score:", f_score)
+
+	if (opt.testfile ~= '') then
+		print("Starting Viterbi on test set...")
+		if include_dense_feats then
+			test_predicted_output = viterbi(sparse_test_input, predictor, nclasses, start_class, dense_test_input)
+		else
+			test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
+		end
+
+		print("Done. Converting to Kaggle-ish format...")
+		local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class)
+	
+		print("Done. Writing test out to HDF5...")
+		local f = hdf5.open(opt.testfile, 'w')
+		f:write('test_outputs', test_pred_kaggle:long())
+		print("Done. Wrote to ", opt.testfile, ".")
+		print("\x1B[32m".."To finish this process, now run `python write_to_kaggle.py "..opt.testfile.."`".."\x1b[0m")
+
 	end
 
 
