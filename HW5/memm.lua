@@ -55,7 +55,7 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 		print("Beginning epoch", i)
 
 		for j = 1, ntrainingsamples-minibatch_size, minibatch_size do
-			print("J", j)
+			--print("J", j)
 
 		    -- zero out our gradients
 		    gradParameters:zero()
@@ -64,11 +64,11 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 		   	minibatch_sparse_inputs = sparse_input:narrow(1, j, minibatch_size)
 		   	minibatch_dense_inputs = dense_input:narrow(1, j, minibatch_size)
 		    minibatch_outputs = output:narrow(1, j, minibatch_size)
-		    print(torch.max(minibatch_sparse_inputs))
-		    print(torch.max(minibatch_dense_inputs))
-		    print(torch.max(minibatch_outputs))
+		    -- print(torch.max(minibatch_sparse_inputs))
+		    -- print(torch.max(minibatch_dense_inputs))
+		    -- print(torch.max(minibatch_outputs))
 
-		    print(minibatch_sparse_inputs)
+		    --print(minibatch_dense_inputs)
 
 		    -- Create a closure for optim
 		    local feval = function(x)

@@ -40,11 +40,12 @@ function main()
 	print("nclasses:", nclasses, "nsparsefeatures:", nsparsefeatures, "ndensefeatures:", ndensefeatures)
 
 	local sparse_training_input = f:read('train_sparse_input'):all():long()
-	local dense_training_input = f:read('train_dense_input'):all():long()
+	local dense_training_input = f:read('train_dense_input'):all():double()
 	local training_output = f:read('train_output'):all():long()
 
 	local sparse_validation_input = f:read('valid_sparse_input'):all():long()
-	local dense_validation_input = f:read('valid_dense_input'):all():long()
+	local dense_validation_input = f:read('valid_dense_input'):all():double()
+	
 	local validation_output = f:read('valid_output'):all():long()
 	local word_embeddings = f:read('word_embeddings'):all():double() 
 
