@@ -25,6 +25,7 @@ function main()
 
 	dofile(_G.path..'utils.lua')
 	dofile(_G.path..'hmm.lua')
+	dofile(_G.path..'memm.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
 
@@ -84,6 +85,21 @@ function main()
 		-- 		print(i, valid_predicted_output[i], validation_output[i])
 		-- 	end
 		-- end
+
+	elseif (opt.classifier == 'memm') then
+		-- TEMP
+		local embeddingsize = 50
+		local dwin = 1
+		local num_epochs = 1
+		local minibatch_size = 320
+		local eta = 1
+		local optimizer = "sgd"
+
+		local model = train_memm(sparse_training_input, dense_training_input, training_output, 
+						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, 
+						dwin, num_epochs, minibatch_size, eta, optimizer)
+
+		local predictor = make_predictor_function_memm(model)
 
 	else
 		print("error: ", opt.classifier, " is not implemented!")

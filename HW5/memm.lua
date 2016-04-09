@@ -7,13 +7,13 @@ function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out
 	local sparse_part = nn.Sequential()
 	sparse_part:add(nn.LookupTable(nsparsefeatures, embeddingsize))
 	sparse_part:add(nn.View(-1):setNumInputDims(2))
-	sparse_part:add(nn.Linear(embedding_size*D_win, D_out))
+	sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
 
 	parallel_table:add(sparse_part)
 	parallel_table:add(nn.Linear(ndensefeatures, D_out))
 
 	local model = nn.Sequential()
-	model:add(par)
+	model:add(parallel_table)
 	model:add(nn.CAddTable())
 	model:add(nn.LogSoftMax())
 
@@ -23,7 +23,7 @@ end
 
 function train_memm(sparse_training_input, dense_training_input, training_output, 
 						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, 
-						D_win, num_epochs, minibatch_size, eta)
+						D_win, num_epochs, minibatch_size, eta, optimizer)
 
 	assert(sparse_training_input:size(1) == dense_training_input:size(1))
 	assert(sparse_training_input:size(1) == training_output:size(1))
@@ -104,6 +104,8 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 
 		end
 	end
+
+	return model
 
 end
 
