@@ -75,6 +75,7 @@ function main()
 			local f = hdf5.open(opt.testfile, 'w')
 			f:write('test_outputs', test_pred_kaggle:long())
 			print("Done. Wrote to ", opt.testfile, ".")
+			print("\x1B[32m".."To finish this process, now run `python write_to_kaggle.py "..opt.testfile.."`".."\x1b[0m")
 
 		end
 			
