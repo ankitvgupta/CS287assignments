@@ -120,7 +120,12 @@ end
 function make_predictor_function_memm(model)
 
 	local predictor = function(c_prev, x_i_sparse, x_i_dense)
-		return torch.exp(model:forward({x_i_sparse, x_i_dense}))
+		--print()
+		local sparse = torch.zeros(x_i_sparse:size(1) + 1):long()
+		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
+		sparse[-1] = c_prev
+
+		return torch.exp(model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))})):squeeze()
 	end
 	return predictor
 
