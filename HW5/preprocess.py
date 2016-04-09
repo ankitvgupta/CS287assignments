@@ -119,10 +119,6 @@ def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s
                 all_sentences.append(this_sentence)
                 this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
 
-        # don't forget the last sentence
-        if len(this_sentence) > 0:
-            all_sentences.append(this_sentence)
-
     return all_sentences
 
 def create_input(data_file, dwin, features, sep='\t'):
