@@ -96,7 +96,7 @@ def init_features(feature_list):
         inited_features.append(inited_feature)
 
         if inited_feature.isSparse():
-            numSparseFeatures = inited_feature.maxFeatIdx()
+            numSparseFeatures = inited_feature.maxFeatIdx()+1
             index_offset += inited_feature.maxFeatIdx()+1
         else:
             numDenseFeatures += inited_feature.numFeats()
