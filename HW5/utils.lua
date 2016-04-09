@@ -46,7 +46,7 @@ function viterbi(x, predictor, numClasses, start_class, debugger)
 	return yhat
 end
 
-function kagglify_output(output, start_class, o_class, max_span, max_classes)
+function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes)
 	
 	if (max_span == nil) then
 		max_span = 0
@@ -75,7 +75,7 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 				end
 				this_span_length = 0
 			-- some nontrivial class
-			else
+			elseif (this_class ~= end_class) then
 				-- ongoing span
 				if (this_class == previous_class) then
 					this_span_length = this_span_length + 1
@@ -112,7 +112,7 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 		elseif (this_class == o_class) then
 			this_span_idx = 2
 		-- some nontrivial class
-		else
+		elseif (this_class ~= end_class) then
 			-- ongoing span
 			if (this_class == previous_class) then
 				kaggle_output[this_sentence_idx][this_class_idx][this_span_idx] = i
@@ -149,31 +149,35 @@ function compute_f_score(beta, true_kaggle, pred_kaggle)
 		for true_nem_idx=1, true_kaggle:size(2) do
 			local pred_nem_found = false
 			local this_true_nem = this_true_sentence[true_nem_idx]
-			for pred_nem_idx=1, pred_kaggle:size(2) do
-				local this_pred_nem = this_pred_sentence[pred_nem_idx]
-				if (this_pred_nem:eq(this_true_nem):all()) then
-					pred_nem_found = true
-					break
+			if (this_true_nem:gt(0):any()) then
+				for pred_nem_idx=1, pred_kaggle:size(2) do
+					local this_pred_nem = this_pred_sentence[pred_nem_idx]
+					if (this_pred_nem:eq(this_true_nem):all()) then
+						pred_nem_found = true
+						break
+					end
 				end
-			end
-			if (pred_nem_found) then
-				true_pos = true_pos + 1
-			else
-				false_neg = false_neg + 1
+				if (pred_nem_found) then
+					true_pos = true_pos + 1
+				else
+					false_neg = false_neg + 1
+				end
 			end
 		end
 		for pred_nem_idx=1, pred_kaggle:size(2) do
 			local true_nem_found = false
 			local this_pred_nem = this_pred_sentence[pred_nem_idx]
-			for true_nem_idx=1, true_kaggle:size(2) do
-				local this_true_nem = this_true_sentence[true_nem_idx]
-				if (this_pred_nem:eq(this_true_nem):all()) then
-					true_nem_found = true
-					break
+			if (this_pred_nem:gt(0):any()) then
+				for true_nem_idx=1, true_kaggle:size(2) do
+					local this_true_nem = this_true_sentence[true_nem_idx]
+					if (this_pred_nem:eq(this_true_nem):all()) then
+						true_nem_found = true
+						break
+					end
 				end
-			end
-			if (not true_nem_found) then
-				false_pos = false_pos + 1
+				if (not true_nem_found) then
+					false_pos = false_pos + 1
+				end
 			end
 		end
 	end

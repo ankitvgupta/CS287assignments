@@ -101,5 +101,5 @@ def main(arguments):
     	write_to_txt(test_outputs, tag_dict, gtl_dict, outfile)
 
 if __name__ == '__main__':
-    # sys.exit(main(sys.argv[1:]))
-    print_nth_sentence("data/dev.num.txt", 111)
+    sys.exit(main(sys.argv[1:]))
+    # print_nth_sentence("data/dev.num.txt", 111)
