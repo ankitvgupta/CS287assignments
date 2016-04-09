@@ -70,9 +70,9 @@ function main()
 			print("Done. Converting to Kaggle-ish format...")
 			local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, o_class)
 		
-			print("Done. Writing out to HDF5...")
+			print("Done. Writing VALIDATION out to HDF5...")
 			local f = hdf5.open(opt.testfile, 'w')
-			f:write('test_outputs', test_pred_kaggle:long())
+			f:write('test_outputs', valid_true_kaggle:long())
 			print("Done. Wrote to ", opt.testfile, ".")
 
 		end

@@ -98,7 +98,7 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 
 	previous_class = o_class
 	local this_sentence_idx = 0
-	local this_class_idx = 1
+	local this_class_idx = 0
 	local this_span_idx = 2
 
 	for i=1, n do
@@ -106,7 +106,7 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 		-- finish last sentence
 		if (this_class == start_class) then
 			this_sentence_idx = this_sentence_idx + 1
-			this_class_idx = 1
+			this_class_idx = 0
 			this_span_idx = 2
 		-- finish last span
 		elseif (this_class == o_class) then
@@ -119,10 +119,10 @@ function kagglify_output(output, start_class, o_class, max_span, max_classes)
 				this_span_idx = this_span_idx + 1
 			-- new span
 			else
+				this_class_idx = this_class_idx + 1
 				kaggle_output[this_sentence_idx][this_class_idx][1] = this_class
 				kaggle_output[this_sentence_idx][this_class_idx][2] = i
 				this_span_idx = 3
-				this_class_idx = this_class_idx + 1
 			end
 		end
 		previous_class = this_class
