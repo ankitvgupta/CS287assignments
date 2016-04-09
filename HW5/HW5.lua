@@ -57,7 +57,7 @@ function main()
 	local word_embeddings = f:read('word_embeddings'):all():double() 
 
 	local sparse_test_input = f:read('test_sparse_input'):all():long()
-	local dense_test_input = f:read('test_dense_input'):all():long()
+	local dense_test_input = f:read('test_dense_input'):all():double()
 
 	if opt.classifier == "hmm" then
 		predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
