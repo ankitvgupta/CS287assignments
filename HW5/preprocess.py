@@ -73,7 +73,7 @@ def init_vocab(file_path, top_n=100000, front_word="<s>", back_word="</s>"):
                 vocab_dict[word] += 1    
 
     top_n_words = sorted(vocab_dict, key=vocab_dict.get, reverse=True)[:top_n]
-    return [front_word, back_word]+top_n_words+['RARE', 'PADDING']
+    return [front_word, back_word]+top_n_words+['RARE', '<FRONTPADDING>', '<BACKPADDING>']
 
 
 def init_features(feature_list):
@@ -103,9 +103,9 @@ def init_features(feature_list):
 
     return inited_features, numSparseFeatures, numDenseFeatures
 
-def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s>", front_tag="<t>", back_tag="</t>"):
+def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s>"):
     all_sentences = []
-    this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
+    this_sentence = ['<FRONTPADDING>' for _ in range(dwin/2)]+[front_word]
 
     with open(data_file, 'r') as f:
         for line in f:
@@ -115,9 +115,9 @@ def load_padded_sentences(data_file, dwin, sep, front_word="<s>", back_word="</s
             # NEW SENTENCE!
             else:
                 # finish the old
-                this_sentence = this_sentence + ['</s>']+['PADDING' for _ in range(dwin/2)]
+                this_sentence = this_sentence + [back_word]+['<BACKPADDING>' for _ in range(dwin/2)]
                 all_sentences.append(this_sentence)
-                this_sentence = ['PADDING' for _ in range(dwin/2)]+['<s>']
+                this_sentence = ['<FRONTPADDING>' for _ in range(dwin/2)]+[front_word]
 
     return all_sentences
 

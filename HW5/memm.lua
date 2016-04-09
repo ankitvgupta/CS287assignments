@@ -42,8 +42,8 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 	local dense_input = dense_training_input:narrow(1, 2, ntrainingsamples)
 	local output = training_output:narrow(1, 2, ntrainingsamples)
 
-	print("nsparsefeatures", nsparsefeatures)
-	print("nclasses", nclasses)
+	-- print("nsparsefeatures", nsparsefeatures)
+	-- print("nclasses", nclasses)
 
 	--[[ 
 		In this section, we train the above model.

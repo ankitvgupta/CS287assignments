@@ -26,8 +26,8 @@ class Feature(object):
 		l = len(padded_sentence)
 		assert word_idx >= self.dwin/2 and word_idx < l-self.dwin/2
 		for i in range(0, self.dwin/2):
-			assert padded_sentence[i] == "PADDING"
-			assert padded_sentence[l-i-1] == "PADDING"
+			assert padded_sentence[i] == "<FRONTPADDING>"
+			assert padded_sentence[l-i-1] == "<BACKPADDING>"
 
 	def maxFeatIdx(self):
 		raise UnimplementedError

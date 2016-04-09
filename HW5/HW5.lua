@@ -88,11 +88,11 @@ function main()
 	local ms2, mc2, s2 = find_kaggle_dims(valid_predicted_output, start_class, end_class, o_class)
 	ms = math.max(ms, ms2)
 	mc = math.max(mc, mc2)
-	if (s = s2) then
-		print(s, s2)
+	if (s ~= s2) then
 		for i=1, validation_output:size(1) do
 			print(validation_output[i], valid_predicted_output[i])
 		end
+		print(s, s2)
 	end
 	assert(s == s2)
 	local valid_true_kaggle = kagglify_output(validation_output, start_class, end_class, o_class, ms, mc, s)
