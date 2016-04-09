@@ -167,6 +167,11 @@ def create_output(data_file, tag_dict):
                 Y.append(tag_dict['</t>'])
                 Y.append(tag_dict['<t>'])
 
+    # take out the last sentence
+    popped = Y.pop()
+    while popped != tag_dict['<t>']:
+        popped = Y.pop()
+
     return Y
 
 
