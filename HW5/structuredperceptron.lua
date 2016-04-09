@@ -19,3 +19,4 @@ function strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsi
 
 	return model
 end
+
