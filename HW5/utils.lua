@@ -46,53 +46,55 @@ function viterbi(x, predictor, numClasses, start_class, x_dense)
 	return yhat
 end
 
-function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes)
-	
-	if (max_span == nil) then
-		max_span = 0
-		max_classes = 0
-		n = output:size(1)
-		sentences = 0
+function find_kaggle_dims(output, start_class, end_class, o_class)
 
-		-- one pass through to get max classes and indexes
-		local previous_class = o_class
-		local this_span_length = 0
-		local this_class_length = 0
+	max_span = 0
+	max_classes = 0
+	n = output:size(1)
+	sentences = 0
 
-		for i=1, n do
-			local this_class = output[i]
-			-- finish last sentence
-			if (this_class == start_class) then
-				sentences = sentences + 1
-				if this_class_length > max_classes then
-					max_classes = this_class_length
-				end
-				this_class_length = 0
-			-- finish last span
-			elseif (this_class == o_class) then
-				if this_span_length > max_span then
-					max_span = this_span_length
-				end
-				this_span_length = 0
-			-- some nontrivial class
-			elseif (this_class ~= end_class) then
-				-- ongoing span
-				if (this_class == previous_class) then
-					this_span_length = this_span_length + 1
-				-- new span
-				else
-					this_class_length = this_class_length + 1
-					this_span_length = 1
-				end
+	-- one pass through to get max classes and indexes
+	local previous_class = o_class
+	local this_span_length = 0
+	local this_class_length = 0
+
+	for i=1, n do
+		local this_class = output[i]
+		-- finish last sentence
+		if (this_class == start_class) then
+			sentences = sentences + 1
+			if this_class_length > max_classes then
+				max_classes = this_class_length
 			end
-			previous_class = this_class
+			this_class_length = 0
+		-- finish last span
+		elseif (this_class == o_class) then
+			if this_span_length > max_span then
+				max_span = this_span_length
+			end
+			this_span_length = 0
+		-- some nontrivial class
+		elseif (this_class ~= end_class) then
+			-- ongoing span
+			if (this_class == previous_class) then
+				this_span_length = this_span_length + 1
+			-- new span
+			else
+				this_class_length = this_class_length + 1
+				this_span_length = 1
+			end
 		end
+		previous_class = this_class
 	end
 
-	-- generate sentences x max_classes x max_span+1 tensor for kaggle :'(
-	-- the first entry will be the id of the class
-	-- [i][j][k] = the kth index in the span of the jth named entity of the ith sentence
-	-- zeros are padding
+	return max_span, max_classes
+end
+
+-- generate sentences x max_classes x max_span+1 tensor for kaggle
+-- the first entry will be the id of the class
+-- [i][j][k] = the kth index in the span of the jth named entity of the ith sentence
+-- zeros are padding
+function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes)
 
 	kaggle_output = torch.zeros(sentences, max_classes, max_span+1)
 

@@ -84,8 +84,12 @@ function main()
 	end
 
 	print("Done. Converting to Kaggle-ish format...")
-	local valid_true_kaggle, ms, mc, s = kagglify_output(validation_output, start_class, end_class, o_class)
-	local valid_pred_kaggle, _, _, _ = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
+	local ms, mc = find_kaggle_dims(validation_output, start_class, end_class, o_class)
+	local ms2, mc2 = find_kaggle_dims(valid_predicted_output, start_class, end_class, o_class)
+	ms = math.max(ms, ms2)
+	mc = math.max(mc, mc2)
+	local valid_true_kaggle = kagglify_output(validation_output, start_class, end_class, o_class, ms, mc)
+	local valid_pred_kaggle = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc)
 
 	print("Done. Computing statistics...")
 	local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
@@ -100,7 +104,8 @@ function main()
 		end
 
 		print("Done. Converting to Kaggle-ish format...")
-		local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class)
+		local tms, tmc = find_kaggle_dims(test_predicted_output, start_class, end_class, o_class)
+		local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class, tms, tmc)
 	
 		print("Done. Writing test out to HDF5...")
 		local f = hdf5.open(opt.testfile, 'w')
