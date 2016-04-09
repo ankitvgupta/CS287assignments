@@ -21,7 +21,7 @@ function strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsi
 end
 
 
-function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev)
+function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev, nsparsefeatures)
 
 	local sparse_true = torch.cat(input_sparse, torch.LongTensor{c_iprev + nsparsefeatures})
 	local sparse_pred = torch.cat(input_sparse, torch.LongTensor{c_istarprev + nsparsefeatures})
@@ -41,5 +41,20 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 
 	model:backward({batch_sparse, batch_dense}, grad)
 
+
+end
+
+function make_predictor_function_strucperpcetron(model, nsparsefeatures)
+
+	local predictor = function(c_prev, x_i_sparse, x_i_dense)
+		--print()
+		local sparse = torch.zeros(x_i_sparse:size(1) + 1):long()
+		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
+		sparse[-1] = c_prev + nsparsefeatures
+		--print(sparse)
+
+		return model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))}):squeeze()
+	end
+	return predictor
 
 end
