@@ -58,6 +58,7 @@ function main()
 
 	local sparse_test_input = f:read('test_sparse_input'):all():long()
 	local dense_test_input = f:read('test_dense_input'):all():double()
+	print(sparse_test_input[1])
 
 	if opt.classifier == "hmm" then
 		predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
@@ -110,10 +111,26 @@ function main()
 			test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
 		end
 
+
+		-- Make sure that the start and end sentence tags are correctly predicted.
+		for i = 1, test_predicted_output:size(1) do
+			if test_predicted_output[i] == 9 and sparse_test_input[i][2] ~= 3 then
+				print(i, test_predicted_output[i], sparse_test_input[i][2])
+				assert(false)
+			end
+			if test_predicted_output[i] == 8 and sparse_test_input[i][2] ~= 2 then
+				print(i, test_predicted_output[i], sparse_test_input[i][2])
+				assert(false)
+			end
+		end
+		print(test_predicted_output:size(1), sparse_test_input:size(1))
+
 		print("Done. Converting to Kaggle-ish format...")
 		local tms, tmc, ts = find_kaggle_dims(test_predicted_output, start_class, end_class, o_class)
 		local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class, tms, tmc, ts)
 	
+		-- local tms, tmc, ts = find_kaggle_dims(validation_output, start_class, end_class, o_class)
+		-- local test_pred_kaggle, _, _, _ = kagglify_output(validation_output, start_class, end_class, o_class, tms, tmc, ts)
 		print("Done. Writing test out to HDF5...")
 		local f = hdf5.open(opt.testfile, 'w')
 		f:write('test_outputs', test_pred_kaggle:long())

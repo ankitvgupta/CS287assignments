@@ -40,8 +40,6 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	grad[2][c_istar] = 1
 
 	model:backward({batch_sparse, batch_dense}, grad)
-
-
 end
 
 function make_predictor_function_strucperpcetron(model, nsparsefeatures)
