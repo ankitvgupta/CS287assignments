@@ -35,22 +35,28 @@ C_istarprev: The predicted class for the previous word
 --]]
 function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev, nsparsefeatures)
 
+	-- Create the true previous sparse_input and the predicted previous sparse input.
+	-- These are created by appending the true/predicted class to the input.
 	local sparse_true = torch.cat(input_sparse, torch.LongTensor{c_iprev + nsparsefeatures})
 	local sparse_pred = torch.cat(input_sparse, torch.LongTensor{c_istarprev + nsparsefeatures})
 
-	-- Two sparse inputs - one with c_{i-1}, and one with c_{i-1}^*
+	-- Make them into a batch. - one with c_{i-1}, and one with c_{i-1}^*
 	local batch_sparse = torch.cat(sparse_true, sparse_pred, 2):t()
 	-- The dense inputs are the same for both.
 	local batch_dense = torch.cat(input_dense, input_dense, 2):t()
+
+	-- Make sure the shapes make sense.
 	assert(batch_sparse:size(1) == 2)
 	assert(batch_dense:size(1) == 2)
 
+	-- Calculate the prediction.
 	local preds = model:forward({batch_sparse, batch_dense})
-
+	-- Manually created a gradient.
 	local grad = torch.zeros(preds:size())
 	grad[1][c_i] = -1
 	grad[2][c_istar] = 1
 
+	-- Push the gradient backwards.
 	model:backward({batch_sparse, batch_dense}, grad)
 end
 
