@@ -3,7 +3,7 @@ import h5py
 import argparse
 import sys
 
-SEP = '\t'
+SEP = None
 
 args = {}
 
@@ -27,7 +27,10 @@ def load_global_to_local(file_path, start_tag=2, stop_tag=3):
 		last_l = None
 		for line in f:
 			if line[0].isdigit():
-				_, l, _, _ = line.split(SEP)
+				if SEP is not None:
+					_, l, _, _ = line.split(SEP)
+				else:
+					_, l, _  = line.split()
 				last_l = int(l)
 				g_to_l[g] = int(l)
 				g += 1
@@ -97,7 +100,7 @@ def main(arguments):
     	test_outputs = f['test_outputs']
     	tag_dict = load_tag_dict("data/tags.txt")
     	#gtl_dict = load_global_to_local("data/test.num.txt")
-    	gtl_dict = load_global_to_local("data/dev.num.txt")
+    	gtl_dict = load_global_to_local("data/test.num.txt")
     	write_to_txt(test_outputs, tag_dict, gtl_dict, outfile)
 
 if __name__ == '__main__':
