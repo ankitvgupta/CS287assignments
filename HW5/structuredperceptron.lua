@@ -65,13 +65,19 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 	local parameters, gradParameters = model:getParameters()
 
 	for i = 1, numepochs do
+		-- For each sentence
 		for j = 1, sentences:size(1) do
+			-- Determine the predicted sequence
 			predicted_sequence = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+
+			-- Compare the predicted sequence to the true sequence. Call single_update whenever there is a discrepancy.
+			-- TODO: Check if predicted_sequence needs to be cast to a LongTensor (if it isn't already) for this to work.
 			for k = 2, predicted_sequence:size(1) do
 				if predicted_sequence[k] ~= outputs[j][k] then
 					single_update(model, sentences_sparse[j][k], sentences_dense[j][k], outputs[j][k], outputs[j][k-1], predicted_sequence[k-1], predicted_sequence[k])
 				end
 			end
+			-- Update the parameters with learning rate 1, as stated in the spec.
 			parameters:add(-1.0, gradParameters)
 		end
 	end
