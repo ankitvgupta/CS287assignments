@@ -20,7 +20,19 @@ function strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsi
 	return model
 end
 
+--[[
+You should call this function whenever a mistake is made.
 
+
+model: the model being trained
+input_sparse: the sparse features for the current word
+input_dense: The dense features for the current word
+c_i: the True class for the current word
+c_iprev: The true class for the previous word
+c_istar: THe predicted class for the current word
+C_istarprev: The predicted class for the previous word
+
+--]]
 function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev, nsparsefeatures)
 
 	local sparse_true = torch.cat(input_sparse, torch.LongTensor{c_iprev + nsparsefeatures})
@@ -40,6 +52,29 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	grad[2][c_istar] = 1
 
 	model:backward({batch_sparse, batch_dense}, grad)
+end
+
+-- Sentences should be a 3D tensor, where i,j,k is the ith sentence, jth window, kth feature.
+-- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
+-- TODO: Get the input in the format specified.
+-- TODO: Test this :)
+function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win)
+
+	local model = strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, nclasses)
+	local predictor = make_predictor_function_memm(model, nsparsefeatures)
+	local parameters, gradParameters = model:getParameters()
+
+	for i = 1, numepochs do
+		for j = 1, sentences:size(1) do
+			predicted_sequence = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+			for k = 2, predicted_sequence:size(1) do
+				if predicted_sequence[k] ~= outputs[j][k] then
+					single_update(model, sentences_sparse[j][k], sentences_dense[j][k], outputs[j][k], outputs[j][k-1], predicted_sequence[k-1], predicted_sequence[k])
+				end
+			end
+			parameters:add(-1.0, gradParameters)
+		end
+	end
 end
 
 function make_predictor_function_strucperpcetron(model, nsparsefeatures)
