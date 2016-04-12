@@ -2,12 +2,13 @@ require("nn")
 
 
 -- Returns the structured perceptron model without softmax
-function strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out)
-	print("Making MEMM Model")
+function structured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out)
+	print("Making Structured Perceptron Model")
 	local parallel_table = nn.ParallelTable()
 	local sparse_part = nn.Sequential()
 	sparse_part:add(nn.LookupTable(nsparsefeatures, embeddingsize))
 	sparse_part:add(nn.View(-1):setNumInputDims(2))
+	-- print("Dwin", D_win)
 	sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
 
 	parallel_table:add(sparse_part)
@@ -51,6 +52,9 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 
 	-- Calculate the prediction.
 	local preds = model:forward({batch_sparse, batch_dense})
+
+	-- print(preds[1])
+
 	-- Manually created a gradient.
 	local grad = torch.zeros(preds:size())
 	grad[1][c_i] = -1
@@ -66,30 +70,41 @@ end
 -- TODO: Test this :)
 function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win)
 
-	local model = strucured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, nclasses)
-	local predictor = make_predictor_function_memm(model, nsparsefeatures)
+	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
+	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures)
 	local parameters, gradParameters = model:getParameters()
 
 	for i = 1, numepochs do
+		print("Starting epoch...", i)
 		-- For each sentence
-		for j = 1, sentences:size(1) do
+		for j = 1, #sentences_sparse do
 			-- Determine the predicted sequence
-			predicted_sequence = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+			predicted_sequence = viterbi(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
+
+			assert(predicted_sequence:size(1) == outputs[j]:size(1))
 
 			-- Compare the predicted sequence to the true sequence. Call single_update whenever there is a discrepancy.
 			-- TODO: Check if predicted_sequence needs to be cast to a LongTensor (if it isn't already) for this to work.
+			-- print("Comparison")
+			-- print(predicted_sequence)
+			-- print(outputs[j])
 			for k = 2, predicted_sequence:size(1) do
 				if predicted_sequence[k] ~= outputs[j][k] then
-					single_update(model, sentences_sparse[j][k], sentences_dense[j][k], outputs[j][k], outputs[j][k-1], predicted_sequence[k-1], predicted_sequence[k])
+					single_update(model, sentences_sparse[j][k], sentences_dense[j][k], outputs[j][k], outputs[j][k-1], predicted_sequence[k], predicted_sequence[k-1], nsparsefeatures)
 				end
 			end
 			-- Update the parameters with learning rate 1, as stated in the spec.
-			parameters:add(-1.0, gradParameters)
+			--print(torch.abs(gradParameters):sum())
+			parameters:add(-0.01, gradParameters)
+			gradParameters:zero()
+			model:zeroGradParameters()
 		end
 	end
+
+	return model, predictor
 end
 
-function make_predictor_function_strucperpcetron(model, nsparsefeatures)
+function make_predictor_function_strucperceptron(model, nsparsefeatures)
 
 	local predictor = function(c_prev, x_i_sparse, x_i_dense)
 		--print()
@@ -97,6 +112,9 @@ function make_predictor_function_strucperpcetron(model, nsparsefeatures)
 		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
 		sparse[-1] = c_prev + nsparsefeatures
 		--print(sparse)
+		-- print("hi", c_prev, sparse, x_i_dense)
+		-- print(sparse:reshape(1, sparse:size(1)))
+		-- print(x_i_dense:reshape(1, x_i_dense:size(1)))
 
 		return model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))}):squeeze()
 	end

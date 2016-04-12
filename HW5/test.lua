@@ -54,4 +54,18 @@ function test_viterbi(viterbi_alg)
 	print(yhat)
 end
 
-test_viterbi(viterbi)
+
+function test_split_data_into_sentences()
+
+	sparse_inputs = torch.randn(10, 6):long()
+	dense_inputs = torch.randn(10, 6)
+	output_classes = torch.LongTensor{8, 1, 2, 3, 9, 8, 3, 2, 1, 9}
+	end_class = 9
+	st, dt, ot = split_data_into_sentences(sparse_inputs, dense_inputs, output_classes, end_class)
+
+	print(ot[2])
+
+end
+
+-- test_viterbi(viterbi)
+test_split_data_into_sentences()

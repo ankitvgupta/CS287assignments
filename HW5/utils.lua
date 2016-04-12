@@ -193,3 +193,33 @@ function compute_f_score(beta, true_kaggle, pred_kaggle)
 
 	return fscore
 end
+
+function split_data_into_sentences(sparse_inputs, dense_inputs, output_classes, end_class)
+	local sparse_sentence_table = {}
+	local dense_sentence_table = {}
+	local output_sentence_table = {}
+	
+	local last_start_index = 1
+	local sentence_id = 1
+
+	for i=1, output_classes:size(1) do
+		local this_class = output_classes[i]
+		-- end the sentence and start a new one
+		if (this_class == end_class) then
+			local this_sparse_inputs = sparse_inputs:narrow(1, last_start_index, i-last_start_index+1)
+			local this_dense_inputs = dense_inputs:narrow(1, last_start_index, i-last_start_index+1)
+			local this_output_classes = output_classes:narrow(1, last_start_index, i-last_start_index+1)
+			
+			sparse_sentence_table[sentence_id] = this_sparse_inputs
+			dense_sentence_table[sentence_id] = this_dense_inputs
+			output_sentence_table[sentence_id] = this_output_classes
+
+			last_start_index = i+1
+			sentence_id = sentence_id + 1
+		end
+	end
+	
+	return sparse_sentence_table, dense_sentence_table, output_sentence_table
+
+end
+

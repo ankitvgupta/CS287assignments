@@ -7,6 +7,7 @@ function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out
 	local sparse_part = nn.Sequential()
 	sparse_part:add(nn.LookupTable(nsparsefeatures, embeddingsize))
 	sparse_part:add(nn.View(-1):setNumInputDims(2))
+	print("D_win", D_win)
 	sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
 
 	parallel_table:add(sparse_part)
@@ -127,6 +128,7 @@ function make_predictor_function_memm(model, nsparsefeatures)
 		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
 		sparse[-1] = c_prev + nsparsefeatures
 		--print(sparse)
+		print(sparse:reshape(1, sparse:size(1)))
 
 		return torch.exp(model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))})):squeeze()
 	end

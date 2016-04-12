@@ -32,6 +32,7 @@ function main()
 	dofile(_G.path..'utils.lua')
 	dofile(_G.path..'hmm.lua')
 	dofile(_G.path..'memm.lua')
+	dofile(_G.path..'structuredperceptron.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
 
@@ -68,10 +69,15 @@ function main()
 
 		local model = train_memm(sparse_training_input, dense_training_input, training_output, 
 						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, 
-						opt.dwin, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
+						dwin, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
 
 		predictor = make_predictor_function_memm(model, nsparsefeatures)
 		include_dense_feats = true
+
+	elseif (opt.classifier == 'struct') then
+
+		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
+		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, nsparsefeatures, ndensefeatures, opt.embedding_size, dwin)
 
 	else
 		print("error: ", opt.classifier, " is not implemented!")
