@@ -68,10 +68,10 @@ end
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
 -- TODO: Get the input in the format specified.
 -- TODO: Test this :)
-function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win, eta)
+function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win, eta)
 
 	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
-	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures)
+	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures, end_class, nclasses, start_class)
 	local parameters, gradParameters = model:getParameters()
 
 	for i = 1, numepochs do
@@ -104,7 +104,7 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 	return model, predictor
 end
 
-function make_predictor_function_strucperceptron(model, nsparsefeatures)
+function make_predictor_function_strucperceptron(model, nsparsefeatures, end_class, nclasses, begin_class)
 
 	local predictor = function(c_prev, x_i_sparse, x_i_dense)
 		--print()
@@ -115,9 +115,17 @@ function make_predictor_function_strucperceptron(model, nsparsefeatures)
 		-- print("hi", c_prev, sparse, x_i_dense)
 		-- print(sparse:reshape(1, sparse:size(1)))
 		-- print(x_i_dense:reshape(1, x_i_dense:size(1)))
+	
+		local x = model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))}):squeeze()
+	
+		if c_prev == end_class then
+			x:zero()
+			x[begin_class] = 1000000000000
+		end
 
-		return model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))}):squeeze()
+		return x
 	end
+
 	return predictor
 
 end
