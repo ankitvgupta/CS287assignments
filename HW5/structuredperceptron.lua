@@ -36,6 +36,9 @@ C_istarprev: The predicted class for the previous word
 --]]
 function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, c_istarprev, nsparsefeatures)
 
+	--print(c_i, c_istar, c_iprev, c_istarprev)
+	assert(c_i ~= c_istar)
+
 	-- Create the true previous sparse_input and the predicted previous sparse input.
 	-- These are created by appending the true/predicted class to the input.
 	local sparse_true = torch.cat(input_sparse, torch.LongTensor{c_iprev + nsparsefeatures})
@@ -46,6 +49,7 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	-- The dense inputs are the same for both.
 	local batch_dense = torch.cat(input_dense, input_dense, 2):t()
 
+	--print(batch_sparse)
 	-- Make sure the shapes make sense.
 	assert(batch_sparse:size(1) == 2)
 	assert(batch_dense:size(1) == 2)
@@ -60,14 +64,18 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	grad[1][c_i] = -1
 	grad[2][c_istar] = 1
 
+	if c_i ~= 9 then
+		grad[1][9] = 1
+		grad[2][9] = 1
+	end
+
+
 	-- Push the gradient backwards.
 	model:backward({batch_sparse, batch_dense}, grad)
 end
 
 -- Sentences should be a 3D tensor, where i,j,k is the ith sentence, jth window, kth feature.
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
--- TODO: Get the input in the format specified.
--- TODO: Test this :)
 function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta)
 
 	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
@@ -81,6 +89,8 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 
 		-- For each sentence
 		for j = 1, #sentences_sparse do
+			gradParameters:zero()
+			model:zeroGradParameters()
 			-- Determine the predicted sequence
 			predicted_sequence = viterbi(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
 
@@ -102,9 +112,8 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 			end
 			-- Update the parameters with learning rate 1, as stated in the spec.
 			--print(torch.abs(gradParameters):sum())
+			--print(torch.abs(gradParameters):sum())
 			parameters:add(-eta, gradParameters)
-			gradParameters:zero()
-			model:zeroGradParameters()
 		end
 		print("   Epoch "..i.." Percent correct",total_correct/total )
 	end
