@@ -68,7 +68,7 @@ end
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
 -- TODO: Get the input in the format specified.
 -- TODO: Test this :)
-function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win, eta)
+function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta)
 
 	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
 	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures, end_class, nclasses, start_class)

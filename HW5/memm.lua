@@ -23,8 +23,7 @@ function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out
 end
 
 function train_memm(sparse_training_input, dense_training_input, training_output, 
-						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, 
-						D_win, num_epochs, minibatch_size, eta, optimizer)
+						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, num_epochs, minibatch_size, eta, optimizer)
 
 	assert(sparse_training_input:size(1) == dense_training_input:size(1))
 	assert(sparse_training_input:size(1) == training_output:size(1))

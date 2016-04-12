@@ -41,7 +41,7 @@ function main()
 	local ndensefeatures = f:read('numDenseFeatures'):all():long()[1]
 	local start_class = f:read('startClass'):all():long()[1]
 	local end_class = f:read('endClass'):all():long()[1]
-	local dwin = f:read('dwin'):all():long()[1]
+	--local dwin = f:read('dwin'):all():long()[1]
 
 	local o_class = 1
 
@@ -68,8 +68,7 @@ function main()
 	elseif (opt.classifier == 'memm') then
 
 		local model = train_memm(sparse_training_input, dense_training_input, training_output, 
-						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, 
-						dwin, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
+						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
 
 		predictor = make_predictor_function_memm(model, nsparsefeatures)
 		include_dense_feats = true
@@ -77,7 +76,7 @@ function main()
 	elseif (opt.classifier == 'struct') then
 
 		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
-		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, dwin, opt.eta)
+		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta)
 
 		include_dense_feats = true
 	else
