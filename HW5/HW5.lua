@@ -77,8 +77,9 @@ function main()
 	elseif (opt.classifier == 'struct') then
 
 		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
-		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, nsparsefeatures, ndensefeatures, opt.embedding_size, dwin)
+		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, nsparsefeatures, ndensefeatures, opt.embedding_size, dwin, opt.eta)
 
+		include_dense_feats = true
 	else
 		print("error: ", opt.classifier, " is not implemented!")
 	end

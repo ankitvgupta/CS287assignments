@@ -68,7 +68,7 @@ end
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
 -- TODO: Get the input in the format specified.
 -- TODO: Test this :)
-function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win)
+function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, nsparsefeatures, ndensefeatures, embeddingsize, D_win, eta)
 
 	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
 	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures)
@@ -95,7 +95,7 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 			end
 			-- Update the parameters with learning rate 1, as stated in the spec.
 			--print(torch.abs(gradParameters):sum())
-			parameters:add(-0.01, gradParameters)
+			parameters:add(-eta, gradParameters)
 			gradParameters:zero()
 			model:zeroGradParameters()
 		end
