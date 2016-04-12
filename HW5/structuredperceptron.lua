@@ -128,8 +128,9 @@ function make_predictor_function_strucperceptron(model, nsparsefeatures, end_cla
 	
 		if c_prev == end_class then
 			x:zero()
-			x[begin_class] = 1000000000000
+			x[begin_class] = 1000
 		end
+		--print(x)
 
 		return x
 	end

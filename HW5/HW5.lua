@@ -75,13 +75,13 @@ function main()
 
 	elseif (opt.classifier == 'struct') then
 
-		--local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
-		sst = {}
-		dst = {}
-		ost = {}
-		sst[1] = sparse_training_input
-		dst[1] = dense_training_input
-		ost[1] = training_output
+		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
+		-- sst = {}
+		-- dst = {}
+		-- ost = {}
+		-- sst[1] = sparse_training_input
+		-- dst[1] = dense_training_input
+		-- ost[1] = training_output
 		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta)
 
 		include_dense_feats = true
