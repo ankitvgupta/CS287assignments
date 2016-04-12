@@ -76,12 +76,19 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 
 	for i = 1, numepochs do
 		print("Starting epoch...", i)
+		local total_correct = 0
+		local total = 0
+
 		-- For each sentence
 		for j = 1, #sentences_sparse do
 			-- Determine the predicted sequence
 			predicted_sequence = viterbi(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
 
 			assert(predicted_sequence:size(1) == outputs[j]:size(1))
+			--print("Percent same", torch.eq(predicted_sequence, outputs[j]):sum()/predicted_sequence:size(1))
+			total_correct = total_correct + torch.eq(predicted_sequence, outputs[j]):sum()
+			total = total + predicted_sequence:size(1)
+			--print(predicted_sequence)
 
 			-- Compare the predicted sequence to the true sequence. Call single_update whenever there is a discrepancy.
 			-- TODO: Check if predicted_sequence needs to be cast to a LongTensor (if it isn't already) for this to work.
@@ -99,6 +106,7 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 			gradParameters:zero()
 			model:zeroGradParameters()
 		end
+		print("   Epoch "..i.." Percent correct",total_correct/total )
 	end
 
 	return model, predictor

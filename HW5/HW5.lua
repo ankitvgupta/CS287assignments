@@ -98,7 +98,9 @@ function main()
 	mc = math.max(mc, mc2)
 	if (s ~= s2) then
 		for i=1, validation_output:size(1) do
-			print(validation_output[i], valid_predicted_output[i])
+			if (validation_output[i] == 9 and valid_predicted_output[i] ~= 9) or (validation_output[i] ~= 9 and valid_predicted_output[i] == 9) then
+				print(validation_output[i], valid_predicted_output[i])
+			end
 		end
 		print(s, s2)
 	end
