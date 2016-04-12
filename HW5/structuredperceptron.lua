@@ -65,8 +65,8 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	grad[2][c_istar] = 1
 
 	if c_i ~= 9 then
-		grad[1][9] = .1
-		grad[2][9] = .1
+		grad[1][9] = .01
+		grad[2][9] = .01
 	end
 
 
