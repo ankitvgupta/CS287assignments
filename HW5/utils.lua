@@ -1,3 +1,16 @@
+function printoptions(opt)
+	print("datafile:", opt.datafile, 
+		"classifier:", opt.classifier, 
+		"alpha:", opt.alpha, 
+		"beta:", opt.beta,
+		"embedding_size:", opt.embedding_size, 
+		"minibatch_size", opt.minibatch_size,
+		"optimizer:", opt.optimizer, 
+		"epochs:", opt.epochs, 
+		"hidden", opt.hidden, 
+		"eta:", opt.eta)
+end
+
 -- x is a sequence of inputs
 -- predictor is a function that takes in past class and xi and
 --   provides a

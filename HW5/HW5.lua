@@ -33,6 +33,7 @@ function main()
 	dofile(_G.path..'hmm.lua')
 	dofile(_G.path..'memm.lua')
 	dofile(_G.path..'structuredperceptron.lua')
+	printoptions(opt)
 
 	local f = hdf5.open(opt.datafile, 'r')
 
@@ -115,6 +116,7 @@ function main()
 
 	print("Done. Computing statistics...")
 	local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)
+	printoptions(opt)
 	print("F-Score:", f_score)
 
 	if (opt.testfile ~= '') then
