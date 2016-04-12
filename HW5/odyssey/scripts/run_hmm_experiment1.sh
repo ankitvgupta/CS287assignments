@@ -19,15 +19,14 @@ selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 # Extract params
 datafile=${selected_config[0]}
 classifier=${selected_config[1]}
-window_size=${selected_config[2]}
-b=${selected_config[3]}
-alpha=${selected_config[4]}
-sequence_length=${selected_config[5]}
-embedding_size=${selected_config[6]}
-optimizer=${selected_config[7]}
-epochs=${selected_config[8]}
-hidden=${selected_config[9]}
-eta=${selected_config[10]}
+alpha=${selected_config[2]}
+beta=${selected_config[3]}
+embedding_size=${selected_config[4]}
+minibatch_size=${selected_config[5]}
+optimizer=${selected_config[6]}
+epochs=${selected_config[7]}
+hidden=${selected_config[8]}
+eta=${selected_config[9]}
 
 # Run the trainer
 cd /scratch
@@ -38,8 +37,8 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW5/HW5.lua \
   -alpha $alpha \
   -beta $beta \
   -embedding_size $embedding_size \
-  - minibatch_size $minibatch_size \
-  -optimize $optimizer \
+  -minibatch_size $minibatch_size \
+  -optimizer $optimizer \
   -epochs $epochs \
   -hidden $hidden \
   -eta $eta \
@@ -47,17 +46,5 @@ th /n/home09/ankitgupta/CS287/CS287assignments/HW5/HW5.lua \
 
 
 
-  cmd:option('-datafile', '', 'data file')
-cmd:option('-classifier', 'hmm', 'classifier to use')
-cmd:option('-alpha', 1, 'laplacian smoothing factor')
-cmd:option('-beta', 1, 'F score parameter')
-cmd:option('-odyssey', false, 'Set to true if running on odyssey')
-cmd:option('-testfile', '', 'test file (must be HDF5)')
-cmd:option('-embedding_size', 50, 'Size of embeddings')
-cmd:option('-minibatch_size', 320, 'Size of minibatches')
-cmd:option('-optimizer', 'sgd', 'optimizer to use')
-cmd:option('-epochs', 10, 'Number of epochs')
-cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
-cmd:option('-eta', 1, 'Learning rate')
 
 
