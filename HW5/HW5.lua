@@ -83,7 +83,7 @@ function main()
 		-- sst[1] = sparse_training_input
 		-- dst[1] = dense_training_input
 		-- ost[1] = training_output
-		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta)
+		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta, opt.hidden)
 
 		include_dense_feats = true
 	else
@@ -113,6 +113,7 @@ function main()
 	assert(s == s2)
 	local valid_true_kaggle = kagglify_output(validation_output, start_class, end_class, o_class, ms, mc, s)
 	local valid_pred_kaggle = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
+
 
 	print("Done. Computing statistics...")
 	local f_score = compute_f_score(opt.beta, valid_true_kaggle, valid_pred_kaggle)

@@ -28,7 +28,7 @@ for line in sys.stdin:
     if line[0] == 'd':
         splitted = line.split('\t')
         #sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23]])
-        sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
+        sets.append([splitted[1].split("HW5/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19]])
 
 print len(accuracies), len(sets)
 
@@ -47,29 +47,29 @@ df = pd.DataFrame(alldata)
 #df[['Accuracy', 'Precision', 'Precision2']] = df[['Accuracy', 'Precision', 'Precision2']].astype(float)
 df.columns = ['Datafile', 'Classifier', 'alpha', 'beta', 'embeddingsize', 'minibatchsize', 'optimizer', 'epochs', 'hidden', 'eta','FScore'] 
 
-df[['FScore']] = df[['Fscore']].astype(float)
+df[['FScore']] = df[['FScore']].astype(float)
 
 if sys.argv[1] != "all":
     df = df[df['Datafile'].str.startswith(sys.argv[1])]
 
 df.sort(columns='FScore', ascending=False, inplace=True)
-print "Full, sorted by Accuracy"
+print "Full, sorted by Fscore"
 print df
-df.sort(columns='Precision2', ascending=False, inplace=True)
-print "Full, sorted by PercentRealsPredicted"
-print df
-df.sort(columns='MSEPerp', ascending=True, inplace=True)
-print "Full, sorted by MSEPerp"
-print df
+#df.sort(columns='Precision2', ascending=False, inplace=True)
+#print "Full, sorted by PercentRealsPredicted"
+#print df
+#df.sort(columns='MSEPerp', ascending=True, inplace=True)
+#print "Full, sorted by MSEPerp"
+#print df
 #df.sort(columns='Perp', ascending=True, inplace=True)
 #print "Full, sorted by Perp"
 #print df
-df = df[df['RNN1'] == 'lstm']
-df = df[df['RNN2'] == 'none']
-print "Single LSTM, sorted by MSE/Perp"
-print df
-df.sort(columns='Accuracy', ascending=False, inplace=True)
-print "Single LSTM, sorted by Accuracy"
-print df
+#df = df[df['RNN1'] == 'lstm']
+#df = df[df['RNN2'] == 'none']
+#print "Single LSTM, sorted by MSE/Perp"
+#print df
+#df.sort(columns='Accuracy', ascending=False, inplace=True)
+#print "Single LSTM, sorted by Accuracy"
+#print df
 
 

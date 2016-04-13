@@ -2,21 +2,36 @@ require("nn")
 
 
 -- Returns the structured perceptron model without softmax
-function structured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out)
+function structured_perceptron_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out, hidden)
 	print("Making Structured Perceptron Model")
 	local parallel_table = nn.ParallelTable()
 	local sparse_part = nn.Sequential()
 	sparse_part:add(nn.LookupTable(nsparsefeatures, embeddingsize))
 	sparse_part:add(nn.View(-1):setNumInputDims(2))
-	-- print("Dwin", D_win)
-	sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
+	print("D_win", D_win)
+
+	if hidden > 0 then
+		sparse_part:add(nn.Linear(embeddingsize*D_win, hidden))
+	else
+		sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
+	end
 
 	parallel_table:add(sparse_part)
-	parallel_table:add(nn.Linear(ndensefeatures, D_out))
+
+	if hidden > 0 then
+		parallel_table:add(nn.Linear(ndensefeatures, hidden))
+	else
+		parallel_table:add(nn.Linear(ndensefeatures, D_out))
+	end
 
 	local model = nn.Sequential()
 	model:add(parallel_table)
 	model:add(nn.CAddTable())
+
+	if hidden > 0 then
+		model:add(nn.Linear(hidden, D_out))
+	end
+
 
 	return model
 end
@@ -76,9 +91,9 @@ end
 
 -- Sentences should be a 3D tensor, where i,j,k is the ith sentence, jth window, kth feature.
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
-function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta)
+function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta, hidden)
 
-	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses)
+	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses, hidden)
 	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures, end_class, nclasses, start_class)
 	local parameters, gradParameters = model:getParameters()
 
