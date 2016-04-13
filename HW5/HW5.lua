@@ -76,7 +76,7 @@ function main()
 
 	elseif (opt.classifier == 'struct') then
 
-		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
+		sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
 		-- sst = {}
 		-- dst = {}
 		-- ost = {}
@@ -89,6 +89,11 @@ function main()
 	else
 		print("error: ", opt.classifier, " is not implemented!")
 	end
+
+	print("NEW METHOD: Returning Viterbi Predictions for each sentence separately in validation set")
+	-- predicted_outputs is a table of 1D Tensors. The ith element of the table is the predictions for the ith sentence.
+	local predicted_outputs = predict_each_sentence(sst, dst, ost, nclasses, predictor, start_class)
+
 
 	print("Starting Viterbi on validation set...")
 	if include_dense_feats then
