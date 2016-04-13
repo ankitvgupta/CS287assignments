@@ -1,0 +1,40 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	struct	alpha:	1	beta:	1	embedding_size:	75	minibatch_size	320	optimizer:	sgd	epochs:	10	hidden	50	eta:	0.01	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	12	
+  7847
+     2
+  7847
+  7865
+  7850
+  7865
+ 23558
+ 15716
+ 23558
+[torch.LongTensor of size 9]
+
+Making Structured Perceptron Model	
+Starting epoch...	1	
+   Epoch 1 Percent correct	0.89185325494541	
+Starting epoch...	2	
+   Epoch 2 Percent correct	0.94481871303229	
+Starting epoch...	3	
+   Epoch 3 Percent correct	0.95336037597613	
+Starting epoch...	4	
+   Epoch 4 Percent correct	0.95895355694144	
+Starting epoch...	5	
+   Epoch 5 Percent correct	0.96283125748289	
+Starting epoch...	6	
+   Epoch 6 Percent correct	0.9665123925591	
+Starting epoch...	7	
+   Epoch 7 Percent correct	0.97162309465521	
+Starting epoch...	8	
+   Epoch 8 Percent correct	0.97221279105091	
+Starting epoch...	9	
+   Epoch 9 Percent correct	0.97464305498472	
+Starting epoch...	10	
+   Epoch 10 Percent correct	0.97598327406587	
+Starting Viterbi on validation set...	
+Done. Converting to Kaggle-ish format...	
+Done. Computing statistics...	
+true positive:	1129	false positive:	863	false negative: 	1518	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	struct	alpha:	1	beta:	1	embedding_size:	75	minibatch_size	320	optimizer:	sgd	epochs:	10	hidden	50	eta:	0.01	
+F-Score:	0.48674283250701	
