@@ -1,0 +1,80 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_1.hdf5	classifier:	memm	alpha:	1	beta:	1	embedding_size:	100	minibatch_size	64	optimizer:	adagrad	epochs:	50	hidden	35	eta:	1	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	4	
+     2
+  7850
+ 15716
+[torch.LongTensor of size 3]
+
+Making MEMM Model	
+D_win	4	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.ParallelTable {
+    input
+      |`-> (1): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> output]
+      |      (1): nn.LookupTable
+      |      (2): nn.View(-1)
+      |      (3): nn.Linear(400 -> 35)
+      |    }
+      |`-> (2): nn.Linear(4 -> 35)
+       ... -> output
+  }
+  (2): nn.CAddTable
+  (3): nn.Linear(35 -> 9)
+  (4): nn.LogSoftMax
+}
+Beginning epoch	1	
+    	2.2955012613782	
+Beginning epoch	2	
+    	5211.4071562773	
+Beginning epoch	3	
+    	10441.093212252	
+Beginning epoch	4	
+    	12278.219658485	
+Beginning epoch	5	
+    	31597.268451746	
+Beginning epoch	6	
+    	24363.245329534	
+Beginning epoch	7	
+    	14774.603151589	
+Beginning epoch	8	
+    	23783.413247303	
+Beginning epoch	9	
+    	19762.692612201	
+Beginning epoch	10	
+    	30418.354915977	
+Beginning epoch	11	
+    	29392.018221286	
+Beginning epoch	12	
+    	24472.7565898	
+Beginning epoch	13	
+    	30298.677379476	
+Beginning epoch	14	
+    	13383.438191958	
+Beginning epoch	15	
+    	38452.370074373	
+Beginning epoch	16	
+    	21966.759361681	
+Beginning epoch	17	
+    	30994.430848153	
+Beginning epoch	18	
+    	38166.04436194	
+Beginning epoch	19	
+    	14078.823806564	
+Beginning epoch	20	
+    	46690.662587188	
+Beginning epoch	21	
+    	21711.857156894	
+Beginning epoch	22	
+    	21826.320649813	
+Beginning epoch	23	
+    	26697.660650498	
+Beginning epoch	24	
+    	45457.734439196	
+Beginning epoch	25	
+    	33910.317673596	
+Beginning epoch	26	
+    	24993.128952996	
+Beginning epoch	27	
+    	17257.949088695	

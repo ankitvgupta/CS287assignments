@@ -1,0 +1,136 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	memm	alpha:	1	beta:	1	embedding_size:	15	minibatch_size	256	optimizer:	adagrad	epochs:	50	hidden	55	eta:	0.1	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	12	
+  7847
+     2
+  7847
+  7865
+  7850
+  7865
+ 23558
+ 15716
+ 23558
+[torch.LongTensor of size 9]
+
+Making MEMM Model	
+D_win	10	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.ParallelTable {
+    input
+      |`-> (1): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> output]
+      |      (1): nn.LookupTable
+      |      (2): nn.View(-1)
+      |      (3): nn.Linear(150 -> 55)
+      |    }
+      |`-> (2): nn.Linear(12 -> 55)
+       ... -> output
+  }
+  (2): nn.CAddTable
+  (3): nn.Linear(55 -> 9)
+  (4): nn.LogSoftMax
+}
+Beginning epoch	1	
+    	2.5938649912538	
+Beginning epoch	2	
+    	5.3462838766822	
+Beginning epoch	3	
+    	7.1017560279091	
+Beginning epoch	4	
+    	8.7116111651941	
+Beginning epoch	5	
+    	6.974649932084	
+Beginning epoch	6	
+    	5.4200402592958	
+Beginning epoch	7	
+    	3.824678635828	
+Beginning epoch	8	
+    	2.9282177956774	
+Beginning epoch	9	
+    	0.49442386046337	
+Beginning epoch	10	
+    	2.2701138700249	
+Beginning epoch	11	
+    	0.97607809189071	
+Beginning epoch	12	
+    	0.92913117343006	
+Beginning epoch	13	
+    	2.1661085471198	
+Beginning epoch	14	
+    	0	
+Beginning epoch	15	
+    	3.2913757872407	
+Beginning epoch	16	
+    	2.2797878028336	
+Beginning epoch	17	
+    	0.4033625630517	
+Beginning epoch	18	
+    	0.25141284318666	
+Beginning epoch	19	
+    	0.5469611804144	
+Beginning epoch	20	
+    	0	
+Beginning epoch	21	
+    	2.1034441288369	
+Beginning epoch	22	
+    	0.10861147252324	
+Beginning epoch	23	
+    	0	
+Beginning epoch	24	
+    	0	
+Beginning epoch	25	
+    	0.95570644930832	
+Beginning epoch	26	
+    	0	
+Beginning epoch	27	
+    	0	
+Beginning epoch	28	
+    	0.53706057706565	
+Beginning epoch	29	
+    	0.65366039002956	
+Beginning epoch	30	
+    	0.22261163963408	
+Beginning epoch	31	
+    	2.1345556108148	
+Beginning epoch	32	
+    	0.60579546492231	
+Beginning epoch	33	
+    	0	
+Beginning epoch	34	
+    	0.44695512353939	
+Beginning epoch	35	
+    	0	
+Beginning epoch	36	
+    	2.3656987901392	
+Beginning epoch	37	
+    	1.904180739175	
+Beginning epoch	38	
+    	0.46944878717295	
+Beginning epoch	39	
+    	0	
+Beginning epoch	40	
+    	0.63927880550224	
+Beginning epoch	41	
+    	0	
+Beginning epoch	42	
+    	0	
+Beginning epoch	43	
+    	0.13660304343954	
+Beginning epoch	44	
+    	0	
+Beginning epoch	45	
+    	0	
+Beginning epoch	46	
+    	0	
+Beginning epoch	47	
+    	2.6239022620385	
+Beginning epoch	48	
+    	0	
+Beginning epoch	49	
+    	2.9324681125152	
+Beginning epoch	50	
+    	0	
+Starting Viterbi on validation set...	
+Done. Converting to Kaggle-ish format...	
+4	9	
+1600	1601	

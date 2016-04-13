@@ -1,0 +1,104 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_1.hdf5	classifier:	memm	alpha:	1	beta:	1	embedding_size:	100	minibatch_size	64	optimizer:	adagrad	epochs:	50	hidden	55	eta:	1	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	4	
+     2
+  7850
+ 15716
+[torch.LongTensor of size 3]
+
+Making MEMM Model	
+D_win	4	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.ParallelTable {
+    input
+      |`-> (1): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> output]
+      |      (1): nn.LookupTable
+      |      (2): nn.View(-1)
+      |      (3): nn.Linear(400 -> 55)
+      |    }
+      |`-> (2): nn.Linear(4 -> 55)
+       ... -> output
+  }
+  (2): nn.CAddTable
+  (3): nn.Linear(55 -> 9)
+  (4): nn.LogSoftMax
+}
+Beginning epoch	1	
+    	2.2377968907447	
+Beginning epoch	2	
+    	3035.2240508853	
+Beginning epoch	3	
+    	17809.768814945	
+Beginning epoch	4	
+    	18460.553638307	
+Beginning epoch	5	
+    	13722.781122871	
+Beginning epoch	6	
+    	12460.30730892	
+Beginning epoch	7	
+    	33262.72290291	
+Beginning epoch	8	
+    	11885.287269665	
+Beginning epoch	9	
+    	35496.163318745	
+Beginning epoch	10	
+    	11679.67394776	
+Beginning epoch	11	
+    	62144.268556498	
+Beginning epoch	12	
+    	38425.695969537	
+Beginning epoch	13	
+    	41964.362562143	
+Beginning epoch	14	
+    	17454.789034153	
+Beginning epoch	15	
+    	36566.709769976	
+Beginning epoch	16	
+    	18833.747236599	
+Beginning epoch	17	
+    	11826.415040438	
+Beginning epoch	18	
+    	29059.83502671	
+Beginning epoch	19	
+    	69178.187823665	
+Beginning epoch	20	
+    	73397.90428325	
+Beginning epoch	21	
+    	66189.56567235	
+Beginning epoch	22	
+    	14800.887144269	
+Beginning epoch	23	
+    	42498.227430111	
+Beginning epoch	24	
+    	26020.878724396	
+Beginning epoch	25	
+    	68009.866628131	
+Beginning epoch	26	
+    	28026.997364692	
+Beginning epoch	27	
+    	18651.083617682	
+Beginning epoch	28	
+    	61286.625913288	
+Beginning epoch	29	
+    	9103.2989082777	
+Beginning epoch	30	
+    	39308.422139832	
+Beginning epoch	31	
+    	54054.146626991	
+Beginning epoch	32	
+    	33610.990462761	
+Beginning epoch	33	
+    	60374.969770328	
+Beginning epoch	34	
+    	9987.5179306096	
+Beginning epoch	35	
+    	76870.121525541	
+Beginning epoch	36	
+    	55672.163395266	
+Beginning epoch	37	
+    	39859.708094804	
+Beginning epoch	38	
+    	42289.415389872	
+Beginning epoch	39	
+    	40127.723460728	
