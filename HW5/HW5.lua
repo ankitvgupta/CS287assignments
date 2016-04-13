@@ -69,7 +69,7 @@ function main()
 	elseif (opt.classifier == 'memm') then
 
 		local model = train_memm(sparse_training_input, dense_training_input, training_output, 
-						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
+						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
 
 		predictor = make_predictor_function_memm(model, nsparsefeatures)
 		include_dense_feats = true

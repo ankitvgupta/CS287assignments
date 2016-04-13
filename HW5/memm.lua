@@ -1,21 +1,36 @@
 require("nn")
 
 
-function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out)
+function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out, hidden)
 	print("Making MEMM Model")
 	local parallel_table = nn.ParallelTable()
 	local sparse_part = nn.Sequential()
 	sparse_part:add(nn.LookupTable(nsparsefeatures, embeddingsize))
 	sparse_part:add(nn.View(-1):setNumInputDims(2))
 	print("D_win", D_win)
-	sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
+
+	if hidden > 0 then
+		sparse_part:add(nn.Linear(embeddingsize*D_win, hidden))
+	else
+		sparse_part:add(nn.Linear(embeddingsize*D_win, D_out))
+	end
 
 	parallel_table:add(sparse_part)
-	parallel_table:add(nn.Linear(ndensefeatures, D_out))
+
+	if hidden > 0 then
+		parallel_table:add(nn.Linear(ndensefeatures, hidden))
+	else
+		parallel_table:add(nn.Linear(ndensefeatures, D_out))
+	end
 
 	local model = nn.Sequential()
 	model:add(parallel_table)
 	model:add(nn.CAddTable())
+
+	if hidden > 0 then
+		model:add(nn.Linear(hidden, D_out))
+	end
+
 	model:add(nn.LogSoftMax())
 
 	criterion = nn.ClassNLLCriterion()
@@ -23,7 +38,7 @@ function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out
 end
 
 function train_memm(sparse_training_input, dense_training_input, training_output, 
-						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, num_epochs, minibatch_size, eta, optimizer)
+						nsparsefeatures, ndensefeatures, nclasses, embeddingsize, num_epochs, minibatch_size, eta, optimizer, hidden)
 
 	assert(sparse_training_input:size(1) == dense_training_input:size(1))
 	assert(sparse_training_input:size(1) == training_output:size(1))
@@ -50,7 +65,8 @@ function train_memm(sparse_training_input, dense_training_input, training_output
 		In this section, we train the above model.
 	--]]
 
-	local model, criterion = memm_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sparse_input:size(2), nclasses)
+	local model, criterion = memm_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sparse_input:size(2), nclasses, hidden)
+	print(model)
 	local parameters, gradParameters = model:getParameters()
 	for i = 1, num_epochs do
 		print("Beginning epoch", i)
@@ -127,7 +143,7 @@ function make_predictor_function_memm(model, nsparsefeatures)
 		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
 		sparse[-1] = c_prev + nsparsefeatures
 		--print(sparse)
-		print(sparse:reshape(1, sparse:size(1)))
+		--print(sparse:reshape(1, sparse:size(1)))
 
 		return torch.exp(model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))})):squeeze()
 	end
