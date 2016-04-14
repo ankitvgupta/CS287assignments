@@ -17,7 +17,7 @@ cmd:option('-minibatch_size', 320, 'Size of minibatches')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (set to 0 to not have hidden layer for memm)')
-cmd:option('-eta', 0.01, 'Learning rate')
+cmd:option('-eta', 0.001, 'Learning rate')
 
 -- Hyperparameters
 -- ...
