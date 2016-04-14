@@ -79,10 +79,10 @@ function single_update(model, input_sparse, input_dense, c_i, c_iprev, c_istar, 
 	grad[1][c_i] = -1
 	grad[2][c_istar] = 1
 
-	if c_i ~= 9 then
-		grad[1][9] = .01
-		grad[2][9] = .01
-	end
+	-- if c_i ~= 9 then
+	-- 	grad[1][9] = .01
+	-- 	grad[2][9] = .01
+	-- end
 
 
 	-- Push the gradient backwards.
@@ -120,13 +120,14 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 			-- print("Comparison")
 			-- print(predicted_sequence)
 			-- print(outputs[j])
-			for k = 2, predicted_sequence:size(1) do
-				if predicted_sequence[k] ~= outputs[j][k] then
+			for k = 1, predicted_sequence:size(1) do
+				-- print(k, predicted_sequence[k], outputs[j][k])
+				if (k > 1) and (predicted_sequence[k] ~= outputs[j][k]) then
 					single_update(model, sentences_sparse[j][k], sentences_dense[j][k], outputs[j][k], outputs[j][k-1], predicted_sequence[k], predicted_sequence[k-1], nsparsefeatures)
 				end
 			end
 			-- Update the parameters with learning rate 1, as stated in the spec.
-			--print(torch.abs(gradParameters):sum())
+			-- print(torch.abs(gradParameters):sum())
 			--print(torch.abs(gradParameters):sum())
 			parameters:add(-eta, gradParameters)
 		end
@@ -150,10 +151,10 @@ function make_predictor_function_strucperceptron(model, nsparsefeatures, end_cla
 	
 		local x = model:forward({sparse:reshape(1, sparse:size(1)), x_i_dense:reshape(1, x_i_dense:size(1))}):squeeze()
 	
-		if c_prev == end_class then
-			x:zero()
-			x[begin_class] = 1000
-		end
+		-- if c_prev == end_class then
+		-- 	x:zero()
+		-- 	x[begin_class] = 1000
+		-- end
 		--print(x)
 
 		return x
