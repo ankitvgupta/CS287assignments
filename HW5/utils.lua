@@ -64,13 +64,21 @@ end
 
 -- sentences_sparse, sentences_dense, and outputs are tables of 2D tensors, where the ith element of the table
 -- is a 2D tensor associated with the ith sentence.
--- Return: Table where the ith element is a 1D tensor with the class predictions for the ith sentence.
-function predict_each_sentence(sentences_sparse, sentences_dense, outputs, nclasses, predictor, start_class)
+function predict_each_sentence(sentences_sparse, sentences_dense, nclasses, predictor, start_class, n)
 
-	local predicted_outputs = {}
+	local predicted_outputs = torch.Tensor(n)
+	local idx = 1
+
 	for i = 1, #sentences_sparse do
-		predicted_outputs[i] = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+		local yhat = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+		for j = 1, yhat:size(1) do
+			predicted_outputs[idx] = yhat[j]
+			idx = idx + 1
+		end
 	end
+
+	assert(idx == n+1)
+
 	return predicted_outputs
 end
 
