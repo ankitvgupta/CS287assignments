@@ -64,65 +64,63 @@ end
 
 -- sentences_sparse, sentences_dense, and outputs are tables of 2D tensors, where the ith element of the table
 -- is a 2D tensor associated with the ith sentence.
-function predict_each_sentence(sentences_sparse, sentences_dense, nclasses, predictor, start_class, n)
+-- Return: Table where the ith element is a 1D tensor with the class predictions for the ith sentence.
+function predict_each_sentence(sentences_sparse, sentences_dense, nclasses, predictor, start_class, includeDense)
 
-	local predicted_outputs = torch.Tensor(n)
-	local idx = 1
-
+	local predicted_outputs = {}
 	for i = 1, #sentences_sparse do
-		local yhat = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
-		for j = 1, yhat:size(1) do
-			predicted_outputs[idx] = yhat[j]
-			idx = idx + 1
+		if includeDense then
+			predicted_outputs[i] = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+		else
+			predicted_outputs[i] = viterbi(sentences_sparse[i]:squeeze(), predictor, nclasses, start_class)
 		end
 	end
-
-	assert(idx == n+1)
-
 	return predicted_outputs
 end
 
-function find_kaggle_dims(output, start_class, end_class, o_class)
+function find_kaggle_dims(output, o_class)
 
 	max_span = 0
 	max_classes = 0
-	n = output:size(1)
-	sentences = 0
+	sentences = #output
 
 	-- one pass through to get max classes and indexes
 	local previous_class = o_class
 	local this_span_length = 0
 	local this_class_length = 0
 
-	for i=1, n do
-		local this_class = output[i]
-		-- finish last sentence
-		if (this_class == start_class) then
-			sentences = sentences + 1
-			if this_class_length > max_classes then
-				max_classes = this_class_length
-			end
-			this_class_length = 0
-		-- finish last span
-		elseif (this_class == o_class) then
-			if this_span_length > max_span then
-				max_span = this_span_length
-			end
-			this_span_length = 0
-		-- some nontrivial class
-		elseif (this_class ~= end_class) then
-			-- ongoing span
-			if (this_class == previous_class) then
-				this_span_length = this_span_length + 1
-			-- new span
+	for s=1, sentences do
+		local previous_class = o_class
+		local this_span_length = 0
+		local this_class_length = 0
+		local this_sentence = output[s]
+		-- start after <t>, end before </t>
+		for c=2, this_sentence:size(1)-1 do
+			local this_class = this_sentence[c]
+			-- finish last span
+			if this_class == o_class then
+				if this_span_length > max_span then
+					max_span = this_span_length
+				end
+				this_span_length = 0
+			-- part of a span
 			else
-				this_class_length = this_class_length + 1
-				this_span_length = 1
+				-- continuing old span
+				if (this_class == previous_class) then
+					this_span_length = this_span_length + 1
+				-- new span
+				else
+					this_class_length = this_class_length + 1
+					this_span_length = 1
+				end
 			end
+			previous_class = this_class
 		end
-		previous_class = this_class
+		-- done with sentence
+		if this_class_length > max_classes then
+			max_classes = this_class_length
+		end
 	end
-
 	return max_span, max_classes, sentences
 end
 
@@ -130,46 +128,44 @@ end
 -- the first entry will be the id of the class
 -- [i][j][k] = the kth index in the span of the jth named entity of the ith sentence
 -- zeros are padding
-function kagglify_output(output, start_class, end_class, o_class, max_span, max_classes, sentences)
+function kagglify_output(output, o_class, max_span, max_classes, sentences)
 
 	kaggle_output = torch.zeros(sentences, max_classes, max_span+1)
 
-	previous_class = o_class
-	local this_sentence_idx = 0
-	local this_class_idx = 0
-	local this_span_idx = 2
+	assert(#output == sentences)
 
-	for i=1, n do
-		local this_class = output[i]
-		-- finish last sentence
-		if (this_class == start_class) then
-			this_sentence_idx = this_sentence_idx + 1
-			this_class_idx = 0
-			this_span_idx = 2
-		-- finish last span
-		elseif (this_class == o_class) then
-			this_span_idx = 2
-		-- some nontrivial class
-		elseif (this_class ~= end_class) then
-			-- ongoing span
-			if (this_class == previous_class) then
-				kaggle_output[this_sentence_idx][this_class_idx][this_span_idx] = i
-				this_span_idx = this_span_idx + 1
-			-- new span
+	for s=1, sentences do
+		-- +1 for <t>
+		word_idx = 0
+		previous_class = o_class
+		local this_class_idx = 0
+		local this_sentence = output[s]
+		-- start after <t>, end before </t>
+		for c=2, this_sentence:size(1)-1 do
+			word_idx = word_idx + 1
+			local this_class = this_sentence[c]
+			--finish last span
+			if (this_class == o_class) then
+				this_span_idx = 2
+			-- part of a span
 			else
-				this_class_idx = this_class_idx + 1
-				if (this_class_idx > max_classes) then
-					print(this_class_idx, max_classes, i, this_sentence_idx)
+				-- continuing old span
+				if (this_class == previous_class) then
+					kaggle_output[s][this_class_idx][this_span_idx] = word_idx
+					this_span_idx = this_span_idx + 1
+				-- starting new span
+				else
+					this_class_idx = this_class_idx + 1
+					kaggle_output[s][this_class_idx][1] = this_class
+					kaggle_output[s][this_class_idx][2] = word_idx
+					this_span_idx = 3
 				end
-				kaggle_output[this_sentence_idx][this_class_idx][1] = this_class
-				kaggle_output[this_sentence_idx][this_class_idx][2] = i
-				this_span_idx = 3
 			end
+			previous_class = this_class
 		end
-		previous_class = this_class
 	end
 
-	return kaggle_output, max_span, max_classes, sentences
+	return kaggle_output
 
 end
 

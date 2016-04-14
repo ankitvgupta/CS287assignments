@@ -62,10 +62,11 @@ function main()
 	local dense_test_input = f:read('test_dense_input'):all():double()
 
 	ssv, dsv, osv = split_data_into_sentences(sparse_validation_input, dense_validation_input, validation_output, end_class)
-	nv = sparse_validation_input:size(1)
 
 	if opt.classifier == "hmm" then
 		predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
+
+		includeDense = false
 
 	elseif (opt.classifier == 'memm') then
 
@@ -73,6 +74,8 @@ function main()
 						nsparsefeatures, ndensefeatures, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
 
 		predictor = make_predictor_function_memm(model, nsparsefeatures)
+
+		includeDense = true
 
 	elseif (opt.classifier == 'struct') then
 		-- sst = {}
@@ -84,12 +87,14 @@ function main()
 		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
 		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta, opt.hidden)
 
+		includeDense = true
+
 	else
 		print("error: ", opt.classifier, " is not implemented!")
 	end
 
 	print("NEW METHOD: Returning Viterbi Predictions for each sentence separately in validation set")
-	local valid_predicted_output = predict_each_sentence(ssv, dsv, nclasses, predictor, start_class, nv)
+	local valid_predicted_output = predict_each_sentence(ssv, dsv, nclasses, predictor, start_class, includeDense)
 
 
 	-- print("Starting Viterbi on validation set...")
@@ -100,8 +105,8 @@ function main()
 	-- end
 
 	print("Done. Converting to Kaggle-ish format...")
-	local ms, mc, s = find_kaggle_dims(validation_output, start_class, end_class, o_class)
-	local ms2, mc2, s2 = find_kaggle_dims(valid_predicted_output, start_class, end_class, o_class)
+	local ms, mc, s = find_kaggle_dims(osv, o_class)
+	local ms2, mc2, s2 = find_kaggle_dims(valid_predicted_output, o_class)
 	ms = math.max(ms, ms2)
 	mc = math.max(mc, mc2)
 	if (s ~= s2) then
@@ -113,8 +118,8 @@ function main()
 		print(s, s2)
 	end
 	assert(s == s2)
-	local valid_true_kaggle = kagglify_output(validation_output, start_class, end_class, o_class, ms, mc, s)
-	local valid_pred_kaggle = kagglify_output(valid_predicted_output, start_class, end_class, o_class, ms, mc, s)
+	local valid_true_kaggle = kagglify_output(osv, o_class, ms, mc, s)
+	local valid_pred_kaggle = kagglify_output(valid_predicted_output, o_class, ms, mc, s)
 
 
 	print("Done. Computing statistics...")
@@ -123,36 +128,35 @@ function main()
 	print("F-Score:", f_score)
 
 	if (opt.testfile ~= '') then
-		print("Starting Viterbi on test set...")
-		if include_dense_feats then
-			test_predicted_output = viterbi(sparse_test_input, predictor, nclasses, start_class, dense_test_input)
-		else
-			test_predicted_output = viterbi(sparse_test_input:squeeze(), predictor, nclasses, start_class)
-		end
-
+		print("Starting Viterbi on test set (sentence by sentence)...")
+		test_predicted_output = predict_each_sentence(ssv, dsv, nclasses, predictor, start_class, includeDense)
 
 		-- Make sure that the start and end sentence tags are correctly predicted.
-		for i = 1, test_predicted_output:size(1) do
-			if test_predicted_output[i] == 9 and sparse_test_input[i][2] ~= 3 then
-				print(i, test_predicted_output[i], sparse_test_input[i][2])
-				assert(false)
-			end
-			if test_predicted_output[i] == 8 and sparse_test_input[i][2] ~= 2 then
-				print(i, test_predicted_output[i], sparse_test_input[i][2])
-				assert(false)
-			end
-		end
-		print(test_predicted_output:size(1), sparse_test_input:size(1))
+		-- for i = 1, test_predicted_output:size(1) do
+		-- 	if test_predicted_output[i] == 9 and sparse_test_input[i][2] ~= 3 then
+		-- 		print(i, test_predicted_output[i], sparse_test_input[i][2])
+		-- 		assert(false)
+		-- 	end
+		-- 	if test_predicted_output[i] == 8 and sparse_test_input[i][2] ~= 2 then
+		-- 		print(i, test_predicted_output[i], sparse_test_input[i][2])
+		-- 		assert(false)
+		-- 	end
+		-- end
+		-- print(test_predicted_output:size(1), sparse_test_input:size(1))
 
 		print("Done. Converting to Kaggle-ish format...")
-		local tms, tmc, ts = find_kaggle_dims(test_predicted_output, start_class, end_class, o_class)
-		local test_pred_kaggle, _, _, _ = kagglify_output(test_predicted_output, start_class, end_class, o_class, tms, tmc, ts)
+		local tms, tmc, ts = find_kaggle_dims(test_predicted_output, o_class)
+		local test_pred_kaggle = kagglify_output(test_predicted_output, o_class, tms, tmc, ts)
 	
 		-- local tms, tmc, ts = find_kaggle_dims(validation_output, start_class, end_class, o_class)
 		-- local test_pred_kaggle, _, _, _ = kagglify_output(validation_output, start_class, end_class, o_class, tms, tmc, ts)
 		print("Done. Writing test out to HDF5...")
 		local f = hdf5.open(opt.testfile, 'w')
 		f:write('test_outputs', test_pred_kaggle:long())
+
+		local ftest = hdf5.open('VALIDTEST.hdf5', 'w')
+		ftest:write('test_outputs', valid_true_kaggle:long())
+
 		print("Done. Wrote to ", opt.testfile, ".")
 		print("\x1B[32m".."To finish this process, now run `python write_to_kaggle.py "..opt.testfile.."`".."\x1b[0m")
 

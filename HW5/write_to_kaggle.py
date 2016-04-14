@@ -20,27 +20,29 @@ def load_tag_dict(file_path, front_tag="<t>", back_tag="</t>"):
 
     return tag_dict
 
-def load_global_to_local(file_path, start_tag=2, stop_tag=3):
-	g_to_l = {0: 0, 1: 1}
-	with open(file_path, 'r') as f:
-		g = 2
-		last_l = None
-		for line in f:
-			if line[0].isdigit():
-				if SEP is not None:
-					_, l, _, _ = line.split(SEP)
-				else:
-					_, l, _  = line.split()
-				last_l = int(l)
-				g_to_l[g] = int(l)
-				g += 1
-			else:
-				g_to_l[g] = last_l + 1
-				g_to_l[g+1] = last_l + 2
-				g += 2
-				last_l = None
+# def load_global_to_local(file_path, start_tag=2, stop_tag=3):
+# 	g_to_l = {0: 0, 1: 1}
+# 	with open(file_path, 'r') as f:
+# 		g = 2
+# 		last_l = None
+# 		for line in f:
+# 			if line[0].isdigit():
+# 				if SEP is not None:
+# 					_, l, _, _ = line.split(SEP)
+# 				else:
+# 					_, l, _  = line.split()
+# 				last_l = int(l)
+# 				g_to_l[g] = int(l)
+# 				g += 1
+# 			else:
+# 				g_to_l[g] = last_l + 1
+# 				g_to_l[g+1] = last_l + 2
+# 				g += 2
+# 				last_l = None
 
-	return g_to_l
+# 		print g
+
+# 	return g_to_l
 
 # for debugging
 def print_nth_sentence(file_path, n):
@@ -53,7 +55,7 @@ def print_nth_sentence(file_path, n):
 				c += 1
 
 
-def write_to_txt(test_outputs, tag_dict, gtl_dict, outfile, back_tag="</t>"):
+def write_to_txt(test_outputs, tag_dict, outfile, back_tag="</t>"):
 	with open(outfile, 'w') as f:
 		f.write("ID,Labels\n")
 		for i in range(len(test_outputs)):
@@ -72,7 +74,7 @@ def write_to_txt(test_outputs, tag_dict, gtl_dict, outfile, back_tag="</t>"):
 					if v == 0:
 						break
 					else:
-						this_output += '-'+str(gtl_dict[v])
+						this_output += '-'+str(v)
 				this_output += ' '
 			this_output = this_output.rstrip() + '\n'
 			f.write(this_output)
@@ -100,8 +102,9 @@ def main(arguments):
     	test_outputs = f['test_outputs']
     	tag_dict = load_tag_dict("data/tags.txt")
     	#gtl_dict = load_global_to_local("data/test.num.txt")
-    	gtl_dict = load_global_to_local("data/test.num.txt")
-    	write_to_txt(test_outputs, tag_dict, gtl_dict, outfile)
+    	# gtl_dict = load_global_to_local("data/test.num.txt")
+    	# write_to_txt(test_outputs, tag_dict, gtl_dict, outfile)
+    	write_to_txt(test_outputs, tag_dict, outfile)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
