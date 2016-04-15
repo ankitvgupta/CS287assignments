@@ -1,0 +1,127 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	memm	alpha:	1	beta:	1	embedding_size:	100	minibatch_size	256	optimizer:	adagrad	epochs:	50	hidden	25	eta:	1	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	12	
+Making MEMM Model	
+D_win	10	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.ParallelTable {
+    input
+      |`-> (1): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> output]
+      |      (1): nn.LookupTable
+      |      (2): nn.View(-1)
+      |      (3): nn.Linear(1000 -> 25)
+      |    }
+      |`-> (2): nn.Linear(12 -> 25)
+       ... -> output
+  }
+  (2): nn.CAddTable
+  (3): nn.Linear(25 -> 9)
+  (4): nn.LogSoftMax
+}
+Beginning epoch	1	
+    	2.0596215685155	
+Beginning epoch	2	
+    	5115.3776229007	
+Beginning epoch	3	
+    	2711.1966486335	
+Beginning epoch	4	
+    	924.49802306913	
+Beginning epoch	5	
+    	3249.2322253307	
+Beginning epoch	6	
+    	342.06803914335	
+Beginning epoch	7	
+    	3167.8798700258	
+Beginning epoch	8	
+    	1451.9249894759	
+Beginning epoch	9	
+    	765.26251862067	
+Beginning epoch	10	
+    	510.54494581454	
+Beginning epoch	11	
+    	0	
+Beginning epoch	12	
+    	2946.5327480702	
+Beginning epoch	13	
+    	1977.5565499337	
+Beginning epoch	14	
+    	827.47410272922	
+Beginning epoch	15	
+    	2242.9382568335	
+Beginning epoch	16	
+    	1264.0012050035	
+Beginning epoch	17	
+    	0	
+Beginning epoch	18	
+    	0	
+Beginning epoch	19	
+    	0	
+Beginning epoch	20	
+    	112.14943562152	
+Beginning epoch	21	
+    	0	
+Beginning epoch	22	
+    	2330.3625373802	
+Beginning epoch	23	
+    	4872.0803692385	
+Beginning epoch	24	
+    	1829.0051649085	
+Beginning epoch	25	
+    	1321.6982394919	
+Beginning epoch	26	
+    	0	
+Beginning epoch	27	
+    	2279.8700666053	
+Beginning epoch	28	
+    	0	
+Beginning epoch	29	
+    	675.50018450649	
+Beginning epoch	30	
+    	1706.8346693958	
+Beginning epoch	31	
+    	397.99096932003	
+Beginning epoch	32	
+    	0	
+Beginning epoch	33	
+    	0	
+Beginning epoch	34	
+    	6551.5588954327	
+Beginning epoch	35	
+    	372.95768058361	
+Beginning epoch	36	
+    	4502.9711302605	
+Beginning epoch	37	
+    	303.31917224207	
+Beginning epoch	38	
+    	0	
+Beginning epoch	39	
+    	5116.9822873552	
+Beginning epoch	40	
+    	6897.5166552021	
+Beginning epoch	41	
+    	0	
+Beginning epoch	42	
+    	0	
+Beginning epoch	43	
+    	0	
+Beginning epoch	44	
+    	1607.3662991406	
+Beginning epoch	45	
+    	0	
+Beginning epoch	46	
+    	0	
+Beginning epoch	47	
+    	0	
+Beginning epoch	48	
+    	864.71398048546	
+Beginning epoch	49	
+    	0	
+Beginning epoch	50	
+    	0	
+NEW METHOD: Returning Viterbi Predictions for each sentence separately in validation set	
+Done. Converting to Kaggle-ish format...	
+Done. Computing statistics...	
+true positive:	1340	false positive:	634	false negative: 	1307	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	memm	alpha:	1	beta:	1	embedding_size:	100	minibatch_size	256	optimizer:	adagrad	epochs:	50	hidden	25	eta:	1	
+F-Score:	0.57996104739234	

@@ -4,7 +4,7 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=2500                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 3:30:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 4:30:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general               #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/HW5/odyssey/outputs/out/memm_exp1/setup_%A_%a_out.txt            #File to which standard out will be written
