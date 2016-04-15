@@ -62,17 +62,80 @@ function viterbi(x, predictor, numClasses, start_class, x_dense)
 	return yhat
 end
 
+-- returns kx2 tensor of indices of k max values in t
+function argmax_2d(t, K)
+	local rows = t:size(1)
+	local cols = t:size(2)
+	local flatt = t:view(rows*cols)
+	local _, sorted_idxs = torch.sort(flatt, true)
+	local max_idxs = torch.Tensor(K, 2)
+	for i=1, K do
+		local this_idx = sorted_idxs[i]
+		local this_col_idx = ((this_idx-1) % cols) + 1
+		local this_row_idx = ((this_idx-this_col_idx)/cols) + 1
+		max_idxs[i][1] = this_row_idx
+		max_idxs[i][2] = this_col_idx
+	end
+	return max_idxs
+end
+
+function wrap_beam_search(K)
+	return function(x, predictor, numClasses, start_class, x_dense) return beam_search(K, x, predictor, numClasses, start_class, x_dense) end
+end
+
+
+
+function beam_search(K, x, predictor, numClasses, start_class, x_dense)
+	local hasDense = (x_dense ~= nil)
+	local n = x:size(1)
+	local sequences = torch.Tensor(K, 1)
+	local scores = torch.zeros(K)
+
+	for k=1, K do
+		sequences[k][1] = start_class
+	end
+
+	local hypotheses = torch.Tensor(K, numClasses)
+	for i=2, n do
+		for k=1, K do
+			for ci=1, numClasses do
+				if (hasDense) then
+					yci1 = predictor(sequences[k][i-1], x[i], x_dense[i])
+				else
+					yci1 = predictor(sequences[k][i-1], x[i])
+				end
+				hypotheses[k][ci] = scores[k] + torch.log(yci1[ci])
+			end
+		end
+
+		max_indices = argmax_2d(hypotheses, K)
+		local new_sequences = torch.Tensor(K, i)
+		for j=1, K do
+			k = max_indices[j][1]
+			ci = max_indices[j][2]
+			for l=1, i-1 do
+				new_sequences[j][l] = sequences[k][l]
+			end
+			new_sequences[j][i] = ci
+		end
+		sequences = new_sequences
+	end
+
+	return sequences[1]
+
+end
+
 -- sentences_sparse, sentences_dense, and outputs are tables of 2D tensors, where the ith element of the table
 -- is a 2D tensor associated with the ith sentence.
 -- Return: Table where the ith element is a 1D tensor with the class predictions for the ith sentence.
-function predict_each_sentence(sentences_sparse, sentences_dense, nclasses, predictor, start_class, includeDense)
+function predict_each_sentence(viterbi_alg, sentences_sparse, sentences_dense, nclasses, predictor, start_class, includeDense)
 
 	local predicted_outputs = {}
 	for i = 1, #sentences_sparse do
 		if includeDense then
-			predicted_outputs[i] = viterbi(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
+			predicted_outputs[i] = viterbi_alg(sentences_sparse[i], predictor, nclasses, start_class, sentences_dense[i])
 		else
-			predicted_outputs[i] = viterbi(sentences_sparse[i]:squeeze(), predictor, nclasses, start_class)
+			predicted_outputs[i] = viterbi_alg(sentences_sparse[i]:squeeze(), predictor, nclasses, start_class)
 		end
 	end
 	return predicted_outputs

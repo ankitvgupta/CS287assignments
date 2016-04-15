@@ -18,6 +18,7 @@ cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
 cmd:option('-hidden', 50, 'Hidden layer (set to 0 to not have hidden layer for memm)')
 cmd:option('-eta', 0.001, 'Learning rate')
+cmd:option('-beam', false, 'If true then use beam search instead of viterbi')
 
 -- Hyperparameters
 -- ...
@@ -63,6 +64,12 @@ function main()
 
 	ssv, dsv, osv = split_data_into_sentences(sparse_validation_input, dense_validation_input, validation_output, end_class)
 
+	if (opt.beam) then
+		viterbi_alg = wrap_beam_search(50)
+	else
+		viterbi_alg = viterbi
+	end
+
 	if opt.classifier == "hmm" then
 		predictor = hmm_train(sparse_training_input:squeeze(), training_output, nsparsefeatures, nclasses, opt.alpha)
 
@@ -85,7 +92,7 @@ function main()
 		-- dst[1] = dense_training_input
 		-- ost[1] = training_output
 		local sst, dst, ost = split_data_into_sentences(sparse_training_input, dense_training_input, training_output, end_class)
-		model, predictor = train_structured_perceptron(sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta, opt.hidden)
+		model, predictor = train_structured_perceptron(viterbi_alg, sst, dst, ost, opt.epochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, opt.embedding_size, opt.eta, opt.hidden)
 
 		includeDense = true
 
@@ -94,7 +101,7 @@ function main()
 	end
 
 	print("NEW METHOD: Returning Viterbi Predictions for each sentence separately in validation set")
-	local valid_predicted_output = predict_each_sentence(ssv, dsv, nclasses, predictor, start_class, includeDense)
+	local valid_predicted_output = predict_each_sentence(viterbi_alg, ssv, dsv, nclasses, predictor, start_class, includeDense)
 
 
 	-- print("Starting Viterbi on validation set...")
@@ -129,7 +136,7 @@ function main()
 
 	if (opt.testfile ~= '') then
 		print("Starting Viterbi on test set (sentence by sentence)...")
-		test_predicted_output = predict_each_sentence(ssv, dsv, nclasses, predictor, start_class, includeDense)
+		test_predicted_output = predict_each_sentence(viterbi_alg, ssv, dsv, nclasses, predictor, start_class, includeDense)
 
 		-- Make sure that the start and end sentence tags are correctly predicted.
 		-- for i = 1, test_predicted_output:size(1) do

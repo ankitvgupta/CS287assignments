@@ -91,7 +91,7 @@ end
 
 -- Sentences should be a 3D tensor, where i,j,k is the ith sentence, jth window, kth feature.
 -- Outputs should be 2D sentence, where i,j is the class for the jth window in the ith sentence.
-function train_structured_perceptron(sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta, hidden)
+function train_structured_perceptron(viterbi_alg, sentences_sparse, sentences_dense, outputs, numepochs, nclasses, start_class, end_class, nsparsefeatures, ndensefeatures, embeddingsize, eta, hidden)
 
 	local model = structured_perceptron_model(nsparsefeatures+nclasses, ndensefeatures, embeddingsize, sentences_sparse[1]:size(2) + 1, nclasses, hidden)
 	local predictor = make_predictor_function_strucperceptron(model, nsparsefeatures, end_class, nclasses, start_class)
@@ -107,7 +107,7 @@ function train_structured_perceptron(sentences_sparse, sentences_dense, outputs,
 			gradParameters:zero()
 			model:zeroGradParameters()
 			-- Determine the predicted sequence
-			predicted_sequence = viterbi(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
+			predicted_sequence = viterbi_alg(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
 
 			assert(predicted_sequence:size(1) == outputs[j]:size(1))
 			--print("Percent same", torch.eq(predicted_sequence, outputs[j]):sum()/predicted_sequence:size(1))

@@ -54,7 +54,6 @@ function test_viterbi(viterbi_alg)
 	print(yhat)
 end
 
-
 function test_split_data_into_sentences()
 
 	sparse_inputs = torch.randn(10, 6):long()
@@ -67,5 +66,8 @@ function test_split_data_into_sentences()
 
 end
 
--- test_viterbi(viterbi)
-test_split_data_into_sentences()
+
+test_viterbi(wrap_beam_search(300))
+
+--test_viterbi(viterbi)
+--test_split_data_into_sentences()
