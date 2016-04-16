@@ -67,7 +67,8 @@ function argmax_2d(t, K)
 	local rows = t:size(1)
 	local cols = t:size(2)
 	local flatt = t:view(rows*cols)
-	local _, sorted_idxs = torch.sort(flatt, true)
+	local sorted_vals, sorted_idxs = torch.sort(flatt, true)
+	local max_vals = torch.Tensor(K)
 	local max_idxs = torch.Tensor(K, 2)
 	for i=1, K do
 		local this_idx = sorted_idxs[i]
@@ -75,8 +76,31 @@ function argmax_2d(t, K)
 		local this_row_idx = ((this_idx-this_col_idx)/cols) + 1
 		max_idxs[i][1] = this_row_idx
 		max_idxs[i][2] = this_col_idx
+		max_vals[i] = sorted_vals[i]
 	end
-	return max_idxs
+	return max_idxs, max_vals
+end
+
+-- returns kx2 tensor of indices of k max values in t
+function argmax_2d2(t, K)
+	-- find max, set col to zero
+	local rows = t:size(1)
+	local cols = t:size(2)
+	local flatt = t:view(rows*cols)
+	local minval = flatt:min()
+	local max_vals = torch.Tensor(K)
+	local max_idxs = torch.Tensor(K, 2)
+	for i=1, K do
+		local next_max_val, next_max_idx = flatt:max(1)
+		local this_col_idx = ((next_max_idx:squeeze()-1) % cols) + 1
+		local this_row_idx = ((next_max_idx:squeeze()-this_col_idx)/cols) + 1
+		max_idxs[i][1] = this_row_idx
+		max_idxs[i][2] = this_col_idx
+		max_vals[i] = next_max_val
+		-- t:select(1,this_row_idx):zero():add(minval-1)
+		t:select(2,this_col_idx):zero():add(minval-1)
+	end
+	return max_idxs, max_vals
 end
 
 function wrap_beam_search(K)
@@ -108,7 +132,7 @@ function beam_search(K, x, predictor, numClasses, start_class, x_dense)
 			end
 		end
 
-		max_indices = argmax_2d(hypotheses, K)
+		max_indices, scores = argmax_2d2(hypotheses, K)
 		local new_sequences = torch.Tensor(K, i)
 		for j=1, K do
 			k = max_indices[j][1]

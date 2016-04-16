@@ -67,7 +67,50 @@ function test_split_data_into_sentences()
 end
 
 
-test_viterbi(wrap_beam_search(300))
+function beam_viterbi_efficiency()
+	n = 100
+	k = 10
+	beam_search_alg = wrap_beam_search(k)
+	timer = torch.Timer()
+	start_class = 1
+	for c = 5, 100, 5 do
+		r = torch.rand(c, n, c)
+		local predictor = (function (ci1, x) return r[ci1][x] end)
+		local x = torch.ceil(torch.rand(n-2):add(0.00001):mul(n))
+		-- start viterbi
+		timer:reset()
+		viterbi(x, predictor, c, start_class)
+		viterbi_time = timer:time().real
+		-- start beam search
+		timer:reset()
+		beam_search_alg(x, predictor, c, start_class)
+		beam_time = timer:time().real
+		print(c, viterbi_time, beam_time)
+	end
+end
 
+function beam_viterbi_accuracy()
+	n = 100
+	c = 30
+	r = torch.rand(c, n, c)
+	start_class = 1
+	predictor = (function (ci1, x) return r[ci1][x] end)
+	x = torch.ceil(torch.rand(n-2):add(0.00001):mul(n))
+
+	for k=1, 25 do
+		correct_seq = viterbi(x, predictor, c, start_class)
+		beam_seq = beam_search(k, x, predictor, c, start_class)
+		accuracy = torch.mean(torch.eq(correct_seq, beam_seq):double())
+		print(k, accuracy)
+	end
+end
+
+
+
+
+--test_viterbi(wrap_beam_search(300))
 --test_viterbi(viterbi)
 --test_split_data_into_sentences()
+
+beam_viterbi_efficiency()
+--beam_viterbi_accuracy()

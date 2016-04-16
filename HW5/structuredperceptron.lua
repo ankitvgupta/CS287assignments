@@ -107,7 +107,7 @@ function train_structured_perceptron(viterbi_alg, sentences_sparse, sentences_de
 			gradParameters:zero()
 			model:zeroGradParameters()
 			-- Determine the predicted sequence
-			predicted_sequence = viterbi_alg(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
+			predicted_sequence = viterbi(sentences_sparse[j], predictor, nclasses, start_class, sentences_dense[j]):long()
 
 			assert(predicted_sequence:size(1) == outputs[j]:size(1))
 			--print("Percent same", torch.eq(predicted_sequence, outputs[j]):sum()/predicted_sequence:size(1))
