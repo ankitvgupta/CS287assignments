@@ -112,5 +112,5 @@ end
 --test_viterbi(viterbi)
 --test_split_data_into_sentences()
 
-beam_viterbi_efficiency()
---beam_viterbi_accuracy()
+--beam_viterbi_efficiency()
+beam_viterbi_accuracy()
