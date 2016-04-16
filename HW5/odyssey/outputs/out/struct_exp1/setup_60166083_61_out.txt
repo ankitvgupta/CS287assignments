@@ -1,0 +1,30 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	struct	alpha:	1	beta:	1	embedding_size:	50	minibatch_size	1	optimizer:	sgd	epochs:	10	hidden	0	eta:	0.01	
+nclasses:	9	nsparsefeatures:	39272	ndensefeatures:	12	
+Making Structured Perceptron Model	
+D_win	10	
+Starting epoch...	1	
+   Epoch 1 Percent correct	0.91408302210468	
+Starting epoch...	2	
+   Epoch 2 Percent correct	0.93205982737978	
+Starting epoch...	3	
+   Epoch 3 Percent correct	0.93463304801558	
+Starting epoch...	4	
+   Epoch 4 Percent correct	0.93852861814478	
+Starting epoch...	5	
+   Epoch 5 Percent correct	0.94244205786173	
+Starting epoch...	6	
+   Epoch 6 Percent correct	0.94606958417469	
+Starting epoch...	7	
+   Epoch 7 Percent correct	0.94757062954558	
+Starting epoch...	8	
+   Epoch 8 Percent correct	0.95155554761352	
+Starting epoch...	9	
+   Epoch 9 Percent correct	0.95409302907382	
+Starting epoch...	10	
+   Epoch 10 Percent correct	0.95573703114669	
+NEW METHOD: Returning Viterbi Predictions for each sentence separately in validation set	
+Done. Converting to Kaggle-ish format...	
+Done. Computing statistics...	
+true positive:	756	false positive:	1179	false negative: 	1891	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/HW5/CONLL_3.hdf5	classifier:	struct	alpha:	1	beta:	1	embedding_size:	50	minibatch_size	1	optimizer:	sgd	epochs:	10	hidden	0	eta:	0.01	
+F-Score:	0.32998690528154	
