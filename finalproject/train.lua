@@ -22,7 +22,31 @@ cmd:option('-rnn_unit2', 'none', 'Determine which recurrent unit to use (none ls
 cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if rnn_unit2 is not none')
 cmd:option('-testfile', '', 'test file')
 
+function main() 
+	-- Parse input params
+	opt = cmd:parse(arg)
+	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/finalproject/' or ''
 
+	dofile(_G.path..'neural.lua')
+
+	local f = hdf5.open(opt.datafile, 'r')
+	ngrams = f:read('ngrams'):all():long()[1]
+
+	-- Count based laplace
+	local train_input = f:read('train_input'):all():long()
+	local train_output = f:read('train_output'):all():long()
+	local test_input = f:read('test_input'):all():long()
+	local test_output = f:read('test_output'):all():long()
+	
+	printoptions(opt)
+
+	--print(flat_valid_output:narrow(1, 1, 20))
+	if opt.classifier == 'rnn' then
+		model, crit = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout)
+
+   end
+end
+main()
 
 
 
