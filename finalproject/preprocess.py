@@ -13,34 +13,67 @@ import h5py
 
 ACIDS = list(string.ascii_uppercase)
 
-FILE_PATHS = {"HUMAN": ("data/human.pr.filter",
-                       "data/human.go.filter"),
-              "ALL": (None,
-                       None)}
+FILE_PATHS = {"HUMAN": ("data/ss.txt")}
 args = {}
 
 def get_ngram_vocab(n):
     words = [''.join(p) for p in itertools.product(ACIDS, repeat=n)]
     vocab = {}
-    idx = 1
+    idx = 3
     for word in words:
         vocab[word] = idx
         idx += 1
     return vocab
 
-def load_input_data(input_data_file, seq_to_vec, cutoff=2000):
+def load_data(data_file, input_seq_to_vec, min_amino_acids=0, max_amino_acids=100000):
     X = []
-    max_l = 0
-    indices_to_remove = []
-    with open(input_data_file, 'r') as f:
+    Y = []
+
+    max_input_l = 0
+    max_output_l = 0
+    output_vocab = {'<START>': 1, '<END>': 2}
+    output_vocab_idx = 3
+
+    indices_to_exclude = []
+    next_line_is_seq = False
+    next_line_is_output = False
+
+    with open(data_file, 'r') as f:
         for line_idx, line in enumerate(f):
-            x = seq_to_vec(line)
-            if len(x) <= cutoff:
-                max_l = max(len(x), max_l)
-            else:
-                indices_to_remove.append(line_idx)
-            X.append(x)
-    return pad(X, max_l), indices_to_remove
+            if 'A:sequence' in line:
+                next_line_is_output = False
+                next_line_is_seq = True
+            elif 'A:secstr' in line:
+                next_line_is_seq = False
+                next_line_is_output = True
+            elif (':sequence' in line) or ('secstr' in line):
+                next_line_is_seq = False
+                next_line_is_output = False
+            elif next_line_is_seq: 
+                x = input_seq_to_vec(line)
+                if len(x) >= min_amino_acids and len(x) <= max_amino_acids:
+                    max_input_l = max(len(x), max_input_l)
+                else:
+                    indices_to_exclude.append(line_idx)
+                X.extend(x)
+            elif next_line_is_output:
+                y = []
+                # start tag
+                y.append(1)
+                for output in line[:-1]:
+                    if output not in output_vocab:
+                        output_vocab[output] = output_vocab_idx
+                        output_vocab_idx += 1
+                    y.append(output_vocab[output])
+                    max_output_l = max(max_output_l, len(y))
+                # end tag
+                y.append(2)
+                Y.extend(y)
+
+    X = remove_indices(X, indices_to_exclude)
+    Y = remove_indices(Y, indices_to_exclude)
+
+    return X, Y, output_vocab
 
 def pad(vecs, padding_len, pad_char=0):
     for i in range(len(vecs)):
@@ -53,30 +86,32 @@ def pad(vecs, padding_len, pad_char=0):
 def remove_indices(data, indices_to_remove):
     return [d for i,d in enumerate(data) if i not in indices_to_remove]
 
-def load_output_data(output_data_file, cutoff=50):
-    output_vocab = {}
-    idx = 1
-    output_vecs = []
-    indices_to_remove = []
-    max_l = 0
-    with open(output_data_file, 'r') as f:
-        for line_idx, line in enumerate(f):
-            this_vec = []
-            for output in line.split():
-                if output not in output_vocab:
-                    output_vocab[output] = idx
-                    idx += 1
-                this_vec.append(output_vocab[output])
-            if len(this_vec) <= cutoff:
-                max_l = max(max_l, len(this_vec))
-            else:
-                indices_to_remove.append(line_idx)
-            output_vecs.append(this_vec)
-    return pad(output_vecs, max_l), indices_to_remove, len(output_vocab)
+# def load_output_data(output_data_file, cutoff=50):
+#     output_vocab = {}
+#     idx = 1
+#     output_vecs = []
+#     indices_to_remove = []
+#     max_l = 0
+#     with open(output_data_file, 'r') as f:
+#         for line_idx, line in enumerate(f):
+#             this_vec = []
+#             for output in line.split():
+#                 if output not in output_vocab:
+#                     output_vocab[output] = idx
+#                     idx += 1
+#                 this_vec.append(output_vocab[output])
+#             if len(this_vec) <= cutoff:
+#                 max_l = max(max_l, len(this_vec))
+#             else:
+#                 indices_to_remove.append(line_idx)
+#             output_vecs.append(this_vec)
+#     return pad(output_vecs, max_l), indices_to_remove, len(output_vocab)
 
 
-def ngram_seq_to_vec(sequence, n, vocab):
+def ngram_seq_to_vec(sequence, n, vocab, start_tag=1, end_tag=2):
     vec = []
+
+    vec.append(start_tag)
 
     for start_idx in range(len(sequence)-n):
         ngram = sequence[start_idx:start_idx+n]
@@ -85,6 +120,8 @@ def ngram_seq_to_vec(sequence, n, vocab):
             print "not in vocab"
             assert False
         vec.append(vocab[ngram])
+
+    vec.append(end_tag)
 
     return vec
 
@@ -111,20 +148,21 @@ def main(arguments):
     args = parser.parse_args(arguments)
     dataset = args.dataset
     ngrams = args.ngrams
-    input_data_file, output_data_file = FILE_PATHS[dataset]
+    data_file = FILE_PATHS[dataset]
 
     assert ngrams > 0
     vocab = get_ngram_vocab(ngrams)
     seq_to_vec = lambda s: ngram_seq_to_vec(s, ngrams, vocab)
 
-    input_data, input_indices_to_remove = load_input_data(input_data_file, seq_to_vec)
-    output_data, output_indices_to_remove, nclasses = load_output_data(output_data_file)
-
-    indices_to_remove = set(input_indices_to_remove) | set(output_indices_to_remove)
-    input_data = remove_indices(input_data, indices_to_remove)
-    output_data = remove_indices(output_data, indices_to_remove)
-
+    input_data, output_data, classes = load_data(data_file, seq_to_vec)
     train_input, train_output, test_input, test_output = split_data(input_data, output_data)
+
+    print "Class | Index"
+    for w, idx in classes.items():
+        print w, idx
+
+    print "Num inputs:",
+    print len(input_data)
 
     # Write out to hdf5
     print "Writing out to hdf5"
@@ -137,7 +175,9 @@ def main(arguments):
         f['test_output'] = np.array(test_output, dtype=np.int32)
         f['ngrams'] = np.array([ngrams], dtype=np.int32)
         f['vocab_size'] = np.array([len(vocab)], dtype=np.int32)
-        f['nclasses'] = np.array([nclasses], dtype=np.int32)
+        f['nclasses'] = np.array([len(classes)], dtype=np.int32)
+        f['start_idx'] = 1
+        f['end_idx'] = 2
 
     print "Done."
 
