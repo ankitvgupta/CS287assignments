@@ -72,7 +72,7 @@ def load_output_data(output_data_file, cutoff=50):
             else:
                 indices_to_remove.append(line_idx)
             output_vecs.append(this_vec)
-    return pad(output_vecs, max_l), indices_to_remove
+    return pad(output_vecs, max_l), indices_to_remove, len(output_vocab)
 
 
 def ngram_seq_to_vec(sequence, n, vocab):
@@ -118,7 +118,7 @@ def main(arguments):
     seq_to_vec = lambda s: ngram_seq_to_vec(s, ngrams, vocab)
 
     input_data, input_indices_to_remove = load_input_data(input_data_file, seq_to_vec)
-    output_data, output_indices_to_remove = load_output_data(output_data_file)
+    output_data, output_indices_to_remove, nclasses = load_output_data(output_data_file)
 
     indices_to_remove = set(input_indices_to_remove) | set(output_indices_to_remove)
     input_data = remove_indices(input_data, indices_to_remove)
@@ -136,6 +136,8 @@ def main(arguments):
         f['test_input'] = np.array(test_input, dtype=np.int32)
         f['test_output'] = np.array(test_output, dtype=np.int32)
         f['ngrams'] = np.array([ngrams], dtype=np.int32)
+        f['vocab_size'] = np.array([len(vocab)], dtype=np.int32)
+        f['nclasses'] = np.array([nclasses], dtype=np.int32)
 
     print "Done."
 
