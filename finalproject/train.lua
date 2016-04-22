@@ -30,7 +30,9 @@ function main()
 	dofile(_G.path..'neural.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
-	ngrams = f:read('ngrams'):all():long()[1]
+	local ngrams = f:read('ngrams'):all():long()[1]
+	local nclasses = f:read('nclasses'):all():long()[1]
+	local vocab_size = f:read('vocab_size'):all():long()[1]
 
 	-- Count based laplace
 	local train_input = f:read('train_input'):all():long()
