@@ -144,3 +144,7 @@ function trainRNN(model,
 	end
 end
 
+function testRNN(model, crit, test_input)
+	local joined_table = nn.Sequential():add(model):add(nn.JoinTable(1)):forward(test_input)
+	print(joined_table:size())
+end

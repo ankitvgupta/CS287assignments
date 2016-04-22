@@ -56,6 +56,7 @@ function main()
 	if opt.classifier == 'rnn' then
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout)
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
+   		testRNN(model, crit, test_input)
    end
 end
 main()
