@@ -1,8 +1,10 @@
 require 'nn'
 require 'rnn'
 require 'optim'
+require 'cunn'
+--require 'cudnn'
 
-function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout) 
+function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda) 
 
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
@@ -45,7 +47,14 @@ function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, drop
 
 	-- Add a criterion
 	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
-
+	if usecuda then
+		--cudnn.convert(batchLSTM, cudnn)
+		batchLSTM:cuda()
+		print("Converted LSTM to CUDA")
+		--cudnn.convert(crit, cudnn)
+		crit:cuda()
+		print("Converted crit to CUDA")
+	end
 	return batchLSTM, crit, embedding
 
 end

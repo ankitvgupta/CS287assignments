@@ -21,6 +21,11 @@ cmd:option('-rnn_unit1', 'lstm', 'Determine which recurrent unit to use (lstm or
 cmd:option('-rnn_unit2', 'none', 'Determine which recurrent unit to use (none lstm or gru) for 2nd layer - for classifier=rnn only')
 cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if rnn_unit2 is not none')
 cmd:option('-testfile', '', 'test file')
+cmd:option('-cuda', false, 'Set to use cuda')
+
+require 'cunn'
+cutorch.setDevice(1)
+
 
 function main() 
 	-- Parse input params
@@ -42,19 +47,27 @@ function main()
 	local flat_train_input = f:read('train_input'):all():long()
 	local flat_train_output = f:read('train_output'):all():long()
 
+
+	local test_input = f:read('test_input'):all():long()
+	local test_output = f:read('test_output'):all():long()
+
+	if opt.cuda then
+		print("Using cuda")
+		flat_train_input = flat_train_input:cuda()
+		flat_train_output = flat_train_output:cuda()
+		test_input = test_input:cuda()
+		test_output = test_output:cuda()	
+	end
 	local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
 	print(train_input:size())
 	print(train_output:size())
 
-	local test_input = f:read('test_input'):all():long()
-	local test_output = f:read('test_output'):all():long()
-	
 
 	--printoptions(opt)
 
 	--print(flat_valid_output:narrow(1, 1, 20))
 	if opt.classifier == 'rnn' then
-		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout)
+		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    end
 end
