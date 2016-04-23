@@ -14,7 +14,9 @@ import h5py
 ACIDS = {'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9, 'H': 10, 'K': 11, 'M': 12, 'L': 13, 'N':14, 'Q':15, 'P':16, 'S':17, 'R':18, 'T':19, 'W':20, 'V':21, 'Y':22, 'X':23, 'U': 24, 'Z': 25, 'B':26, 'O':27}
 LABELS = {'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
 
-FILE_PATHS = {"HUMAN": ("data/ss.txt"), "CB513": ("data/cb513+profile_split1.npy")}
+FILE_PATHS = {"HUMAN": ("data/ss.txt"), 
+              "CB513": ("data/cb513+profile_split1.npy"), 
+              "PRINC": ("data/cullpdb+profile_6133_filtered.npy")}
 args = {}
 
 # return two lists of amino acid / label strings
@@ -44,7 +46,7 @@ def parse_human(data_file):
     return X_strings, Y_strings
 
 # return two lists of amino acid / label strings
-def parse_cb513(data_file):
+def parse_princeton(data_file, num_proteins):
     X_strings = []
     Y_strings = []
 
@@ -53,9 +55,9 @@ def parse_cb513(data_file):
     label_order = ['L', 'B', 'E', 'G', 'I', 'H', 'S', 'T','NoSeq']
 
     data = np.load(data_file)
-    amino_acids = np.reshape(data, (514, 700, 57))
+    amino_acids = np.reshape(data, (num_proteins, 700, 57))
     
-    for p in range(514):
+    for p in range(num_proteins):
         x = ''
         y = ''
         for a in range(700):
@@ -113,11 +115,20 @@ def main(arguments):
     train_dataset = args.train_dataset
     test_dataset = args.test
 
+    if test_dataset != "CB513": 
+        print "Test dataset should only be CB513 as of now."
+        assert False
+
     train_data_file = FILE_PATHS[train_dataset]
     if train_dataset == "CB513":
-        X_strings, Y_strings = parse_cb513(train_data_file)
-    else:
+        X_strings, Y_strings = parse_princeton(train_data_file, 514)
+    elif train_dataset == "PRINC":
+        X_strings, Y_strings = parse_princeton(train_data_file, 5534)
+    elif train_data == "HUMAN":
         X_strings, Y_strings = parse_human(train_data_file)
+    else:
+        print "Unknown train dataset", train_dataset
+        assert False
 
     input_data = encode_strings(X_strings, ACIDS)
     output_data = encode_strings(Y_strings, LABELS)
@@ -130,9 +141,10 @@ def main(arguments):
 
         test_data_file = FILE_PATHS[test_dataset]
         if test_dataset == "CB513":
-            X_strings, Y_strings = parse_cb513(test_data_file)
+            X_strings, Y_strings = parse_princeton(test_data_file, 514)
         else:
-            X_strings, Y_strings = parse_human(test_data_file)
+            print "This should only be CB513..."
+            assert False
 
         test_input = encode_strings(X_strings, ACIDS)
         test_output = encode_strings(Y_strings, LABELS)
