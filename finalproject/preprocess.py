@@ -11,35 +11,22 @@ import itertools
 import numpy as np
 import h5py
 
-ACIDS = list(string.ascii_uppercase)
+ACIDS = {'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9, 'H': 10, 'K': 11, 'M': 12, 'L': 13, 'N':14, 'Q':15, 'P':16, 'S':17, 'R':18, 'T':19, 'W':20, 'V':21, 'Y':22, 'X':23, 'U': 24, 'Z': 25, 'B':26, 'O':27}
+LABELS = {'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
 
-FILE_PATHS = {"HUMAN": ("data/ss.txt")}
+FILE_PATHS = {"HUMAN": ("data/ss.txt"), "CB513": ("data/cb513+profile_split1.npy")}
 args = {}
 
-def get_ngram_vocab(n):
-    words = [''.join(p) for p in itertools.product(ACIDS, repeat=n)]
-    vocab = {}
-    idx = 3
-    for word in words:
-        vocab[word] = idx
-        idx += 1
-    return vocab
+# return two lists of amino acid / label strings
+def parse_human(data_file):
+    X_strings = []
+    Y_strings = []
 
-def load_data(data_file, input_seq_to_vec, min_amino_acids=0, max_amino_acids=100000):
-    X = []
-    Y = []
-
-    max_input_l = 0
-    max_output_l = 0
-    output_vocab = {'<START>': 1, '<END>': 2}
-    output_vocab_idx = 3
-
-    indices_to_exclude = []
     next_line_is_seq = False
     next_line_is_output = False
 
     with open(data_file, 'r') as f:
-        for line_idx, line in enumerate(f):
+        for line in f:
             if 'A:sequence' in line:
                 next_line_is_output = False
                 next_line_is_seq = True
@@ -50,90 +37,66 @@ def load_data(data_file, input_seq_to_vec, min_amino_acids=0, max_amino_acids=10
                 next_line_is_seq = False
                 next_line_is_output = False
             elif next_line_is_seq: 
-                x = input_seq_to_vec(line)
-                if len(x) >= min_amino_acids and len(x) <= max_amino_acids:
-                    max_input_l = max(len(x), max_input_l)
-                else:
-                    indices_to_exclude.append(line_idx)
-                X.extend(x)
+                X_strings.append(line[:-1])
             elif next_line_is_output:
-                y = []
-                # start tag
-                y.append(1)
-                for output in line[:-1]:
-                    if output not in output_vocab:
-                        output_vocab[output] = output_vocab_idx
-                        output_vocab_idx += 1
-                    y.append(output_vocab[output])
-                    max_output_l = max(max_output_l, len(y))
-                # end tag
-                y.append(2)
-                Y.extend(y)
+                Y_strings.append(line[:-1])
 
-    X = remove_indices(X, indices_to_exclude)
-    Y = remove_indices(Y, indices_to_exclude)
+    return X_strings, Y_strings
 
-    return X, Y, output_vocab
+# return two lists of amino acid / label strings
+def parse_cb513(data_file):
+    X_strings = []
+    Y_strings = []
 
-def pad(vecs, padding_len, pad_char=0):
-    for i in range(len(vecs)):
-        vec = vecs[i]
-        diff = max(0, padding_len - len(vec))
-        padding = [pad_char for _ in range(diff)]
-        vecs[i] = padding+vec
-    return vecs
+    # NoSeq is padding
+    acid_order = ['A', 'C', 'E', 'D', 'G', 'F', 'I', 'H', 'K', 'M', 'L', 'N', 'Q', 'P', 'S', 'R', 'T', 'W', 'V', 'Y', 'X','NoSeq']
+    label_order = ['L', 'B', 'E', 'G', 'I', 'H', 'S', 'T','NoSeq']
 
-def remove_indices(data, indices_to_remove):
-    return [d for i,d in enumerate(data) if i not in indices_to_remove]
+    data = np.load(data_file)
+    amino_acids = np.reshape(data, (514, 700, 57))
+    
+    for p in range(514):
+        x = ''
+        y = ''
+        for a in range(700):
+            # reached end of this sequence
+            if amino_acids[p][a][21]:
+                # label should also be noseq
+                assert amino_acids[p][a][30]
+                X_strings.append(x)
+                Y_strings.append(y)
+                break
+            else:
+                this_acids = np.nonzero(amino_acids[p][a][:22])[0]
+                assert len(this_acids) == 1
+                this_acid = acid_order[this_acids[0]]
+                this_labels = np.nonzero(amino_acids[p][a][22:30])[0]
+                assert len(this_labels) == 1
+                this_label = label_order[this_labels[0]]
 
-# def load_output_data(output_data_file, cutoff=50):
-#     output_vocab = {}
-#     idx = 1
-#     output_vecs = []
-#     indices_to_remove = []
-#     max_l = 0
-#     with open(output_data_file, 'r') as f:
-#         for line_idx, line in enumerate(f):
-#             this_vec = []
-#             for output in line.split():
-#                 if output not in output_vocab:
-#                     output_vocab[output] = idx
-#                     idx += 1
-#                 this_vec.append(output_vocab[output])
-#             if len(this_vec) <= cutoff:
-#                 max_l = max(max_l, len(this_vec))
-#             else:
-#                 indices_to_remove.append(line_idx)
-#             output_vecs.append(this_vec)
-#     return pad(output_vecs, max_l), indices_to_remove, len(output_vocab)
+                x = x+this_acid
+                y = y+this_label
 
 
-def ngram_seq_to_vec(sequence, n, vocab, start_tag=1, end_tag=2):
-    vec = []
+    return X_strings, Y_strings
 
-    vec.append(start_tag)
+def encode_strings(str_list, index_dict, start_pad=1, end_pad=2):
+    encoded = []
 
-    for start_idx in range(len(sequence)-n):
-        ngram = sequence[start_idx:start_idx+n]
-        if ngram not in vocab:
-            print ngram,
-            print "not in vocab"
-            assert False
-        vec.append(vocab[ngram])
+    for s in str_list:
+        encoded.append(start_pad)
+        for c in s:
+            encoded.append(index_dict[c])
+        encoded.append(end_pad)
 
-    vec.append(end_tag)
-
-    return vec
+    return encoded
 
 
 def split_data(input_data, output_data, split_perc=0.8):
     l = len(input_data)
     assert len(output_data) == l
-    index_shuf = range(l)
-    input_shuf = [input_data[i] for i in index_shuf]
-    output_shuf = [output_data[i] for i in index_shuf]
     cutoff = int(split_perc*l)
-    return input_shuf[:cutoff], output_shuf[:cutoff], input_shuf[cutoff:], output_shuf[cutoff:]
+    return input_data[:cutoff], output_data[:cutoff], input_data[cutoff:], output_data[cutoff:]
     
 
 def main(arguments):
@@ -143,26 +106,20 @@ def main(arguments):
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('dataset', help="Data set", default="HUMAN",
                         type=str, nargs='?')
-    parser.add_argument('--ngrams', help="N gram length", default=1,
-                        type=int, nargs='?')
     args = parser.parse_args(arguments)
     dataset = args.dataset
-    ngrams = args.ngrams
     data_file = FILE_PATHS[dataset]
 
-    assert ngrams > 0
-    vocab = get_ngram_vocab(ngrams)
-    seq_to_vec = lambda s: ngram_seq_to_vec(s, ngrams, vocab)
 
-    input_data, output_data, classes = load_data(data_file, seq_to_vec)
+    if dataset == "CB513":
+        X_strings, Y_strings = parse_cb513(data_file)
+    else:
+        X_strings, Y_strings = parse_human(data_file)
+
+    input_data = encode_strings(X_strings, ACIDS)
+    output_data = encode_strings(Y_strings, LABELS)
+
     train_input, train_output, test_input, test_output = split_data(input_data, output_data)
-
-    print "Class | Index"
-    for w, idx in classes.items():
-        print w, idx
-
-    print "Num inputs:",
-    print len(input_data)
 
     # Write out to hdf5
     print "Writing out to hdf5"
@@ -173,9 +130,8 @@ def main(arguments):
         f['train_output'] = np.array(train_output, dtype=np.int32)
         f['test_input'] = np.array(test_input, dtype=np.int32)
         f['test_output'] = np.array(test_output, dtype=np.int32)
-        f['ngrams'] = np.array([ngrams], dtype=np.int32)
-        f['vocab_size'] = np.array([len(vocab)], dtype=np.int32)
-        f['nclasses'] = np.array([len(classes)], dtype=np.int32)
+        f['vocab_size'] = np.array([max(ACIDS.values())], dtype=np.int32)
+        f['nclasses'] = np.array([max(LABELS.values())], dtype=np.int32)
         f['start_idx'] = 1
         f['end_idx'] = 2
 
