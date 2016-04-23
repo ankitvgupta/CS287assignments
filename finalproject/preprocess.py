@@ -151,8 +151,8 @@ def main(arguments):
         f['test_output'] = np.array(test_output, dtype=np.int32)
         f['vocab_size'] = np.array([max(ACIDS.values())], dtype=np.int32)
         f['nclasses'] = np.array([max(LABELS.values())], dtype=np.int32)
-        f['start_idx'] = 1
-        f['end_idx'] = 2
+        f['start_idx'] = np.array([1], dtype=np.int32)
+        f['end_idx'] = np.array([2], dtype=np.int32)
 
     print "Done."
 
