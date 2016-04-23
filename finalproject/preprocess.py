@@ -129,7 +129,7 @@ def main(arguments):
         train_output = output_data
 
         test_data_file = FILE_PATHS[test_dataset]
-        if test_data_file == "CB513":
+        if test_dataset == "CB513":
             X_strings, Y_strings = parse_cb513(test_data_file)
         else:
             X_strings, Y_strings = parse_human(test_data_file)
