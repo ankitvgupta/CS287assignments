@@ -1,5 +1,5 @@
 require("nn")
-require 'cunn'
+-- require 'cunn'
 
 
 function memm_model(nsparsefeatures, ndensefeatures, embeddingsize, D_win, D_out, hidden, usecuda)
@@ -161,9 +161,12 @@ function make_predictor_function_memm(model, nsparsefeatures)
 
 	local predictor = function(c_prev, x_i_sparse)
 		--print()
-		local sparse = torch.zeros(2):long()
-		sparse[1] = x_i_sparse
+		local sparse = torch.zeros(x_i_sparse:size(1) + 1):long()
+		sparse:narrow(1, 1, x_i_sparse:size(1)):copy(x_i_sparse)
 		sparse[-1] = c_prev + nsparsefeatures
+		--print(sparse)
+		--print(sparse:reshape(1, sparse:size(1)))
+
 		return torch.exp(model:forward({sparse:reshape(1, sparse:size(1))})):squeeze()
 	end
 	return predictor

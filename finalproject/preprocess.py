@@ -11,8 +11,8 @@ import itertools
 import numpy as np
 import h5py
 
-ACIDS = {'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9, 'H': 10, 'K': 11, 'M': 12, 'L': 13, 'N':14, 'Q':15, 'P':16, 'S':17, 'R':18, 'T':19, 'W':20, 'V':21, 'Y':22, 'X':23, 'U': 24, 'Z': 25, 'B':26, 'O':27}
-LABELS = {'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
+ACIDS = {'<': 1, '>': 2, 'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9, 'H': 10, 'K': 11, 'M': 12, 'L': 13, 'N':14, 'Q':15, 'P':16, 'S':17, 'R':18, 'T':19, 'W':20, 'V':21, 'Y':22, 'X':23, 'U': 24, 'Z': 25, 'B':26, 'O':27}
+LABELS = {'<': 1, '>': 2, 'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
 
 FILE_PATHS = {"HUMAN": ("data/ss.txt"), 
               "CB513": ("data/cb513+profile_split1.npy"), 
@@ -82,14 +82,28 @@ def parse_princeton(data_file, num_proteins):
 
     return X_strings, Y_strings
 
-def encode_strings(str_list, index_dict, start_pad=1, end_pad=2):
+def ngram_encoder(vocab_dict, ngram, start_pad='<', end_pad='>'):
+    halfwin = (ngram-1)/2
+    def this_encoder(s):
+        padded_str = ''.join([start_pad for _ in range(halfwin)])+s+''.join([end_pad for _ in range(halfwin)])
+        encoding = []
+        for idx in range(halfwin, len(s)+halfwin):
+            start_idx = idx-halfwin
+            end_idx = idx+halfwin+1
+            this_encoding = []
+            for i in range(start_idx, end_idx):
+                c = padded_str[i]
+                this_encoding.append(vocab_dict[c])
+            encoding.append(this_encoding)
+        return encoding
+    return this_encoder
+
+
+def encode_strings(str_list, string_encoder):
     encoded = []
 
     for s in str_list:
-        encoded.append(start_pad)
-        for c in s:
-            encoded.append(index_dict[c])
-        encoded.append(end_pad)
+        encoded.extend(string_encoder(s))
 
     return encoded
 
@@ -111,11 +125,16 @@ def main(arguments):
     # if None, then train dataset is split into train and test
     parser.add_argument('--test', help="Test data set", default=None,
                         type=str, nargs='?')
+    parser.add_argument('--dwin', help="Train data set", default=1,
+                        type=int, nargs='?')
     args = parser.parse_args(arguments)
     train_dataset = args.train_dataset
     test_dataset = args.test
+    dwin = args.dwin
 
-    if test_dataset != "CB513": 
+    assert dwin % 2 == 1
+
+    if test_dataset is not None and test_dataset != "CB513": 
         print "Test dataset should only be CB513 as of now."
         assert False
 
@@ -124,14 +143,17 @@ def main(arguments):
         X_strings, Y_strings = parse_princeton(train_data_file, 514)
     elif train_dataset == "PRINC":
         X_strings, Y_strings = parse_princeton(train_data_file, 5534)
-    elif train_data == "HUMAN":
+    elif train_dataset == "HUMAN":
         X_strings, Y_strings = parse_human(train_data_file)
     else:
         print "Unknown train dataset", train_dataset
         assert False
 
-    input_data = encode_strings(X_strings, ACIDS)
-    output_data = encode_strings(Y_strings, LABELS)
+    input_encoder = ngram_encoder(ACIDS, dwin)
+    output_encoder = ngram_encoder(LABELS, 1)
+
+    input_data = encode_strings(X_strings, input_encoder)
+    output_data = encode_strings(Y_strings, output_encoder)
 
     if test_dataset is None:
         train_input, train_output, test_input, test_output = split_data(input_data, output_data)
@@ -146,8 +168,8 @@ def main(arguments):
             print "This should only be CB513..."
             assert False
 
-        test_input = encode_strings(X_strings, ACIDS)
-        test_output = encode_strings(Y_strings, LABELS)
+        test_input = encode_strings(X_strings, input_encoder)
+        test_output = encode_strings(Y_strings, output_encoder)
 
 
     # Write out to hdf5
@@ -158,11 +180,12 @@ def main(arguments):
     with h5py.File(filename, "w") as f:
 
         f['train_input'] = np.array(train_input, dtype=np.int32)
-        f['train_output'] = np.array(train_output, dtype=np.int32)
+        f['train_output'] = np.array(np.squeeze(train_output), dtype=np.int32)
         f['test_input'] = np.array(test_input, dtype=np.int32)
-        f['test_output'] = np.array(test_output, dtype=np.int32)
+        f['test_output'] = np.array(np.squeeze(test_output), dtype=np.int32)
         f['vocab_size'] = np.array([max(ACIDS.values())], dtype=np.int32)
         f['nclasses'] = np.array([max(LABELS.values())], dtype=np.int32)
+        f['dwin'] = np.array([dwin], dtype=np.int32)
         f['start_idx'] = np.array([1], dtype=np.int32)
         f['end_idx'] = np.array([2], dtype=np.int32)
 

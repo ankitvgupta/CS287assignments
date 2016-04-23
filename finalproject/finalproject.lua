@@ -37,7 +37,7 @@ function main()
 	dofile(_G.path..'memm.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
-	-- local ngrams = f:read('ngrams'):all():long()[1]
+	local dwin = f:read('dwin'):all():long()[1]
 	local nclasses = f:read('nclasses'):all():long()[1]
 	local start_class = f:read('start_idx'):all():long()[1]
 	local vocab_size = f:read('vocab_size'):all():long()[1] + 10
@@ -64,9 +64,6 @@ function main()
 		test_input = test_input:cuda()
 		test_output = test_output:cuda()	
 	end
-	local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
-	print(train_input:size())
-	print(train_output:size())
 
 	print(flat_train_input:size())
 
@@ -75,6 +72,9 @@ function main()
 
 	--print(flat_valid_output:narrow(1, 1, 20))
 	if (opt.classifier == 'rnn') then
+		local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
+		print(train_input:size())
+		print(train_output:size())
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		trainRNN(model,crit,embedding,trainRNNn_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    		testRNN(model, crit, test_input)
