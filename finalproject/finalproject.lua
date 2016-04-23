@@ -22,9 +22,8 @@ cmd:option('-rnn_unit2', 'none', 'Determine which recurrent unit to use (none ls
 cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if rnn_unit2 is not none')
 cmd:option('-testfile', '', 'test file')
 cmd:option('-cuda', false, 'Set to use cuda')
+cmd:option('-minibatch_size', 320, 'Size of minibatches')
 
-require 'cunn'
-cutorch.setDevice(1)
 
 
 function main() 
@@ -34,12 +33,17 @@ function main()
 
 	dofile(_G.path..'neural.lua')
 	dofile(_G.path..'utils.lua')
+	dofile(_G.path..'hmm.lua')
+	dofile(_G.path..'memm.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
-	local ngrams = f:read('ngrams'):all():long()[1]
+	-- local ngrams = f:read('ngrams'):all():long()[1]
 	local nclasses = f:read('nclasses'):all():long()[1]
+	local start_class = f:read('start_idx'):all():long()[1]
 	local vocab_size = f:read('vocab_size'):all():long()[1] + 10
+	print("Num classes:", nclasses)
 	print("Vocab size:", vocab_size)
+	print("Start class:", start_class)
 	--local start_idx = f:read('start_idx'):all():long()[1]
 	--local end_indx = f:read('end_indx'):all():long()[1]
 
@@ -52,6 +56,8 @@ function main()
 	local test_output = f:read('test_output'):all():long()
 
 	if opt.cuda then
+		require 'cunn'
+		cutorch.setDevice(1)
 		print("Using cuda")
 		flat_train_input = flat_train_input:cuda()
 		flat_train_output = flat_train_output:cuda()
@@ -62,15 +68,34 @@ function main()
 	print(train_input:size())
 	print(train_output:size())
 
+	print(flat_train_input:size())
+
 
 	--printoptions(opt)
 
 	--print(flat_valid_output:narrow(1, 1, 20))
-	if opt.classifier == 'rnn' then
+	if (opt.classifier == 'rnn') then
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
-		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
+		trainRNN(model,crit,embedding,trainRNNn_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    		testRNN(model, crit, test_input)
-   end
+   	elseif (opt.classifier == 'hmm') then
+   		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
+   		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
+   		print(test_predicted_output)
+   		acc = prediction_accuracy(test_predicted_output:long(), test_output)
+   		print("Accuracy:", acc)
+   	elseif (opt.classifier == 'memm') then
+   		local model = train_memm(flat_train_input, nil, flat_train_output, 
+						vocab_size, 0, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
+
+		predictor = make_predictor_function_memm(model, vocab_size)
+   		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
+   		print(test_predicted_output)
+   		acc = prediction_accuracy(test_predicted_output:long(), test_output)
+   		print("Accuracy:", acc)
+   	else
+   		print("Unknown classifier ", opt.classifier)
+   	end
 end
 main()
 
