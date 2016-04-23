@@ -175,6 +175,7 @@ def main(arguments):
     # Write out to hdf5
     filename = train_dataset
     if test_dataset is not None: filename = filename + '_'+test_dataset
+    filename = filename+'_'+str(dwin)
     filename = filename+'.hdf5'
     print "Writing out to", filename
     with h5py.File(filename, "w") as f:
