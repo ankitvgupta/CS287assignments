@@ -104,26 +104,45 @@ def main(arguments):
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('dataset', help="Data set", default="HUMAN",
+    parser.add_argument('train_dataset', help="Train data set", default="HUMAN",
+                        type=str, nargs='?')
+    # if None, then train dataset is split into train and test
+    parser.add_argument('--test', help="Test data set", default=None,
                         type=str, nargs='?')
     args = parser.parse_args(arguments)
-    dataset = args.dataset
-    data_file = FILE_PATHS[dataset]
+    train_dataset = args.train_dataset
+    test_dataset = args.test
 
-
-    if dataset == "CB513":
-        X_strings, Y_strings = parse_cb513(data_file)
+    train_data_file = FILE_PATHS[train_dataset]
+    if train_dataset == "CB513":
+        X_strings, Y_strings = parse_cb513(train_data_file)
     else:
-        X_strings, Y_strings = parse_human(data_file)
+        X_strings, Y_strings = parse_human(train_data_file)
 
     input_data = encode_strings(X_strings, ACIDS)
     output_data = encode_strings(Y_strings, LABELS)
 
-    train_input, train_output, test_input, test_output = split_data(input_data, output_data)
+    if test_dataset is None:
+        train_input, train_output, test_input, test_output = split_data(input_data, output_data)
+    else:
+        train_input = input_data
+        train_output = output_data
+
+        test_data_file = FILE_PATHS[test_dataset]
+        if test_data_file == "CB513":
+            X_strings, Y_strings = parse_cb513(test_data_file)
+        else:
+            X_strings, Y_strings = parse_human(test_data_file)
+
+        test_input = encode_strings(X_strings, ACIDS)
+        test_output = encode_strings(Y_strings, LABELS)
+
 
     # Write out to hdf5
-    print "Writing out to hdf5"
-    filename = args.dataset + '.hdf5'
+    filename = train_dataset
+    if test_dataset is not None: filename = filename + '_'+test_dataset
+    filename = filename+'.hdf5'
+    print "Writing out to", filename
     with h5py.File(filename, "w") as f:
 
         f['train_input'] = np.array(train_input, dtype=np.int32)
