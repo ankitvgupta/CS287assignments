@@ -1,11 +1,13 @@
 require 'nn'
 require 'rnn'
 require 'optim'
-require 'cunn'
+
 --require 'cudnn'
 
 function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda) 
-
+	if usecude then
+		require 'cunn'
+	end
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
@@ -153,7 +155,17 @@ function trainRNN(model,
 	end
 end
 
-function testRNN(model, crit, test_input)
-	local joined_table = nn.Sequential():add(model):add(nn.JoinTable(1)):forward(test_input)
-	print(joined_table:size())
+function testRNN(model, crit, test_input, minibatch_size, nclasses)
+	minibatch_size = 5*minibatch_size
+	local results = torch.zeros(test_input:size(2), nclasses)
+	for j = 1,test_input:size(2)-minibatch_size, minibatch_size do
+		local minibatch_input = test_input:narrow(2, j, minibatch_size)
+		--local preds = model:forward(test_input:narrow(2, 1, 100000))
+		local preds = model:forward(minibatch_input)
+		local joined_table = nn.JoinTable(1):forward(preds)
+		results:narrow(1, j, minibatch_size):add(joined_table)
+	end
+	_, i = torch.max(results, 2)
+	return i
+	--print(joined_table:size())
 end

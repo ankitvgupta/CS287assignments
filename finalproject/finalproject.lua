@@ -23,14 +23,15 @@ cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if
 cmd:option('-testfile', '', 'test file')
 cmd:option('-cuda', false, 'Set to use cuda')
 
-require 'cunn'
-cutorch.setDevice(1)
-
 
 function main() 
 	-- Parse input params
 	opt = cmd:parse(arg)
 	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/finalproject/' or ''
+	if opt.cuda then
+		require 'cunn'
+		cutorch.setDevice(1)
+	end
 
 	dofile(_G.path..'neural.lua')
 	dofile(_G.path..'utils.lua')
@@ -50,7 +51,14 @@ function main()
 
 	local test_input = f:read('test_input'):all():long()
 	local test_output = f:read('test_output'):all():long()
-
+	
+	local desired_test_length = test_input:size(1) - (test_input:size(1) % opt.sequence_length)
+	--local desired_test_length = 1000
+	test_input = test_input:narrow(1, 1, desired_test_length)
+	test_output = test_output:narrow(1, 1, desired_test_length)
+	
+	test_input = test_input:reshape(1, test_input:size(1))
+	print("Test size", test_input:size())
 	if opt.cuda then
 		print("Using cuda")
 		flat_train_input = flat_train_input:cuda()
@@ -69,8 +77,11 @@ function main()
 	if opt.classifier == 'rnn' then
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
-   		testRNN(model, crit, test_input)
-   end
+   		print("Starting the testing")
+		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses)
+   		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
+		print("Accuracy", accuracy)
+	end
 end
 main()
 
