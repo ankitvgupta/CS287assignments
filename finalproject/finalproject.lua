@@ -31,12 +31,14 @@ function main()
 	if opt.cuda then
 		require 'cunn'
 		cutorch.setDevice(1)
+		print("Using cuda")
 	end
 
 	dofile(_G.path..'neural.lua')
 	dofile(_G.path..'utils.lua')
 	dofile(_G.path..'hmm.lua')
 	dofile(_G.path..'memm.lua')
+	printoptions(opt)
 
 	local f = hdf5.open(opt.datafile, 'r')
 	local dwin = f:read('dwin'):all():long()[1]
@@ -65,8 +67,8 @@ function main()
 	test_input = test_input:reshape(1, test_input:size(1))
 	print("Test size", test_input:size())
 	if opt.cuda then
-		require 'cunn'
-		cutorch.setDevice(1)
+		--require 'cunn'
+		--cutorch.setDevice(1)
 		print("Using cuda")
 		flat_train_input = flat_train_input:cuda()
 		flat_train_output = flat_train_output:cuda()
@@ -89,6 +91,7 @@ function main()
    		print("Starting the testing")
 		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses)
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
+		printoptions(opt)
 		print("Accuracy", accuracy)
    	elseif (opt.classifier == 'hmm') then
    		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)

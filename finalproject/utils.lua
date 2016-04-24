@@ -9,16 +9,18 @@ end
 function printoptions(opt)
 	print("datafile:", opt.datafile, 
 		"classifier:", opt.classifier, 
-		"alpha:", opt.alpha, 
-		"beta:", opt.beta,
-		"embedding_size:", opt.embedding_size, 
-		"minibatch_size", opt.minibatch_size,
+		"b:", opt.b, 
+		"alpha:", opt.alpha,
+		"sequence_length:", opt.sequence_length, 
+		"embedding_size", opt.embedding_size,
 		"optimizer:", opt.optimizer, 
 		"epochs:", opt.epochs, 
 		"hidden", opt.hidden, 
-		"eta:", opt.eta)
+		"eta:", opt.eta, 
+		"rnn_unit1", opt.rnn_unit1, 
+		"rnn_unit2", opt.rnn_unit2,
+		"dropout", opt.dropout)
 end
-
 
 
 
