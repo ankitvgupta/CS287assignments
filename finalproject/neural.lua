@@ -117,9 +117,9 @@ function trainRNN(model,
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-				print("Loss", loss)
+				--print("Loss", loss)
 				if j == 1 then
-					print("    ", loss)
+					print("Epoch", i, loss)
 				end
 
 				-- backprop
