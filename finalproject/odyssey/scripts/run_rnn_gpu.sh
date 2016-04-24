@@ -16,39 +16,44 @@
 #!/bin/bash
 
 # Read the config files and get the appropriate config
-#readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/HW5/odyssey/scripts/hmm_experiment1_config.txt
-#selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
+readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/scripts/rnn_experiment1_config.txt
+selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
 # Extract params
-#datafile=${selected_config[0]}
-#classifier=${selected_config[1]}
-#alpha=${selected_config[2]}
-#beta=${selected_config[3]}
-#embedding_size=${selected_config[4]}
-#minibatch_size=${selected_config[5]}
-#optimizer=${selected_config[6]}
-#epochs=${selected_config[7]}
-#hidden=${selected_config[8]}
-#eta=${selected_config[9]}
+datafile=${selected_config[0]}
+classifier=${selected_config[1]}
+b=${selected_config[2]}
+alpha=${selected_config[3]}
+sequence_length=${selected_config[4]}
+embedding_size=${selected_config[5]}
+optimizer=${selected_config[6]}
+epochs=${selected_config[7]}
+hidden=${selected_config[8]}
+eta=${selected_config[9]}
+rnn1=${selected_config[10]}
+rnn2=${selected_config[11]}
+dropout=${selected_config[12]}
+
 
 # Run the trainer
 cd /scratch
 source /n/home09/ankitgupta/torch_setup_gpu.sh
 th /n/home09/ankitgupta/CS287/CS287assignments/finalproject/finalproject.lua \
-   -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5 \
-   -classifier rnn -cuda -odyssey
-
-#  -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/$datafile \
-#  -classifier $classifier \
-#  -alpha $alpha \
-#  -beta $beta \
-#  -embedding_size $embedding_size \
-#  -minibatch_size $minibatch_size \
-#  -optimizer $optimizer \
-#  -epochs $epochs \
-#  -hidden $hidden \
-#  -eta $eta \
-#  -odyssey
+ -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/$datafile \
+ -classifier $classifier \
+ -b b \
+ -alpha $alpha \
+ -sequence_length $sequence_length \
+ -embedding_size $embedding_size \
+ -optimizer $optimizer \
+ -epochs $epochs \
+ -hidden $hidden \
+ -eta $eta \
+ -rnn_unit1 $rnn1 \
+ -rnn_unit2 $rnn2 \
+ -dropout $dropout \
+ -odyssey \
+ -cuda
 
 
 
