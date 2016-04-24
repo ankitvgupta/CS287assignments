@@ -6,7 +6,6 @@ cmd = torch.CmdLine()
 -- Cmd Args
 cmd:option('-datafile', '', 'data file')
 cmd:option('-classifier', 'laplace', 'classifier to use')
-cmd:option('-window_size', 5, 'Window size (does not apply to rnn)')
 cmd:option('-b', 128, 'Total number of sequences to split into (for rnn only)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
@@ -72,11 +71,11 @@ function main()
 
 	--print(flat_valid_output:narrow(1, 1, 20))
 	if (opt.classifier == 'rnn') then
-		local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
+		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
 		print(train_input:size())
 		print(train_output:size())
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
-		trainRNN(model,crit,embedding,trainRNNn_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
+		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    		testRNN(model, crit, test_input)
    	elseif (opt.classifier == 'hmm') then
    		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
