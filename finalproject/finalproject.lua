@@ -22,6 +22,7 @@ cmd:option('-rnn_unit2', 'none', 'Determine which recurrent unit to use (none ls
 cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if rnn_unit2 is not none')
 cmd:option('-testfile', '', 'test file')
 cmd:option('-cuda', false, 'Set to use cuda')
+cmd:option('-minibatch_size', 320, 'Size of minibatches')
 
 
 function main() 
@@ -35,12 +36,17 @@ function main()
 
 	dofile(_G.path..'neural.lua')
 	dofile(_G.path..'utils.lua')
+	dofile(_G.path..'hmm.lua')
+	dofile(_G.path..'memm.lua')
 
 	local f = hdf5.open(opt.datafile, 'r')
-	local ngrams = f:read('ngrams'):all():long()[1]
+	local dwin = f:read('dwin'):all():long()[1]
 	local nclasses = f:read('nclasses'):all():long()[1]
+	local start_class = f:read('start_idx'):all():long()[1]
 	local vocab_size = f:read('vocab_size'):all():long()[1] + 10
+	print("Num classes:", nclasses)
 	print("Vocab size:", vocab_size)
+	print("Start class:", start_class)
 	--local start_idx = f:read('start_idx'):all():long()[1]
 	--local end_indx = f:read('end_indx'):all():long()[1]
 
@@ -60,28 +66,49 @@ function main()
 	test_input = test_input:reshape(1, test_input:size(1))
 	print("Test size", test_input:size())
 	if opt.cuda then
+		require 'cunn'
+		cutorch.setDevice(1)
 		print("Using cuda")
 		flat_train_input = flat_train_input:cuda()
 		flat_train_output = flat_train_output:cuda()
 		test_input = test_input:cuda()
 		test_output = test_output:cuda()	
 	end
-	local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
-	print(train_input:size())
-	print(train_output:size())
+
+	print(flat_train_input:size())
 
 
 	--printoptions(opt)
 
 	--print(flat_valid_output:narrow(1, 1, 20))
-	if opt.classifier == 'rnn' then
+	if (opt.classifier == 'rnn') then
+		local train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
+		print(train_input:size())
+		print(train_output:size())
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    		print("Starting the testing")
 		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses)
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
 		print("Accuracy", accuracy)
-	end
+   	elseif (opt.classifier == 'hmm') then
+   		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
+   		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
+   		print(test_predicted_output)
+   		acc = prediction_accuracy(test_predicted_output:long(), test_output)
+   		print("Accuracy:", acc)
+   	elseif (opt.classifier == 'memm') then
+   		local model = train_memm(flat_train_input, nil, flat_train_output, 
+						vocab_size, 0, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
+
+		predictor = make_predictor_function_memm(model, vocab_size)
+   		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
+   		print(test_predicted_output)
+   		acc = prediction_accuracy(test_predicted_output:long(), test_output)
+   		print("Accuracy:", acc)
+   	else
+   		print("Unknown classifier ", opt.classifier)
+   	end
 end
 main()
 
