@@ -4,7 +4,7 @@ require 'optim'
 
 --require 'cudnn'
 
-function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, usecuda):
+function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, usecuda)
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
@@ -99,7 +99,7 @@ function trainRNN(model,
 				num_epochs,
 				optimizer,
 				eta,
-				hacks_wanted
+				hacks_wanted,
 				bidirectional,
 				biseqencer_module)
 	local parameters, gradParameters = model:getParameters()
