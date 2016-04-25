@@ -40,7 +40,7 @@ source /n/home09/ankitgupta/torch_setup.sh
 th /n/home09/ankitgupta/CS287/CS287assignments/finalproject/finalproject.lua \
  -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/$datafile \
  -classifier $classifier \
- -b b \
+ -b $b \
  -alpha $alpha \
  -sequence_length $sequence_length \
  -embedding_size $embedding_size \
