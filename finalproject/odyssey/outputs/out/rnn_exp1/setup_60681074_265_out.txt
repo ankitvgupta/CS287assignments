@@ -1,0 +1,56 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	45	optimizer:	adagrad	epochs:	200	hidden	10	eta:	0.001	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83300
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Unit1: LSTM added	
+Dropout added	0.5	
+Unit2: LSTM added	
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+Input size	9244	
+Max train index	23	
+Epoch	1	234.35731267929	
+Epoch	2	157.58722865582	
+Epoch	3	151.25204432011	
+Epoch	4	149.84261381626	
+Epoch	5	149.50559675694	
+Epoch	6	149.14235830307	
+Epoch	7	148.81074202061	
+Epoch	8	148.67049443722	
+Epoch	9	148.1315227747	
+Epoch	10	147.90041840076	
+Epoch	11	148.04330778122	
+Epoch	12	147.35600602627	
+Epoch	13	146.87552130222	
+Epoch	14	146.55003213882	
+Epoch	15	146.24670028687	
+Epoch	16	145.85248398781	
+Epoch	17	146.53771102428	
+Epoch	18	145.61700308323	
+Epoch	19	145.97581326962	
+Epoch	20	145.53193962574	
+Epoch	21	145.29115903378	
+Epoch	22	145.43469798565	
+Epoch	23	145.27360737324	
+Epoch	24	145.01348984241	
+Epoch	25	144.48317801952	
+Epoch	26	144.12467968464	
+Epoch	27	144.40103876591	
