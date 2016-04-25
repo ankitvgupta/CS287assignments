@@ -1,0 +1,82 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	25	optimizer:	sgd	epochs:	200	hidden	10	eta:	0.1	rnn_unit1	lstm	rnn_unit2	gru	dropout	0.75	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83300
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Unit1: LSTM added	
+Dropout added	0.75	
+Unit2: GRU added	
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+Input size	9244	
+Max train index	23	
+Epoch	1	229.53026199341	
+Epoch	2	156.41857206821	
+Epoch	3	153.64249145985	
+Epoch	4	152.81818449497	
+Epoch	5	152.25285077095	
+Epoch	6	151.95901155472	
+Epoch	7	151.45808672905	
+Epoch	8	151.98652994633	
+Epoch	9	151.60337197781	
+Epoch	10	151.51750838757	
+Epoch	11	151.53316926956	
+Epoch	12	151.11226212978	
+Epoch	13	151.42682230473	
+Epoch	14	151.68858909607	
+Epoch	15	151.55522274971	
+Epoch	16	150.11090123653	
+Epoch	17	149.91644191742	
+Epoch	18	151.65832602978	
+Epoch	19	150.65206372738	
+Epoch	20	150.57623422146	
+Epoch	21	148.90632843971	
+Epoch	22	149.00652003288	
+Epoch	23	148.70502591133	
+Epoch	24	148.16348183155	
+Epoch	25	147.72368812561	
+Epoch	26	147.92688691616	
+Epoch	27	148.68681776524	
+Epoch	28	148.09948563576	
+Epoch	29	147.55816364288	
+Epoch	30	148.10101866722	
+Epoch	31	148.04172813892	
+Epoch	32	147.36608839035	
+Epoch	33	147.74102544785	
+Epoch	34	147.3283945322	
+Epoch	35	147.93583106995	
+Epoch	36	147.58711385727	
+Epoch	37	146.97127020359	
+Epoch	38	147.63609564304	
+Epoch	39	146.60884928703	
+Epoch	40	146.4921952486	
+Epoch	41	146.00779795647	
+Epoch	42	146.71074652672	
+Epoch	43	147.41357541084	
+Epoch	44	146.72252643108	
+Epoch	45	146.7566845417	
+Epoch	46	145.79279100895	
+Epoch	47	146.53461301327	
+Epoch	48	146.85616230965	
+Epoch	49	146.83016431332	
+Epoch	50	146.39391231537	
+Epoch	51	146.49025380611	
+Epoch	52	146.36326372623	
+Epoch	53	146.63726890087	

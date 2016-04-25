@@ -1,0 +1,71 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	200	embedding_size	100	optimizer:	adagrad	epochs:	50	hidden	100	eta:	0.001	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83200
+[torch.LongStorage of size 2]
+
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 100)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Tanh
+  (7): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (8): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9244	
+Max train index	23	
+Epoch	1	458.30068801105	
+Epoch	4	273.9154011022	
+Epoch	6	267.19666123712	
+Epoch	7	264.93122834253	
+Epoch	8	263.09178342921	
+Epoch	9	261.45780624065	
+Epoch	10	259.81618910543	
+Epoch	11	258.09706531021	
+Epoch	12	256.16966448522	
+Epoch	13	253.94222397172	
+Epoch	14	251.69341674332	
+Epoch	16	248.1842078438	
+Epoch	18	245.61646473921	
+Epoch	19	244.4669774327	
+Epoch	20	243.37626541961	
+Epoch	21	242.3811709227	
+Epoch	22	241.44659814044	
+Epoch	24	239.75632628853	
+Epoch	27	237.52335541108	
+Epoch	29	235.97471100526	
+Epoch	30	235.32406553324	
+Epoch	31	234.6310179241	
+Epoch	33	233.36466833602	
