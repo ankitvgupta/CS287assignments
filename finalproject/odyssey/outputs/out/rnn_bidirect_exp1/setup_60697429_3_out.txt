@@ -1,0 +1,101 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83350
+[torch.LongStorage of size 2]
+
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 100)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Tanh
+  (7): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (8): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9244	
+Max train index	23	
+Epoch	1	114.50687186878	
+Epoch	2	68.417153510208	
+Epoch	3	66.658515824349	
+Epoch	4	65.608954651539	
+Epoch	5	66.284743816812	
+Epoch	6	65.594183551917	
+Epoch	7	63.521141558384	
+Epoch	8	63.516035412963	
+Epoch	9	62.969298237374	
+Epoch	10	62.45265037434	
+Epoch	11	61.986818556047	
+Epoch	12	61.617419927615	
+Epoch	13	61.30488905643	
+Epoch	14	61.035835165133	
+Epoch	15	60.810684772366	
+Epoch	16	60.544921155778	
+Epoch	17	59.96587264754	
+Epoch	18	59.77103969346	
+Epoch	19	59.596072009916	
+Epoch	20	59.600336798984	
+Epoch	21	59.465348689264	
+Epoch	22	59.251086375422	
+Epoch	23	59.037184414871	
+Epoch	24	58.803490988312	
+Epoch	25	58.600381029815	
+Epoch	26	58.433802737656	
+Epoch	27	58.261487881702	
+Epoch	28	58.212059899232	
+Epoch	29	58.164069618596	
+Epoch	30	58.042358649564	
+Epoch	31	57.939774357892	
+Epoch	32	57.8209779808	
+Epoch	33	57.741281868629	
+Epoch	34	57.540622102237	
+Epoch	35	57.367988073228	
+Epoch	36	57.14156379261	
+Epoch	37	56.989115897195	
+Epoch	38	56.798614156579	
+Epoch	39	56.653898467215	
+Epoch	40	56.516277057661	
+Epoch	41	56.345021786308	
+Epoch	42	56.056785039472	
+Epoch	43	56.044070347999	
+Epoch	44	55.613415014241	
+Epoch	45	55.753735865345	
+Epoch	46	55.701081370989	
+Epoch	47	55.556618448535	
+Epoch	48	55.392691919752	
+Epoch	49	55.185056064298	
+Epoch	50	55.244887657499	
+Starting the testing	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Accuracy	0.52364727054589	

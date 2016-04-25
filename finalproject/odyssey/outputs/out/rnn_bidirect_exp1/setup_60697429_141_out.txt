@@ -1,0 +1,83 @@
+[?1034hdatafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	200	embedding_size	100	optimizer:	adagrad	epochs:	50	hidden	200	eta:	0.001	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83200
+[torch.LongStorage of size 2]
+
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 200)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Tanh
+  (7): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 10)
+  (8): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9244	
+Max train index	23	
+Epoch	1	460.65452574014	
+Epoch	2	288.72387361922	
+Epoch	3	276.43246442607	
+Epoch	4	270.82070613156	
+Epoch	5	267.25628816588	
+Epoch	6	264.60500829273	
+Epoch	7	262.36956257838	
+Epoch	8	260.29536025506	
+Epoch	9	258.27778032441	
+Epoch	10	256.10584649112	
+Epoch	11	253.79264866307	
+Epoch	12	251.45211223386	
+Epoch	13	249.4471974277	
+Epoch	14	247.85937499059	
+Epoch	15	246.4456491215	
+Epoch	16	245.16088763994	
+Epoch	17	243.97909742566	
+Epoch	18	242.85974656143	
+Epoch	19	241.81486767193	
+Epoch	20	240.85362178893	
+Epoch	21	239.9667771156	
+Epoch	22	239.13096800514	
+Epoch	23	238.37572217363	
+Epoch	24	237.69216379317	
+Epoch	25	236.99292005933	
+Epoch	26	236.31260663005	
+Epoch	27	235.70379069186	
+Epoch	28	235.01844438629	
+Epoch	29	234.33479936432	
+Epoch	30	233.66284514497	
+Epoch	31	233.08168791227	
+Epoch	32	232.4504211879	
+Epoch	33	231.89312913052	
+Epoch	34	231.37876445915	
+Epoch	35	230.86185293592	

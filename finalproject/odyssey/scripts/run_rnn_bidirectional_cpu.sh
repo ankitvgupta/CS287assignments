@@ -2,7 +2,7 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=6000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=10000                  #Memory per cpu in MB (see also --mem)
 
 #SBATCH -t 8:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p general             #Partition to submit to
@@ -45,7 +45,7 @@ th /n/home09/ankitgupta/CS287/CS287assignments/finalproject/finalproject.lua \
  -sequence_length $sequence_length \
  -embedding_size $embedding_size \
  -optimizer $optimizer \
- -epochs $epochs \
+ -epochs 50 \
  -hidden $hidden \
  -eta $eta \
  -rnn_unit1 $rnn1 \
