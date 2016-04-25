@@ -22,7 +22,7 @@ cmd:option('-dropout', .5, 'Dropout probability, only for classifier=rnn, and if
 cmd:option('-testfile', '', 'test file')
 cmd:option('-cuda', false, 'Set to use cuda')
 cmd:option('-minibatch_size', 320, 'Size of minibatches')
-
+cmd:option('-bidirectional', false, 'Use a bidirectional RNN.')
 
 function main() 
 	-- Parse input params
@@ -87,8 +87,11 @@ function main()
 		print(train_input:size())
 		print(train_output:size())
 		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
+		model:remember("both")
+      	model:training()
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
    		print("Starting the testing")
+   		model:evaluate()
 		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses)
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
 		printoptions(opt)
