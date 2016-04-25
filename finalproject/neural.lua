@@ -190,7 +190,7 @@ function trainRNN(model,
 	end
 end
 
-function testRNN(model, crit, test_input, minibatch_size, nclasses)
+function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectional, biseqencer_module)
 	minibatch_size = 5*minibatch_size
 	local results = torch.zeros(test_input:size(2), nclasses)
 	for j = 1,test_input:size(2)-minibatch_size, minibatch_size do
@@ -199,6 +199,9 @@ function testRNN(model, crit, test_input, minibatch_size, nclasses)
 		local preds = model:forward(minibatch_input)
 		local joined_table = nn.JoinTable(1):forward(preds)
 		results:narrow(1, j, minibatch_size):add(joined_table)
+		if bidirectional then
+		    biseqencer_module.bwdSeq:forget()
+		end
 	end
 	_, i = torch.max(results, 2)
 	return i
