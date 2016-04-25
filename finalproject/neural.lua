@@ -4,7 +4,7 @@ require 'optim'
 
 --require 'cudnn'
 
-function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, usecuda)
+function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden)
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
@@ -13,7 +13,9 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, usecuda)
 	
 	local biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
 	batchLSTM:add(biseq)
-	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, output_dim)))
+	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
+	batchLSTM:add(nn.Sequencer(nn.Tanh()))
+	batchLSTM:add(nn.Sequencer(nn.Linear(hidden, output_dim)))
 	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 
 	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
@@ -25,6 +27,7 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, usecuda)
 		crit:cuda()
 		print("Converted crit to CUDA")
 	end
+	print(batchLSTM)
 	return batchLSTM, crit, biseq
 end
 
