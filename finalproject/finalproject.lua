@@ -13,7 +13,7 @@ cmd:option('-sequence_length', 100, 'Length of sequence in batch (for rnn only)'
 cmd:option('-embedding_size', 50, 'Size of embeddings')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
 cmd:option('-epochs', 10, 'Number of epochs')
-cmd:option('-hidden', 50, 'Hidden layer (for nn only)')
+cmd:option('-hidden', 50, 'Hidden layer (for nn and bidirectional rnn only)')
 cmd:option('-eta', .1, 'Learning rate (for nn and rnn)')
 cmd:option('-hacks_wanted', false, 'Enable the hacks')
 cmd:option('-rnn_unit1', 'lstm', 'Determine which recurrent unit to use (lstm or gru) for 1st layer - for classifier=rnn only')
@@ -82,14 +82,23 @@ function main()
 	--printoptions(opt)
 
 	--print(flat_valid_output:narrow(1, 1, 20))
+	local model = nil
+	local crit = nil
+	local embedding = nil
+	local biseqencer_module = nil
+
 	if (opt.classifier == 'rnn') then
 		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
 		print(train_input:size())
 		print(train_output:size())
-		model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
+		if opt.bidirectional then
+			model, crit, biseqencer_module = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden)
+		else
+			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
+		end
 		model:remember("both")
       	model:training()
-		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted)
+		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, biseqencer_module)
    		print("Starting the testing")
    		model:evaluate()
 		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses)
