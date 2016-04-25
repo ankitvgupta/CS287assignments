@@ -1,0 +1,91 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	15	optimizer:	adagrad	epochs:	200	hidden	10	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83350
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Unit1: LSTM added	
+Dropout added	0.5	
+Unit2: LSTM added	
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+Input size	9244	
+Max train index	23	
+Epoch	1	116.55073523521	
+Epoch	2	78.309371352196	
+Epoch	3	77.418501496315	
+Epoch	4	76.851866722107	
+Epoch	5	75.596334934235	
+Epoch	6	74.747578024864	
+Epoch	7	75.431590795517	
+Epoch	8	75.90378677845	
+Epoch	9	75.462246894836	
+Epoch	10	75.563370227814	
+Epoch	11	74.712993144989	
+Epoch	12	74.725360155106	
+Epoch	13	75.181165456772	
+Epoch	14	74.850488901138	
+Epoch	15	76.583016395569	
+Epoch	16	75.796246886253	
+Epoch	17	75.275325417519	
+Epoch	18	75.429734706879	
+Epoch	19	76.875987768173	
+Epoch	20	77.560348153114	
+Epoch	21	76.712692975998	
+Epoch	22	77.11351108551	
+Epoch	23	76.690167665482	
+Epoch	24	77.481570959091	
+Epoch	25	78.406640529633	
+Epoch	26	77.087668299675	
+Epoch	27	75.408674240112	
+Epoch	28	75.923269748688	
+Epoch	29	76.79026222229	
+Epoch	30	76.884877324104	
+Epoch	31	76.607172966003	
+Epoch	32	77.8687312603	
+Epoch	33	77.008953928947	
+Epoch	34	76.689242124557	
+Epoch	35	77.214730381966	
+Epoch	36	77.111638069153	
+Epoch	37	77.131667256355	
+Epoch	38	77.808907985687	
+Epoch	39	75.516312718391	
+Epoch	40	76.005074858665	
+Epoch	41	75.967384338379	
+Epoch	42	77.845038414001	
+Epoch	43	77.654320597649	
+Epoch	44	78.532097458839	
+Epoch	45	77.537800431252	
+Epoch	46	76.973541975021	
+Epoch	47	76.513325214386	
+Epoch	48	78.748116731644	
+Epoch	49	77.610466361046	
+Epoch	50	75.431998729706	
+Epoch	51	77.906556844711	
+Epoch	52	75.792855024338	
+Epoch	53	75.830502510071	
+Epoch	54	78.510265111923	
+Epoch	55	77.343941569328	
+Epoch	56	77.740782856941	
+Epoch	57	76.705938458443	
+Epoch	58	77.417646169662	
+Epoch	59	76.257250666618	
+Epoch	60	78.319222569466	
+Epoch	61	75.161240696907	
+Epoch	62	79.837071061134	

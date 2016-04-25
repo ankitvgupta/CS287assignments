@@ -1,0 +1,80 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	15	optimizer:	adagrad	epochs:	200	hidden	10	eta:	0.1	rnn_unit1	lstm	rnn_unit2	gru	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83350
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Unit1: LSTM added	
+Dropout added	0.5	
+Unit2: GRU added	
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+Input size	9244	
+Max train index	23	
+Epoch	1	113.4778637886	
+Epoch	2	78.252991914749	
+Epoch	3	77.570656895638	
+Epoch	4	78.445558428764	
+Epoch	5	75.254549980164	
+Epoch	6	80.333739757538	
+Epoch	7	82.905624985695	
+Epoch	8	83.198016047478	
+Epoch	9	82.132489800453	
+Epoch	10	84.582638382912	
+Epoch	11	82.804340839386	
+Epoch	12	85.230021834373	
+Epoch	13	81.50358569622	
+Epoch	14	83.04388999939	
+Epoch	15	81.39624273777	
+Epoch	16	80.914266467094	
+Epoch	17	82.928220748901	
+Epoch	18	83.449768781662	
+Epoch	19	83.023028612137	
+Epoch	20	81.765881896019	
+Epoch	21	84.582241654396	
+Epoch	22	83.123459458351	
+Epoch	23	81.222199440002	
+Epoch	24	81.541361808777	
+Epoch	25	80.799270629883	
+Epoch	26	81.009689927101	
+Epoch	27	81.40991127491	
+Epoch	28	82.388043880463	
+Epoch	29	81.579875588417	
+Epoch	30	82.543229222298	
+Epoch	31	81.374645590782	
+Epoch	32	84.472783207893	
+Epoch	33	82.150447249413	
+Epoch	34	81.891818284988	
+Epoch	35	81.883085489273	
+Epoch	36	81.377294301987	
+Epoch	37	83.402997493744	
+Epoch	38	82.39719581604	
+Epoch	39	84.834426403046	
+Epoch	40	81.52473115921	
+Epoch	41	82.870781898499	
+Epoch	42	81.73937702179	
+Epoch	43	85.729970812798	
+Epoch	44	82.291097760201	
+Epoch	45	82.147083640099	
+Epoch	46	81.921695709229	
+Epoch	47	81.691779255867	
+Epoch	48	83.465186357498	
+Epoch	49	82.262069821358	
+Epoch	50	84.77587723732	
+Epoch	51	82.417361736298	

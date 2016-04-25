@@ -4,12 +4,12 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=3000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 3:30:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 3:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p holyseasgpu             #Partition to submit to
 #SBATCH --gres=gpu:1
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_test1/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_test1/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_exp1/setup_%A_%a_out.txt            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_exp1/setup_%A_%a_err.txt            #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
@@ -41,7 +41,7 @@ source /n/home09/ankitgupta/torch_setup_gpu.sh
 th /n/home09/ankitgupta/CS287/CS287assignments/finalproject/finalproject.lua \
  -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/$datafile \
  -classifier $classifier \
- -b b \
+ -b $b \
  -alpha $alpha \
  -sequence_length $sequence_length \
  -embedding_size $embedding_size \

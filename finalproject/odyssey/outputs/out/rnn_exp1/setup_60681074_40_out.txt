@@ -1,0 +1,81 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	15	optimizer:	adagrad	epochs:	200	hidden	10	eta:	0.1	rnn_unit1	lstm	rnn_unit2	gru	dropout	0.75	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83350
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Unit1: LSTM added	
+Dropout added	0.75	
+Unit2: GRU added	
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+Input size	9244	
+Max train index	23	
+Epoch	1	114.73154783249	
+Epoch	2	75.850576043129	
+Epoch	3	83.661936163902	
+Epoch	4	81.773102998734	
+Epoch	5	85.340410590172	
+Epoch	6	87.207005143166	
+Epoch	7	85.672201037407	
+Epoch	8	85.242468714714	
+Epoch	9	80.713567376137	
+Epoch	10	82.818025827408	
+Epoch	11	82.632834792137	
+Epoch	12	84.84340775013	
+Epoch	13	82.88310110569	
+Epoch	14	84.705210566521	
+Epoch	15	82.370671868324	
+Epoch	16	84.909984588623	
+Epoch	17	84.025517702103	
+Epoch	18	85.287412047386	
+Epoch	19	84.957038402557	
+Epoch	20	82.145332098007	
+Epoch	21	87.417322993279	
+Epoch	22	83.149240732193	
+Epoch	23	86.623654961586	
+Epoch	24	81.285261631012	
+Epoch	25	81.598180532455	
+Epoch	26	83.743114709854	
+Epoch	27	83.334458947182	
+Epoch	28	82.523290991783	
+Epoch	29	82.852557301521	
+Epoch	30	86.297105431557	
+Epoch	31	81.8592441082	
+Epoch	32	85.467922568321	
+Epoch	33	85.902356624603	
+Epoch	34	85.622998833656	
+Epoch	35	81.543991088867	
+Epoch	36	84.353473424911	
+Epoch	37	81.721309542656	
+Epoch	38	85.979820251465	
+Epoch	39	88.025055885315	
+Epoch	40	85.957428812981	
+Epoch	41	85.271492481232	
+Epoch	42	85.15726017952	
+Epoch	43	85.744345188141	
+Epoch	44	85.398142576218	
+Epoch	45	84.773744702339	
+Epoch	46	84.534643411636	
+Epoch	47	83.597317695618	
+Epoch	48	83.651873707771	
+Epoch	49	82.80763065815	
+Epoch	50	84.04011464119	
+Epoch	51	82.661490678787	
+Epoch	52	82.794787168503	
