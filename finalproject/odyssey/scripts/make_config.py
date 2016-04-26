@@ -10,10 +10,10 @@ embedding_size=[100,200, 300, 500]
 optimizer=["sgd","adagrad"]
 epochs=[200]
 hidden=[100, 200]
-eta=[.001, .01, .1, .05]
+eta=[.01, .1]
 rnn1=["lstm"]
 rnn2=["lstm"]
-dropout=[.5]
+dropout=[.5, .7]
 
 lists = [datafiles,classifier, b, alpha, sequence_length, embedding_size, optimizer, epochs, hidden, eta, rnn1, rnn2, dropout]
 if not print_description:
