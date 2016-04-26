@@ -16,9 +16,9 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 
 	batchLSTM:add(biseq)
 	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
-	batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
-	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
-	batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
+	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
+	--batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
 	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
 	batchLSTM:add(nn.Sequencer(nn.Tanh()))
 	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
@@ -122,6 +122,7 @@ function trainRNN(model,
 
 	print("Input size", training_input:size(2))
 	print("Max train index", torch.max(training_input))
+	print("Num samples", training_input:size(2))
 	for i = 1, num_epochs do
 		--print("Beginning epoch", i)
 		--local valid_numbers = rnn_segment_and_count(valid_kaggle_input:narrow(1, 1, 500), model, space_idx, padding_idx)
@@ -156,7 +157,7 @@ function trainRNN(model,
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-				--print("Loss", loss)
+				print("Epoch", i, j, loss)
 				if j == 1 then
 					print("Epoch", i, loss)
 				end
