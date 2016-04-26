@@ -1,0 +1,76 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.001	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83350
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 100)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Tanh
+  (7): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (8): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9244	
+Max train index	23	
+Epoch	1	113.9694018364	
+Epoch	2	92.254927039146	
+Epoch	3	80.78957593441	
+Epoch	4	76.613409519196	
+Epoch	5	74.303354859352	
+Epoch	6	72.806561946869	
+Epoch	7	71.61817252636	
+Epoch	8	70.796655893326	
+Epoch	9	70.325684905052	
+Epoch	10	70.039709806442	
+Epoch	11	69.83183991909	
+Epoch	12	69.655020236969	
+Epoch	13	69.491902351379	
+Epoch	14	69.337187051773	
+Epoch	15	69.189612865448	
+Epoch	16	69.049017190933	
+Epoch	17	68.915425777435	
+Epoch	18	68.788815259933	
+Epoch	19	68.669047832489	
+Epoch	20	68.555880904198	
+Epoch	21	68.448971509933	
+Epoch	22	68.347892045975	
+Epoch	23	68.252144813538	
+Epoch	24	68.161189675331	

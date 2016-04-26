@@ -4,8 +4,8 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=6000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 4:00:00              #Indicate duration using HH:MM:SS
-#SBATCH -p holyseasgpu             #Partition to submit to
+#SBATCH -t 8:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -p gpu             #Partition to submit to
 #SBATCH --gres=gpu:1
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_bidirect_exp1/setup_%A_%a_out.txt            #File to which standard out will be written
@@ -37,7 +37,7 @@ dropout=${selected_config[12]}
 
 # Run the trainer
 cd /scratch
-source /n/home09/ankitgupta/torch_setup_gpu.sh
+source /n/home09/ankitgupta/torch_setup.sh
 th /n/home09/ankitgupta/CS287/CS287assignments/finalproject/finalproject.lua \
  -datafile /n/home09/ankitgupta/CS287/CS287assignments/finalproject/$datafile \
  -classifier $classifier \
