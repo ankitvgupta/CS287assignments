@@ -15,6 +15,7 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 	batchLSTM:add(biseq)
 	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
 	batchLSTM:add(nn.Sequencer(nn.Tanh()))
+	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
 	batchLSTM:add(nn.Sequencer(nn.Linear(hidden, output_dim)))
 	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 
