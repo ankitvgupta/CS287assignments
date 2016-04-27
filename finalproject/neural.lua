@@ -157,7 +157,7 @@ function trainRNN(model,
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
-				print("Epoch", i, j, loss)
+				--print("Epoch", i, j, loss)
 				if j == 1 then
 					print("Epoch", i, loss)
 				end

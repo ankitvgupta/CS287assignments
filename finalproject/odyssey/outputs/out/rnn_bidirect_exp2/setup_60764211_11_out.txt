@@ -1,0 +1,148 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/PRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	500	optimizer:	sgd	epochs:	600	hidden	200	eta:	0.01	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83300
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1183318
+       1
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+  128
+ 9244
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(500 -> 500)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(500 -> 500)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Linear(1000 -> 200)
+  (7): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (8): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (9): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 10)
+  (10): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9244	
+Max train index	23	
+Num samples	9244	
+Epoch	1	1	231.19706010818	
+Epoch	1	231.19706010818	
+Epoch	1	101	228.51507210732	
+Epoch	1	201	225.94045853615	
+Epoch	1	301	223.10705661774	
+Epoch	1	401	221.09473443031	
+Epoch	1	501	217.87878036499	
+Epoch	1	601	215.38261389732	
+Epoch	1	701	214.01527667046	
+Epoch	1	801	210.51898479462	
+Epoch	1	901	206.69248557091	
+Epoch	1	1001	204.714209795	
+Epoch	1	1101	202.71861040592	
+Epoch	1	1201	199.71834695339	
+Epoch	1	1301	197.65653085709	
+Epoch	1	1401	193.90983498096	
+Epoch	1	1501	191.90956270695	
+Epoch	1	1601	190.53674972057	
+Epoch	1	1701	188.77964782715	
+Epoch	1	1801	184.38614976406	
+Epoch	1	1901	183.91969132423	
+Epoch	1	2001	180.04477059841	
+Epoch	1	2101	175.20398938656	
+Epoch	1	2201	174.37394762039	
+Epoch	1	2301	175.74247670174	
+Epoch	1	2401	174.94299793243	
+Epoch	1	2501	172.99104404449	
+Epoch	1	2601	170.42216098309	
+Epoch	1	2701	169.06721997261	
+Epoch	1	2801	168.11301493645	
+Epoch	1	2901	166.2765288353	
+Epoch	1	3001	164.34354031086	
+Epoch	1	3101	168.20164585114	
+Epoch	1	3201	167.24241495132	
+Epoch	1	3301	164.14168071747	
+Epoch	1	3401	165.16549515724	
+Epoch	1	3501	163.07775092125	
+Epoch	1	3601	161.604347229	
+Epoch	1	3701	159.9377259016	
+Epoch	1	3801	158.92087006569	
+Epoch	1	3901	163.98440814018	
+Epoch	1	4001	160.99366438389	
+Epoch	1	4101	161.14638578892	
+Epoch	1	4201	158.96558976173	
+Epoch	1	4301	157.83239591122	
+Epoch	1	4401	160.12892115116	
+Epoch	1	4501	159.49246025085	
+Epoch	1	4601	156.1450086832	
+Epoch	1	4701	157.02575695515	
+Epoch	1	4801	156.56862604618	
+Epoch	1	4901	155.58272051811	
+Epoch	1	5001	156.11583817005	
+Epoch	1	5101	156.4425753355	
+Epoch	1	5201	153.89587879181	
+Epoch	1	5301	155.01457452774	
+Epoch	1	5401	155.8618221283	
+Epoch	1	5501	153.65513658524	
+Epoch	1	5601	153.28356575966	
+Epoch	1	5701	153.67464184761	
+Epoch	1	5801	153.99130725861	
+Epoch	1	5901	151.3372399807	
+Epoch	1	6001	154.13680636883	
+Epoch	1	6101	152.45551478863	
+Epoch	1	6201	152.11221790314	
+Epoch	1	6301	152.74252474308	
+Epoch	1	6401	153.00476121902	
+Epoch	1	6501	151.63853549957	
+Epoch	1	6601	153.76841568947	
+Epoch	1	6701	155.29332661629	
+Epoch	1	6801	151.23524069786	
+Epoch	1	6901	150.96870958805	
+Epoch	1	7001	151.34766352177	
+Epoch	1	7101	151.85546791553	
+Epoch	1	7201	149.23331725597	
+Epoch	1	7301	149.11345183849	
+Epoch	1	7401	149.41326057911	
+Epoch	1	7501	151.85707783699	
+Epoch	1	7601	153.99066853523	
+Epoch	1	7701	151.13911640644	
+Epoch	1	7801	152.66942179203	
+Epoch	1	7901	152.11153209209	
+Epoch	1	8001	148.9706029892	
+Epoch	1	8101	147.68952035904	
+Epoch	1	8201	151.01835536957	
+Epoch	1	8301	150.9331817627	
+Epoch	1	8401	148.52905976772	
+Epoch	1	8501	145.80594921112	
+Epoch	1	8601	150.76884615421	
+Epoch	1	8701	149.25306880474	
+Epoch	1	8801	152.70724570751	
+Epoch	1	8901	147.99594306946	
+Epoch	1	9001	150.28301799297	
+Epoch	1	9101	151.79592311382	
