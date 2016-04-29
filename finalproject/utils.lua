@@ -19,7 +19,8 @@ function printoptions(opt)
 		"eta:", opt.eta, 
 		"rnn_unit1", opt.rnn_unit1, 
 		"rnn_unit2", opt.rnn_unit2,
-		"dropout", opt.dropout)
+		"dropout", opt.dropout,
+		"num_bidir_layers", opt.bidirectional_layers)
 end
 
 
