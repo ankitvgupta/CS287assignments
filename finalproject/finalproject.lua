@@ -23,6 +23,7 @@ cmd:option('-testfile', '', 'test file')
 cmd:option('-cuda', false, 'Set to use cuda')
 cmd:option('-minibatch_size', 320, 'Size of minibatches')
 cmd:option('-bidirectional', false, 'Use a bidirectional RNN.')
+cmd:option('-bidirectional_layers', 1, 'Number of layers of bidirectional RNN')
 
 function main() 
 	-- Parse input params
@@ -85,23 +86,23 @@ function main()
 	local model = nil
 	local crit = nil
 	local embedding = nil
-	local biseqencer_module = nil
+	local bisequencer_modules = nil
 
 	if (opt.classifier == 'rnn') then
 		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
 		print(train_input:size())
 		print(train_output:size())
 		if opt.bidirectional then
-			model, crit, biseqencer_module = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden)
+			model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 		else
 			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		end
 		model:remember("both")
       	model:training()
-		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, biseqencer_module)
+		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, bisequencer_modules)
    		print("Starting the testing")
    		model:evaluate()
-		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, biseqencer_module)
+		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, bisequencer_modules)
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
 		printoptions(opt)
 		print("Accuracy", accuracy)

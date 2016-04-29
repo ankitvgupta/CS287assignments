@@ -4,18 +4,30 @@ require 'optim'
 
 --require 'cudnn'
 
-function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden)
+function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers)
 	batchLSTM = nn.Sequential()
 	local embedding = nn.LookupTable(vocab_size, embed_dim)
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
 	batchLSTM:add(nn.Transpose({1,2}))
 	batchLSTM:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
 	
-	local biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
 
+	local sequencers = {}
 
-	batchLSTM:add(biseq)
-	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	-- local biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+	-- batchLSTM:add(biseq)
+	-- batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	biseq = nil
+	for layer = 1, num_layers do 
+		if layer == 1 then 
+			biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+		else
+			biseq = nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim))
+		end
+		sequencers[layer] = biseq
+		batchLSTM:add(biseq)
+		batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	end
 	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
 	--batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
 	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
@@ -35,7 +47,7 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 		print("Converted crit to CUDA")
 	end
 	print(batchLSTM)
-	return batchLSTM, crit, biseq
+	return batchLSTM, crit, sequencers
 end
 
 
@@ -111,7 +123,7 @@ function trainRNN(model,
 				eta,
 				hacks_wanted,
 				bidirectional,
-				biseqencer_module)
+				bisequencer_modules)
 	local parameters, gradParameters = model:getParameters()
 
 	-- initialize the parameters between -.05 and .05
@@ -192,7 +204,9 @@ function trainRNN(model,
 		    end
 		    -- Make sure the backwards sequence forgets.
 		    if bidirectional then
-		    	biseqencer_module.bwdSeq:forget()
+		    	for elem = 1, #bisequencer_modules do
+		    		bisequencer_modules[elem].bwdSeq:forget()
+		    	end
 		    end
 		end
 	end
@@ -207,9 +221,11 @@ function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectiona
 		local preds = model:forward(minibatch_input)
 		local joined_table = nn.JoinTable(1):forward(preds)
 		results:narrow(1, j, minibatch_size):add(joined_table)
-		if bidirectional then
-		    biseqencer_module.bwdSeq:forget()
-		end
+	    if bidirectional then
+	    	for elem = 1, #bisequencer_modules do
+	    		bisequencer_modules[elem].bwdSeq:forget()
+	    	end
+	    end
 	end
 	_, i = torch.max(results, 2)
 	return i
