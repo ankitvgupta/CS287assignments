@@ -212,7 +212,7 @@ function trainRNN(model,
 	end
 end
 
-function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectional, biseqencer_module)
+function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectional, bisequencer_modules)
 	minibatch_size = 5*minibatch_size
 	local results = torch.zeros(test_input:size(2), nclasses)
 	for j = 1,test_input:size(2)-minibatch_size, minibatch_size do
