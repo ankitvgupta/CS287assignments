@@ -20,7 +20,7 @@ cd /scratch
 source /n/home09/ankitgupta/biopython_setup.sh
 python /n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py \
  /n/home09/ankitgupta/CS287/CS287assignments/finalproject/data/cb513+profile_split1.npy \
- /n/home09/ankitgupta/CS287/CS287assignments/finalproject/data/cullpdb+profile_6133_filtered.npy \
+ /n/home09/ankitgupta/CS287/CS287assignments/finalproject/data/ss.txt \
  $SLURM_ARRAY_TASK_ID \
  250
 
