@@ -19,7 +19,7 @@ def parse_human(data_file, start_idx, count):
 
     with open(data_file, 'r') as f:
         for line in f:
-			if len(X_strings) > count:
+			if len(X_strings) >= count:
 				break
 			elif 'A:sequence' in line:
 			    next_line_is_output = False
