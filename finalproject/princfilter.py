@@ -1,3 +1,5 @@
+import resource
+
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 
@@ -84,8 +86,10 @@ def pfilter(sequences, filter_out, start_idx, l, identity_thresh=0.25, identity_
 	seq_idxs = []
 	for idx in range(0, l):
 		# if idx % 1 == 0:
-		# 	print "Filtering sequence ", idx+1, "... (",
+		# 	print "Filtering sequence ", idx+1, "... (", resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1e6
 		seq1 = sequences[idx]
+		if 'U' in seq1:
+			continue
 		keep = True
 		for seq2 in filter_out:
 			if identity_map(seq1, seq2) >= identity_thresh:
