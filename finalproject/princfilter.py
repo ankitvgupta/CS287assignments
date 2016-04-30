@@ -75,9 +75,13 @@ def sim(aln_seq1,aln_seq2):
     return c/min(len(aln_seq1),len(aln_seq2))
 
 def identity_score(seq1, seq2):
-	top_aln = pairwise2.align.globalds(seq1,seq2, matrix, gap_open, gap_extend, one_alignment_only=1)[0]
-	aln_seq1, aln_seq2, score, begin, end = top_aln
-	return sim(aln_seq1,aln_seq2)
+	try:
+		top_aln = pairwise2.align.globalds(seq1,seq2, matrix, gap_open, gap_extend, one_alignment_only=1)[0]
+		aln_seq1, aln_seq2, score, begin, end = top_aln
+		return sim(aln_seq1,aln_seq2)
+	except KeyError:
+		# force remove sequence
+		return 1.0
 
 def mock_score(seq1, seq2):
 	return 0.0
@@ -88,8 +92,6 @@ def pfilter(sequences, filter_out, start_idx, l, identity_thresh=0.25, identity_
 		# if idx % 1 == 0:
 		# 	print "Filtering sequence ", idx+1, "... (", resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1e6
 		seq1 = sequences[idx]
-		if 'U' in seq1:
-			continue
 		keep = True
 		for seq2 in filter_out:
 			if identity_map(seq1, seq2) >= identity_thresh:
