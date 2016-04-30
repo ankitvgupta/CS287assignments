@@ -1,1 +1,1 @@
-sbatch --array=0-472000:250 filter_homologous_sequences.sh
+sbatch --array=0-1888 filter_homologous_sequences.sh
