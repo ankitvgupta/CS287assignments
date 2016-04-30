@@ -9,27 +9,31 @@ matrix = matlist.blosum62
 gap_open = -10
 gap_extend = -0.5
 
-def parse_human(data_file):
+def parse_human(data_file, start_idx, count):
     X_strings = []
+
+    ditch_count = 0
 
     next_line_is_seq = False
     next_line_is_output = False
 
     with open(data_file, 'r') as f:
         for line in f:
-            if 'A:sequence' in line:
-                next_line_is_output = False
-                next_line_is_seq = True
-            elif 'A:secstr' in line:
-                next_line_is_seq = False
-                next_line_is_output = True
-            elif (':sequence' in line) or ('secstr' in line):
-                next_line_is_seq = False
-                next_line_is_output = False
-            elif next_line_is_seq: 
-                X_strings.append(line[:-1])
-            # elif next_line_is_output:
-            #     Y_strings.append(line[:-1])
+			if len(X_strings) > count:
+				break
+			elif 'A:sequence' in line:
+			    next_line_is_output = False
+			    next_line_is_seq = True
+			elif 'A:secstr' in line:
+			    next_line_is_seq = False
+			    next_line_is_output = True
+			elif (':sequence' in line) or ('secstr' in line):
+			    next_line_is_seq = False
+			    next_line_is_output = False
+			elif next_line_is_seq:
+				ditch_count += 1
+				if ditch_count > start_idx:
+					X_strings.append(line[:-1])
 
     return X_strings
 
@@ -78,7 +82,7 @@ def mock_score(seq1, seq2):
 
 def pfilter(sequences, filter_out, start_idx, l, identity_thresh=0.25, identity_map=identity_score, verbose=True):
 	seq_idxs = []
-	for idx in range(start_idx, start_idx+l):
+	for idx in range(0, l):
 		# if idx % 1 == 0:
 		# 	print "Filtering sequence ", idx+1, "... (",
 		seq1 = sequences[idx]
@@ -88,9 +92,9 @@ def pfilter(sequences, filter_out, start_idx, l, identity_thresh=0.25, identity_
 				keep = False
 				break
 		if keep:
-			seq_idxs.append(idx)
+			seq_idxs.append(start_idx+idx)
 			if verbose:
-				print idx
+				print start_idx+idx
 	return seq_idxs
 
 def main(arguments):
@@ -109,7 +113,7 @@ def main(arguments):
 	start_idx = args.start
 	count = args.count
 
-	train_seqs = parse_human(train_path)
+	train_seqs = parse_human(train_path, start_idx, count)
 	cb513_seqs = parse_princeton(cb513_path, 514)
 
 	pfilter(train_seqs, cb513_seqs, start_idx, count)
