@@ -4,7 +4,7 @@
 #SBATCH -N 1                          #Run on 1 node
 #SBATCH --mem=500                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 6:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 5:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue             #Partition to submit to
 
 #SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/filter_seq_1/setup_%A_%a_out.txt            #File to which standard out will be written
@@ -21,7 +21,7 @@ source /n/home09/ankitgupta/biopython_setup.sh
 python /n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py \
  /n/home09/ankitgupta/CS287/CS287assignments/finalproject/data/cb513+profile_split1.npy \
  /n/home09/ankitgupta/CS287/CS287assignments/finalproject/data/ss.txt \
- $SLURM_ARRAY_TASK_ID \
+ $(($SLURM_ARRAY_TASK_ID * 250)) \
  250
 
 

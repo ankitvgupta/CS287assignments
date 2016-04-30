@@ -1,0 +1,18 @@
+discarding /n/sw/fasrcsw/apps/Core/Anaconda/1.9.2-fasrc01/x/bin from PATH
+prepending /n/home09/ankitgupta/.conda/envs/biopython_env/bin to PATH
+Traceback (most recent call last):
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 124, in <module>
+    sys.exit(main(sys.argv[1:]))
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 119, in main
+    pfilter(train_seqs, cb513_seqs, start_idx, count)
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 91, in pfilter
+    if identity_map(seq1, seq2) >= identity_thresh:
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 76, in identity_score
+    top_aln = pairwise2.align.globalds(seq1,seq2, matrix, gap_open, gap_extend, one_alignment_only=1)[0]
+  File "/n/home09/ankitgupta/.conda/envs/biopython_env/lib/python2.7/site-packages/Bio/pairwise2.py", line 317, in __call__
+    return _align(**keywds)
+  File "/n/home09/ankitgupta/.conda/envs/biopython_env/lib/python2.7/site-packages/Bio/pairwise2.py", line 338, in _align
+    score_only)
+  File "/n/home09/ankitgupta/.conda/envs/biopython_env/lib/python2.7/site-packages/Bio/pairwise2.py", line 818, in __call__
+    return self.score_dict[(charA, charB)]
+KeyError: ('V', 'O')
