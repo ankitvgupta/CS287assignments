@@ -3,6 +3,7 @@
 """Final Project Preprocessing
 """
 from matplotlib import pyplot as plt
+from princfilter import pfilter
 
 import argparse
 import string
@@ -15,6 +16,7 @@ ACIDS = {'<': 1, '>': 2, 'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9,
 LABELS = {'<': 1, '>': 2, 'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
 
 FILE_PATHS = {"HUMAN": ("data/ss.txt"), 
+              "FILT": ("data/ss_filtered_input.txt", "data/ss_filtered_output.txt"),
               "CB513": ("data/cb513+profile_split1.npy"), 
               "PRINC": ("data/cullpdb+profile_6133_filtered.npy")}
 args = {}
@@ -42,6 +44,22 @@ def parse_human(data_file):
                 X_strings.append(line[:-1])
             elif next_line_is_output:
                 Y_strings.append(line[:-1])
+
+    return X_strings, Y_strings
+
+def parse_filtered_human(files):
+    input_file, output_file = files
+
+    X_strings = []
+    Y_strings = []
+
+    with open(input_file, 'r') as f1:
+        for line in f1:
+            X_strings.append(line[:-1])
+
+    with open(output_file, 'r') as f2:
+        for line in f2:
+            Y_strings.append(line[:-1])
 
     return X_strings, Y_strings
 
@@ -113,7 +131,7 @@ def split_data(input_data, output_data, split_perc=0.8):
     assert len(output_data) == l
     cutoff = int(split_perc*l)
     return input_data[:cutoff], output_data[:cutoff], input_data[cutoff:], output_data[cutoff:]
-    
+ 
 
 def main(arguments):
     global args
@@ -145,6 +163,8 @@ def main(arguments):
         X_strings, Y_strings = parse_princeton(train_data_file, 5534)
     elif train_dataset == "HUMAN":
         X_strings, Y_strings = parse_human(train_data_file)
+    elif train_dataset == "FILT":
+        X_strings, Y_strings = parse_filtered_human(train_data_file)
     else:
         print "Unknown train dataset", train_dataset
         assert False
