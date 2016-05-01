@@ -12,32 +12,29 @@ gap_open = -10
 gap_extend = -0.5
 
 def parse_human(data_file, start_idx, count):
-    X_strings = []
-
+    X_strings = ''
+    strings_count = 0
     ditch_count = 0
 
     next_line_is_seq = False
-    next_line_is_output = False
 
     with open(data_file, 'r') as f:
         for line in f:
-			if len(X_strings) >= count:
+			if strings_count > count:
 				break
 			elif 'A:sequence' in line:
-			    next_line_is_output = False
 			    next_line_is_seq = True
-			elif 'A:secstr' in line:
-			    next_line_is_seq = False
-			    next_line_is_output = True
+			    ditch_count += 1
+			    if ditch_count > start_idx:
+			    	X_strings = X_strings + '<'
 			elif (':sequence' in line) or ('secstr' in line):
 			    next_line_is_seq = False
-			    next_line_is_output = False
 			elif next_line_is_seq:
-				ditch_count += 1
 				if ditch_count > start_idx:
-					X_strings.append(line[:-1])
+					X_strings = X_strings + line[:-1]
+					strings_count += 1
 
-    return X_strings
+    return X_strings.split('<')[1:]
 
 def parse_princeton(data_file, num_proteins):
     X_strings = []
@@ -121,6 +118,8 @@ def main(arguments):
 
 	train_seqs = parse_human(train_path, start_idx, count)
 	cb513_seqs = parse_princeton(cb513_path, 514)
+
+	print train_seqs
 
 	pfilter(train_seqs, cb513_seqs, start_idx, count)
 

@@ -23,8 +23,8 @@ args = {}
 
 # return two lists of amino acid / label strings
 def parse_human(data_file):
-    X_strings = []
-    Y_strings = []
+    X_strings = ''
+    Y_strings = ''
 
     next_line_is_seq = False
     next_line_is_output = False
@@ -34,18 +34,25 @@ def parse_human(data_file):
             if 'A:sequence' in line:
                 next_line_is_output = False
                 next_line_is_seq = True
+                X_strings = X_strings + '<'
             elif 'A:secstr' in line:
                 next_line_is_seq = False
                 next_line_is_output = True
+                Y_strings = Y_strings + '<'
             elif (':sequence' in line) or ('secstr' in line):
                 next_line_is_seq = False
                 next_line_is_output = False
             elif next_line_is_seq: 
-                X_strings.append(line[:-1])
+                X_strings = X_strings + line[:-1]
             elif next_line_is_output:
-                Y_strings.append(line[:-1])
+                Y_strings = Y_strings + line[:-1]
 
-    return X_strings, Y_strings
+    splitX = X_strings.split('<')[1:]
+    splitY = Y_strings.split('<')[1:]
+
+    assert len(splitX) == len(splitY)
+
+    return splitX, splitY
 
 def parse_filtered_human(files):
     input_file, output_file = files
@@ -60,6 +67,10 @@ def parse_filtered_human(files):
     with open(output_file, 'r') as f2:
         for line in f2:
             Y_strings.append(line[:-1])
+
+
+    print len(X_strings), len(Y_strings)
+    assert len(X_strings) == len(Y_strings)
 
     return X_strings, Y_strings
 
