@@ -20,19 +20,19 @@ def parse_human(data_file, start_idx, count):
 
     with open(data_file, 'r') as f:
         for line in f:
-			if strings_count > count:
-				break
-			elif 'A:sequence' in line:
-			    next_line_is_seq = True
-			    ditch_count += 1
-			    if ditch_count > start_idx:
-			    	X_strings = X_strings + '<'
+			if 'A:sequence' in line:
+				if strings_count >= count:
+					break
+				next_line_is_seq = True
+				ditch_count += 1
+				if ditch_count > start_idx:
+					X_strings = X_strings + '<'
+					strings_count += 1
 			elif (':sequence' in line) or ('secstr' in line):
 			    next_line_is_seq = False
 			elif next_line_is_seq:
 				if ditch_count > start_idx:
 					X_strings = X_strings + line[:-1]
-					strings_count += 1
 
     return X_strings.split('<')[1:]
 
@@ -118,8 +118,6 @@ def main(arguments):
 
 	train_seqs = parse_human(train_path, start_idx, count)
 	cb513_seqs = parse_princeton(cb513_path, 514)
-
-	print train_seqs
 
 	pfilter(train_seqs, cb513_seqs, start_idx, count)
 
