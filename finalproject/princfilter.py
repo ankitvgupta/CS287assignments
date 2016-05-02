@@ -119,7 +119,7 @@ def main(arguments):
 	train_seqs = parse_human(train_path, start_idx, count)
 	cb513_seqs = parse_princeton(cb513_path, 514)
 
-	print train_seqs
+	#print train_seqs
 
 	pfilter(train_seqs, cb513_seqs, start_idx, count)
 
