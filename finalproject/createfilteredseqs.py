@@ -1,4 +1,4 @@
-INDICES_PATH = "odyssey/outputs/out/filter_seq_1/all_indicies_to_keep_sorted_unique.txt"
+INDICES_PATH = "odyssey/outputs/out/filter_seq_2/all_indicies_to_keep_sorted_uniq.txt"
 DATA_PATH = "data/ss.txt"
 OUT_FILE1 = "data/ss_filtered_input.txt"
 OUT_FILE2 = "data/ss_filtered_output.txt"
@@ -8,8 +8,8 @@ def parse_human(data_file, sorted_idxs):
     X_strings = ''
     Y_strings = ''
 
-    input_idx = -1
-    output_idx = -1
+    input_idx = 0
+    output_idx = 0
     input_idx_into_sorted_idx = 0
     output_idx_into_sorted_idx = 0
     num_idxs = len(sorted_idxs)
@@ -22,36 +22,33 @@ def parse_human(data_file, sorted_idxs):
     with open(data_file, 'r') as f:
 		for line in f:
 			if 'A:sequence' in line:
-			    next_line_is_output = False
-			    next_line_is_seq = True
-			    X_strings = X_strings+'<'
-			    input_idx += 1
-			    input_idx_into_sorted_idx += 1
-				if input_idx_into_sorted_idx < num_idxs:
-					next_input_idx_to_keep = sorted_idxs[input_idx_into_sorted_idx]
+				next_line_is_output = False
+				if input_idx == next_input_idx_to_keep:
+					next_line_is_seq = True
+					X_strings = X_strings+'<'
+					input_idx_into_sorted_idx += 1
+					if input_idx_into_sorted_idx < num_idxs:
+						next_input_idx_to_keep = sorted_idxs[input_idx_into_sorted_idx]
+				input_idx += 1
 			elif 'A:secstr' in line:
-			    next_line_is_seq = False
-			    next_line_is_output = True
-			    Y_strings = Y_strings+'<'
-			    output_idx += 1
-			    output_idx_into_sorted_idx += 1
+				next_line_is_seq = False
+				if output_idx == next_output_idx_to_keep:
+					next_line_is_output = True
+					Y_strings = Y_strings+'<'
+					output_idx_into_sorted_idx += 1
 					if output_idx_into_sorted_idx < num_idxs:
 						next_output_idx_to_keep = sorted_idxs[output_idx_into_sorted_idx]
+				output_idx += 1
 			elif (':sequence' in line) or ('secstr' in line):
 			    next_line_is_seq = False
 			    next_line_is_output = False
 			elif next_line_is_seq:
-				if input_idx == next_input_idx_to_keep:
-					
-					X_strings = X_strings+line[:-1]
+				X_strings = X_strings+line[:-1]
+			elif next_line_is_output:					
+				Y_strings = Y_strings+line[:-1]
 
-			elif next_line_is_output:
-				if output_idx == next_output_idx_to_keep:
-					
-					Y_strings = Y_strings+line[:-1]
-
-		splitX = X_strings.split('<')[1:]
-		splitY = Y_strings.split('<')[1:]
+		splitX = X_strings.split('<')[1:-1]
+		splitY = Y_strings.split('<')[1:-1]
 
 		if len(splitX) != len(splitY):
 			print len(splitX), len(splitY)

@@ -69,7 +69,6 @@ def parse_filtered_human(files):
             Y_strings.append(line[:-1])
 
 
-    print len(X_strings), len(Y_strings)
     assert len(X_strings) == len(Y_strings)
 
     return X_strings, Y_strings
