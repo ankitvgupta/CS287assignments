@@ -18,7 +18,8 @@ LABELS = {'<': 1, '>': 2, 'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8
 FILE_PATHS = {"HUMAN": ("data/ss.txt"), 
               "FILT": ("data/ss_filtered_input.txt", "data/ss_filtered_output.txt"),
               "CB513": ("data/cb513+profile_split1.npy"), 
-              "PRINC": ("data/cullpdb+profile_6133_filtered.npy")}
+              "PRINC": ("data/cullpdb+profile_6133_filtered.npy"),
+              "EPRINC": ("data/cullpdb+profile_6133_filtered.npy")}
 args = {}
 
 # return two lists of amino acid / label strings
@@ -110,6 +111,28 @@ def parse_princeton(data_file, num_proteins):
 
     return X_strings, Y_strings
 
+def parse_princeton_extra(data_file, num_proteins):
+    data = np.load(data_file)
+    amino_acids = np.reshape(data, (num_proteins, 700, 57))
+
+    input_data = []
+    output_data = []
+
+    input_idx = np.r_[0:21,31:33,35:57]
+    output_idx = np.r_[22:31]
+
+    for p in range(num_proteins):
+        for a in range(700):
+            input_data.append(amino_acids[p][a][input_idx])
+            output_data.append(amino_acids[p][a][output_idx])
+            # reached end of this sequence
+            if amino_acids[p][a][21]:
+                # label should also be noseq
+                assert amino_acids[p][a][30]
+                break
+
+    return input_data, output_data
+
 def ngram_encoder(vocab_dict, ngram, start_pad='<', end_pad='>'):
     halfwin = (ngram-1)/2
     def this_encoder(s):
@@ -167,39 +190,45 @@ def main(arguments):
         assert False
 
     train_data_file = FILE_PATHS[train_dataset]
-    if train_dataset == "CB513":
-        X_strings, Y_strings = parse_princeton(train_data_file, 514)
-    elif train_dataset == "PRINC":
-        X_strings, Y_strings = parse_princeton(train_data_file, 5534)
-    elif train_dataset == "HUMAN":
-        X_strings, Y_strings = parse_human(train_data_file)
-    elif train_dataset == "FILT":
-        X_strings, Y_strings = parse_filtered_human(train_data_file)
+
+    if train_dataset == "EPRINC":
+        train_input, train_output = parse_princeton_extra(train_data_file, 5534)
+        test_input, test_output = parse_princeton_extra(FILE_PATHS["CB513"], 514)
+
     else:
-        print "Unknown train dataset", train_dataset
-        assert False
-
-    input_encoder = ngram_encoder(ACIDS, dwin)
-    output_encoder = ngram_encoder(LABELS, 1)
-
-    input_data = encode_strings(X_strings, input_encoder)
-    output_data = encode_strings(Y_strings, output_encoder)
-
-    if test_dataset is None:
-        train_input, train_output, test_input, test_output = split_data(input_data, output_data)
-    else:
-        train_input = input_data
-        train_output = output_data
-
-        test_data_file = FILE_PATHS[test_dataset]
-        if test_dataset == "CB513":
-            X_strings, Y_strings = parse_princeton(test_data_file, 514)
+        if train_dataset == "CB513":
+            X_strings, Y_strings = parse_princeton(train_data_file, 514)
+        elif train_dataset == "PRINC":
+            X_strings, Y_strings = parse_princeton(train_data_file, 5534)
+        elif train_dataset == "HUMAN":
+            X_strings, Y_strings = parse_human(train_data_file)
+        elif train_dataset == "FILT":
+            X_strings, Y_strings = parse_filtered_human(train_data_file)
         else:
-            print "This should only be CB513..."
+            print "Unknown train dataset", train_dataset
             assert False
 
-        test_input = encode_strings(X_strings, input_encoder)
-        test_output = encode_strings(Y_strings, output_encoder)
+        input_encoder = ngram_encoder(ACIDS, dwin)
+        output_encoder = ngram_encoder(LABELS, 1)
+
+        input_data = encode_strings(X_strings, input_encoder)
+        output_data = encode_strings(Y_strings, output_encoder)
+
+        if test_dataset is None:
+            train_input, train_output, test_input, test_output = split_data(input_data, output_data)
+        else:
+            train_input = input_data
+            train_output = output_data
+
+            test_data_file = FILE_PATHS[test_dataset]
+            if test_dataset == "CB513":
+                X_strings, Y_strings = parse_princeton(test_data_file, 514)
+            else:
+                print "This should only be CB513..."
+                assert False
+
+            test_input = encode_strings(X_strings, input_encoder)
+            test_output = encode_strings(Y_strings, output_encoder)
 
 
     # Write out to hdf5
@@ -210,9 +239,9 @@ def main(arguments):
     print "Writing out to", filename
     with h5py.File(filename, "w") as f:
 
-        f['train_input'] = np.array(train_input, dtype=np.int32)
+        f['train_input'] = np.array(train_input, dtype=np.float64)
         f['train_output'] = np.array(np.squeeze(train_output), dtype=np.int32)
-        f['test_input'] = np.array(test_input, dtype=np.int32)
+        f['test_input'] = np.array(test_input, dtype=np.float64)
         f['test_output'] = np.array(np.squeeze(test_output), dtype=np.int32)
         f['vocab_size'] = np.array([max(ACIDS.values())], dtype=np.int32)
         f['nclasses'] = np.array([max(LABELS.values())], dtype=np.int32)
