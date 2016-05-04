@@ -89,11 +89,12 @@ function main()
 	local bisequencer_modules = nil
 
 	if (opt.classifier == 'rnn') then
-		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
+		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output, dwin)
+		print("Data sizes")
 		print(train_input:size())
 		print(train_output:size())
 		if opt.bidirectional then
-			model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
+			model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, dwin)
 		else
 			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		end
