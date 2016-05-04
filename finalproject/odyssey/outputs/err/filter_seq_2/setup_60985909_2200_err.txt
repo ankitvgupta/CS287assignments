@@ -1,0 +1,10 @@
+discarding /n/sw/fasrcsw/apps/Core/Anaconda/1.9.2-fasrc01/x/bin from PATH
+prepending /n/home09/ankitgupta/.conda/envs/biopython_env/bin to PATH
+Traceback (most recent call last):
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 127, in <module>
+    sys.exit(main(sys.argv[1:]))
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 122, in main
+    pfilter(train_seqs, cb513_seqs, start_idx, count)
+  File "/n/home09/ankitgupta/CS287/CS287assignments/finalproject/princfilter.py", line 91, in pfilter
+    seq1 = sequences[idx]
+IndexError: list index out of range
