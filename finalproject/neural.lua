@@ -10,9 +10,16 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 	batchLSTM = nn.Sequential()
 
 	-- This is needed to deal with SplitTable being stupid about LongTensors
-	batchLSTM:add(nn.Copy('torch.LongTensor', 'torch.DoubleTensor'))
+	local copy = nn.Copy('torch.LongTensor', 'torch.DoubleTensor')
+	local firstsplit = nn.SplitTable(1,3)
+	-- This is needed to deal with LookupTable not having updateGradOutput
+	copy.updateGradInput = function() end
+	firstsplit.updateGradInput = function() end
 
-	batchLSTM:add(nn.SplitTable(1, 3))	
+	batchLSTM:add(copy)
+	batchLSTM:add(firstsplit)
+	--batchLSTM:add(nn.Copy('torch.LongTensor', 'torch.DoubleTensor'))
+	--batchLSTM:add(nn.SplitTable(1, 3))	
 	local embedding = nn.Sequencer(nn.LookupTable(vocab_size, embed_dim))
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
 	batchLSTM:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))

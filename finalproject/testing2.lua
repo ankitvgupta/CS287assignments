@@ -36,7 +36,7 @@ batchLSTM:add(biseq)
 batchLSTM:add(nn.Sequencer(nn.Linear(2*dwin*embed_dim, output_dim)))
 batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
-
+print(batchLSTM)
 preds = batchLSTM:forward(inputs)
 loss = crit:forward(preds, torch.ones(6, 4))
 print(loss)
