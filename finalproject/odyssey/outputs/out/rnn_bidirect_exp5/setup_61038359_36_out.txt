@@ -1,0 +1,76 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	200	embedding_size	200	optimizer:	sgd	epochs:	30	hidden	100	eta:	0.2	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83200
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 26500986
+        1
+[torch.LongStorage of size 2]
+
+    128
+ 207038
+[torch.LongStorage of size 2]
+
+    128
+ 207038
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(200 -> 200)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(200 -> 200)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (6): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(400 -> 200)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(400 -> 200)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (7): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (8): nn.Sequencer @ nn.Recursor @ nn.Linear(400 -> 100)
+  (9): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (10): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (11): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (12): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	207038	
+Max train index	26	
+Num samples	207038	
+Epoch	1	466.8346927166	
+Epoch	2	261.07001876831	
+Epoch	3	243.44903290272	
+Epoch	4	238.55423939228	

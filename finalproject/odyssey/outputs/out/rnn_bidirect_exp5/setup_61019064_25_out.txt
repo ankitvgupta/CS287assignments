@@ -1,0 +1,105 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	300	optimizer:	sgd	epochs:	30	hidden	100	eta:	0.01	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	     1
+ 83300
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 26500986
+        1
+[torch.LongStorage of size 2]
+
+    128
+ 207038
+[torch.LongStorage of size 2]
+
+    128
+ 207038
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> output]
+  (1): nn.LookupTable
+  (2): nn.Transpose
+  (3): nn.SplitTable
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(300 -> 300)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(300 -> 300)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (6): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(600 -> 300)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(600 -> 300)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (7): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (8): nn.Sequencer @ nn.Recursor @ nn.Linear(600 -> 100)
+  (9): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (10): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (11): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (12): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	207038	
+Max train index	26	
+Num samples	207038	
+Epoch	1	231.03669047356	
+Epoch	2	131.19261300564	
+Epoch	3	128.34667527676	
+Epoch	4	124.61977934837	
+Epoch	5	122.97446089983	
+Epoch	6	121.29338878393	
+Epoch	7	121.52688157558	
+Epoch	8	118.97077804804	
+Epoch	9	117.8237632513	
+Epoch	10	118.38059592247	
+Epoch	11	116.30085492134	
+Epoch	12	117.0241484642	
+Epoch	13	115.53900825977	
+Epoch	14	115.7540833354	
+Epoch	15	114.78631490469	
+Epoch	16	115.04860764742	
+Epoch	17	113.74607777596	
+Epoch	18	113.43579673767	
+Epoch	19	113.30528080463	
+Epoch	20	113.23167484999	
+Epoch	21	112.29770684242	
+Epoch	22	111.91010671854	
+Epoch	23	111.72051370144	
+Epoch	24	111.70801192522	
+Epoch	25	110.6329536438	
+Epoch	26	110.87717461586	
+Epoch	27	110.39532887936	
+Epoch	28	109.21821302176	
+Epoch	29	109.13063800335	
+Epoch	30	109.47673088312	
+Starting the testing	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	300	optimizer:	sgd	epochs:	30	hidden	100	eta:	0.01	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.53123649459784	
