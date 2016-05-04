@@ -4,11 +4,21 @@ require 'optim'
 
 --require 'cudnn'
 
-function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers)
+-- This expects inputs to NOT BE transposed. For example, if you have b sequences of length l, where at each step you are looking 
+-- at a window of size dwin, the dimensions of what should be passed into this model are b x l x dwin.
+function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers, dwin)
 	batchLSTM = nn.Sequential()
-	local embedding = nn.LookupTable(vocab_size, embed_dim)
+
+	-- This is needed to deal with SplitTable being stupid about LongTensors
+	batchLSTM:add(nn.Copy('torch.LongTensor', 'torch.DoubleTensor'))
+
+	batchLSTM:add(nn.SplitTable(1, 3))	
+	local embedding = nn.Sequencer(nn.LookupTable(vocab_size, embed_dim))
 	batchLSTM:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
-	batchLSTM:add(nn.Transpose({1,2}))
+	batchLSTM:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))
+	batchLSTM:add(nn.Sequencer(nn.Unsqueeze(2)))
+	batchLSTM:add(nn.JoinTable(1, 2))
+
 	batchLSTM:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
 	
 
@@ -20,9 +30,9 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 	biseq = nil
 	for layer = 1, num_layers do 
 		if layer == 1 then 
-			biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+			biseq = nn.BiSequencer(nn.FastLSTM(dwin*embed_dim, dwin*embed_dim), nn.FastLSTM(dwin*embed_dim, dwin*embed_dim))
 		else
-			biseq = nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim))
+			biseq = nn.BiSequencer(nn.FastLSTM(2*dwin*embed_dim, dwin*embed_dim), nn.FastLSTM(2*dwin*embed_dim, dwin*embed_dim))
 		end
 		sequencers[layer] = biseq
 		batchLSTM:add(biseq)
@@ -31,7 +41,7 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
 	--batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
 	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
-	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
+	batchLSTM:add(nn.Sequencer(nn.Linear(2*dwin*embed_dim, hidden)))
 	batchLSTM:add(nn.Sequencer(nn.ReLU()))
 	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
 	batchLSTM:add(nn.Sequencer(nn.Linear(hidden, output_dim)))
@@ -149,6 +159,11 @@ function trainRNN(model,
 
 		   	local minibatch_inputs = training_input:narrow(2, j, seq_length)
 			local minibatch_outputs = training_output:narrow(2, j, seq_length):t()
+			-- print("Shapes")
+			-- print(minibatch_inputs:size())
+			-- print(minibatch_outputs:size())
+
+
 			--print("batch", minibatch_inputs)
 			--print("model", model)
 
@@ -177,7 +192,6 @@ function trainRNN(model,
 				-- backprop
 				dLdpreds = criterion:backward(preds, minibatch_outputs) -- gradients of loss wrt preds
 				model:backward(minibatch_inputs, dLdpreds)
-
 				if gradParameters:norm() > 5 then
 					gradParameters:div(gradParameters:norm()/5)
 				end
