@@ -157,6 +157,7 @@ function trainRNN(model,
 		--local valid_numbers = rnn_segment_and_count(valid_kaggle_input:narrow(1, 1, 500), model, space_idx, padding_idx)
       	--local mse = (valid_numbers - valid_kaggle_output:narrow(1, 1, 500)):double():pow(2):mean()
       	--print("MSE", mse)
+		--collectgarbage()
 		for j = 1, training_input:size(2)-seq_length, seq_length do
 			--print("Starting at", j)
 

@@ -1,0 +1,47 @@
+
+The following have been reloaded with a version change:
+  1) mpc/1.0.1-fasrc01 => mpc/1.0.3-fasrc02
+
+THCudaCheck FAIL file=/tmp/luarocks_cutorch-scm-1-1006/cutorch/lib/THC/generic/THCStorage.cu line=40 error=2 : out of memory
+/n/home09/ankitgupta/torch/install/bin/luajit: ...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:69: 
+In 8 module of nn.Sequential:
+In 1 module of nn.Sequential:
+In 1 module of nn.ConcatTable:
+In 5 module of nn.Sequential:
+...09/ankitgupta/.luarocks/share/lua/5.1/nn/ConcatTable.lua:46: cuda runtime error (2) : out of memory at /tmp/luarocks_cutorch-scm-1-1006/cutorch/lib/THC/generic/THCStorage.cu:40
+stack traceback:
+	[C]: in function 'clone'
+	...09/ankitgupta/.luarocks/share/lua/5.1/nn/ConcatTable.lua:46: in function 'f'
+	...09/ankitgupta/.luarocks/share/lua/5.1/nn/ConcatTable.lua:21: in function 'retable'
+	...09/ankitgupta/.luarocks/share/lua/5.1/nn/ConcatTable.lua:44: in function <...09/ankitgupta/.luarocks/share/lua/5.1/nn/ConcatTable.lua:30>
+	[C]: in function 'xpcall'
+	...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:65: in function 'rethrowErrors'
+	...e09/ankitgupta/.luarocks/share/lua/5.1/nn/Sequential.lua:55: in function 'updateGradInput'
+	/n/home09/ankitgupta/.luarocks/share/lua/5.1/rnn/LSTM.lua:201: in function '_updateGradInput'
+	...tgupta/.luarocks/share/lua/5.1/rnn/AbstractRecurrent.lua:52: in function 'updateGradInput'
+	...e09/ankitgupta/.luarocks/share/lua/5.1/rnn/Sequencer.lua:79: in function <...e09/ankitgupta/.luarocks/share/lua/5.1/rnn/Sequencer.lua:72>
+	...
+	...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:65: in function 'rethrowErrors'
+	...e09/ankitgupta/.luarocks/share/lua/5.1/nn/Sequential.lua:84: in function 'backward'
+	...nkitgupta/CS287/CS287assignments/finalproject/neural.lua:202: in function 'opfunc'
+	...e09/ankitgupta/torch/install/share/lua/5.1/optim/sgd.lua:44: in function 'sgd'
+	...nkitgupta/CS287/CS287assignments/finalproject/neural.lua:223: in function 'trainRNN'
+	...pta/CS287/CS287assignments/finalproject/finalproject.lua:104: in function 'main'
+	...pta/CS287/CS287assignments/finalproject/finalproject.lua:134: in main chunk
+	[C]: in function 'dofile'
+	...upta/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:145: in main chunk
+	[C]: at 0x00405800
+
+WARNING: If you see a stack trace below, it doesn't point to the place where this error occured. Please use only the one above.
+stack traceback:
+	[C]: in function 'error'
+	...me09/ankitgupta/.luarocks/share/lua/5.1/nn/Container.lua:69: in function 'rethrowErrors'
+	...e09/ankitgupta/.luarocks/share/lua/5.1/nn/Sequential.lua:84: in function 'backward'
+	...nkitgupta/CS287/CS287assignments/finalproject/neural.lua:202: in function 'opfunc'
+	...e09/ankitgupta/torch/install/share/lua/5.1/optim/sgd.lua:44: in function 'sgd'
+	...nkitgupta/CS287/CS287assignments/finalproject/neural.lua:223: in function 'trainRNN'
+	...pta/CS287/CS287assignments/finalproject/finalproject.lua:104: in function 'main'
+	...pta/CS287/CS287assignments/finalproject/finalproject.lua:134: in main chunk
+	[C]: in function 'dofile'
+	...upta/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:145: in main chunk
+	[C]: at 0x00405800

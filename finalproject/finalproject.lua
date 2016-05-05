@@ -31,7 +31,10 @@ function main()
 	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/finalproject/' or ''
 	if opt.cuda then
 		require 'cunn'
+		--print(cunn)
+		--print(cutorch)
 		cutorch.setDevice(1)
+		cutorch.setHeapTracking(true)
 		print("Using cuda")
 	end
 

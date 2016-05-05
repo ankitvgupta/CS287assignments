@@ -1,0 +1,101 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_5.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Test size	 83350
+     5
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 26500986
+        5
+[torch.LongStorage of size 2]
+
+     1
+ 83350
+     5
+[torch.LongStorage of size 3]
+
+     1
+ 83350
+[torch.LongStorage of size 2]
+
+Data sizes	
+    128
+ 207038
+      5
+[torch.LongStorage of size 3]
+
+    128
+ 207038
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> (13) -> (14) -> (15) -> (16) -> output]
+  (1): nn.Copy
+  (2): nn.SplitTable
+  (3): nn.Sequencer @ nn.Recursor @ nn.LookupTable
+  (4): nn.Sequencer @ nn.Recursor @ nn.View(-1)
+  (5): nn.Sequencer @ nn.Recursor @ nn.Unsqueeze(dim 2)
+  (6): nn.JoinTable
+  (7): nn.SplitTable
+  (8): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(500 -> 500)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(500 -> 500)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (9): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (10): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(1000 -> 500)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(1000 -> 500)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (11): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (12): nn.Sequencer @ nn.Recursor @ nn.Linear(1000 -> 100)
+  (13): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (14): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (15): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (16): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	207038	
+Max train index	26	
+Num samples	207038	
+Epoch	1	113.50864648819	
+Epoch	2	54.503731191158	
+Epoch	3	52.253829300404	
+Epoch	4	50.378449738026	
+Epoch	5	48.813533961773	
+Epoch	6	48.995019078255	
+Epoch	7	46.7327029109	
+Epoch	8	46.796507656574	
+Epoch	9	45.182723104954	
+Epoch	10	45.68322455883	
+Epoch	11	43.530966579914	
+Epoch	12	43.166387140751	
+Epoch	13	43.818569242954	
+Epoch	14	41.025683194399	

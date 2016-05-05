@@ -8,15 +8,15 @@
 #SBATCH -p holyseasgpu             #Partition to submit to
 #SBATCH --gres=gpu:1
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_bidirect_exp5/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_bidirect_exp5/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_bidirect_exp6/setup_%A_%a_out.txt            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_bidirect_exp6/setup_%A_%a_err.txt            #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
 #!/bin/bash
 
 # Read the config files and get the appropriate config
-readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/scripts/rnn_bidirectional_experiment5_config.txt
+readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/scripts/rnn_bidirectional_experiment6_config.txt
 selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
 # Extract params
