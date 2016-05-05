@@ -65,7 +65,6 @@ function main()
 	test_input = test_input:narrow(1, 1, desired_test_length)
 	test_output = test_output:narrow(1, 1, desired_test_length)
 	
-	test_input = test_input:reshape(1, test_input:size(1))
 	print("Test size", test_input:size())
 	if opt.cuda then
 		--require 'cunn'
@@ -90,6 +89,8 @@ function main()
 
 	if (opt.classifier == 'rnn') then
 		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output, dwin)
+		test_input, test_output = reshape_inputs(1, test_input, test_output, dwin)
+		print(test_input:size(), test_output:size())
 		print("Data sizes")
 		print(train_input:size())
 		print(train_output:size())
@@ -108,13 +109,17 @@ function main()
 		printoptions(opt)
 		print("Accuracy", accuracy)
    	elseif (opt.classifier == 'hmm') then
-   		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
+		test_input = test_input:reshape(1, test_input:size(1))
+   		
+		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
    		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
    		print(test_predicted_output)
    		acc = prediction_accuracy(test_predicted_output:long(), test_output)
    		print("Accuracy:", acc)
    	elseif (opt.classifier == 'memm') then
-   		local model = train_memm(flat_train_input, nil, flat_train_output, 
+		test_input = test_input:reshape(1, test_input:size(1))
+   	
+		local model = train_memm(flat_train_input, nil, flat_train_output, 
 						vocab_size, 0, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
 
 		predictor = make_predictor_function_memm(model, vocab_size)
