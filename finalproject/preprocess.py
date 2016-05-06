@@ -13,7 +13,7 @@ import numpy as np
 import h5py
 
 ACIDS = {'<': 1, '>': 2, 'A': 3, 'C': 4, 'E': 5, 'D': 6, 'G': 7, 'F': 8, 'I': 9, 'H': 10, 'K': 11, 'M': 12, 'L': 13, 'N':14, 'Q':15, 'P':16, 'S':17, 'R':18, 'T':19, 'W':20, 'V':21, 'Y':22, 'X':23, 'U': 24, 'Z': 25, 'B':26, 'O':27}
-LABELS = {'<': 1, '>': 2, 'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
+LABELS = {'<': 1, '>': 2, 'NoSeq': 2, 'L': 3, ' ': 3, 'B': 4, 'E': 5, 'G': 6, 'I': 7, 'H': 8, 'S': 9, 'T': 10}
 
 FILE_PATHS = {"HUMAN": ("data/ss.txt"), 
               "FILT": ("data/ss_filtered_input.txt", "data/ss_filtered_output.txt"),
@@ -119,12 +119,16 @@ def parse_princeton_extra(data_file, num_proteins):
     output_data = []
 
     input_idx = np.r_[0:21,31:33,35:57]
-    output_idx = np.r_[22:31]
+    label_order = ['L', 'B', 'E', 'G', 'I', 'H', 'S', 'T','NoSeq']
 
     for p in range(num_proteins):
         for a in range(700):
             input_data.append(amino_acids[p][a][input_idx])
-            output_data.append(amino_acids[p][a][output_idx])
+            this_labels = np.nonzero(amino_acids[p][a][22:31])[0]
+            assert len(this_labels) == 1
+            this_label = label_order[this_labels[0]]
+            this_label_idx = LABELS[this_label]
+            output_data.append(this_label_idx)
             # reached end of this sequence
             if amino_acids[p][a][21]:
                 # label should also be noseq
