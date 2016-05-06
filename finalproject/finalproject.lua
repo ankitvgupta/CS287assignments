@@ -57,13 +57,19 @@ function main()
 	--local end_indx = f:read('end_indx'):all():long()[1]
 
 	-- Count based laplace
-	local flat_train_input = f:read('train_input'):all():long()
+	local flat_train_input = f:read('train_input'):all()
+	if opt.additional_features == false then
+		flat_train_input = flat_train_input:long()
+	end
 	local flat_train_output = f:read('train_output'):all():long()
 
 	local num_features = flat_train_input:size(2)
 	print("Num features", num_features)
 
-	local test_input = f:read('test_input'):all():long()
+	local test_input = f:read('test_input'):all()
+	if opt.additional_features == false then
+		test_input = test_input:long()
+	end
 	local test_output = f:read('test_output'):all():long()
 	
 	local desired_test_length = test_input:size(1) - (test_input:size(1) % opt.sequence_length)
@@ -81,8 +87,8 @@ function main()
 		test_input = test_input:cuda()
 		test_output = test_output:cuda()	
 	end
-
 	print(flat_train_input:size())
+	print(flat_train_output:size())
 
 
 	--printoptions(opt)
