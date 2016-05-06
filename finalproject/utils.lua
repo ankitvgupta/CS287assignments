@@ -15,9 +15,11 @@ function reshape_inputs_hidim(num_sequences, input, output)
 	return new_inputs, new_outputs
 end
 
-function reshape_inputs(num_sequences, input, output, dwin)
+function reshape_inputs(num_sequences, input, output)
 	return reshape_inputs_hidim(num_sequences, input, output)
 end
+
+
 
 function printoptions(opt)
 	print("datafile:", opt.datafile, 

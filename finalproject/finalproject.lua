@@ -60,6 +60,8 @@ function main()
 	local flat_train_input = f:read('train_input'):all():long()
 	local flat_train_output = f:read('train_output'):all():long()
 
+	local num_features = flat_train_input:size(2)
+	print("Num features", num_features)
 
 	local test_input = f:read('test_input'):all():long()
 	local test_output = f:read('test_output'):all():long()
@@ -92,14 +94,18 @@ function main()
 	local bisequencer_modules = nil
 
 	if (opt.classifier == 'rnn') then
-		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output, dwin)
-		test_input, test_output = reshape_inputs(1, test_input, test_output, dwin)
+		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
+		test_input, test_output = reshape_inputs(1, test_input, test_output)
 		print(test_input:size(), test_output:size())
 		print("Data sizes")
 		print(train_input:size())
 		print(train_output:size())
 		if opt.bidirectional then
-			model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, dwin)
+			if opt.additional_features then
+				model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeatures(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
+			else
+				model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, dwin)
+			end
 		else
 			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		end
