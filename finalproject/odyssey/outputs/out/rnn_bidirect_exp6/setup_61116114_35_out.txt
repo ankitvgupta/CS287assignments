@@ -1,30 +1,34 @@
 [?1034hUsing cuda	
-datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_3.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_5.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	10	optimizer:	sgd	epochs:	15	hidden	200	eta:	0.2	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
 Num classes:	10	
 Vocab size:	37	
 Start class:	1	
-Test size	 83350
-     3
+Num features	5	
+Test size	 83300
+     5
 [torch.LongStorage of size 2]
 
 Using cuda	
  26500986
-        3
+        5
 [torch.LongStorage of size 2]
 
+ 26500986
+[torch.LongStorage of size 1]
+
      1
- 83350
-     3
+ 83300
+     5
 [torch.LongStorage of size 3]
 
      1
- 83350
+ 83300
 [torch.LongStorage of size 2]
 
 Data sizes	
     128
  207038
-      3
+      5
 [torch.LongStorage of size 3]
 
     128
@@ -46,11 +50,11 @@ nn.Sequential {
     [input -> (1) -> (2) -> (3) -> output]
     (1): nn.ConcatTable {
       input
-        |`-> (1): nn.Sequencer @ nn.FastLSTM(150 -> 150)
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(50 -> 50)
         |`-> (2): nn.Sequential {
         |      [input -> (1) -> (2) -> (3) -> output]
         |      (1): nn.ReverseTable
-        |      (2): nn.Sequencer @ nn.FastLSTM(150 -> 150)
+        |      (2): nn.Sequencer @ nn.FastLSTM(50 -> 50)
         |      (3): nn.ReverseTable
         |    }
          ... -> output
@@ -63,11 +67,11 @@ nn.Sequential {
     [input -> (1) -> (2) -> (3) -> output]
     (1): nn.ConcatTable {
       input
-        |`-> (1): nn.Sequencer @ nn.FastLSTM(300 -> 150)
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 50)
         |`-> (2): nn.Sequential {
         |      [input -> (1) -> (2) -> (3) -> output]
         |      (1): nn.ReverseTable
-        |      (2): nn.Sequencer @ nn.FastLSTM(300 -> 150)
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 50)
         |      (3): nn.ReverseTable
         |    }
          ... -> output
@@ -76,30 +80,30 @@ nn.Sequential {
     (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
   }
   (11): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
-  (12): nn.Sequencer @ nn.Recursor @ nn.Linear(300 -> 100)
+  (12): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 200)
   (13): nn.Sequencer @ nn.Recursor @ nn.ReLU
   (14): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
-  (15): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (15): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 10)
   (16): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
 }
 Input size	207038	
 Max train index	26	
 Num samples	207038	
-Epoch	1	113.99839019775	
-Epoch	2	57.328668057919	
-Epoch	3	55.685069441795	
-Epoch	4	55.230555176735	
-Epoch	5	54.222724854946	
-Epoch	6	54.582931935787	
-Epoch	7	52.949435770512	
-Epoch	8	53.710969865322	
-Epoch	9	53.024092674255	
-Epoch	10	53.033572614193	
-Epoch	11	52.690237522125	
-Epoch	12	52.258624255657	
-Epoch	13	52.256353199482	
-Epoch	14	51.304558396339	
-Epoch	15	51.965010225773	
+Epoch	1	228.33541822433	
+Epoch	2	119.41598296165	
+Epoch	3	115.87928134203	
+Epoch	4	114.7760951519	
+Epoch	5	111.59816104174	
+Epoch	6	111.59751528502	
+Epoch	7	110.78807973862	
+Epoch	8	111.03264439106	
+Epoch	9	110.08703356981	
+Epoch	10	109.21787959337	
+Epoch	11	109.75039356947	
+Epoch	12	110.54313075542	
+Epoch	13	109.39640134573	
+Epoch	14	108.43885958195	
+Epoch	15	108.17249649763	
 Starting the testing	
-datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_3.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
-Accuracy	0.55503299340132	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_5.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	10	optimizer:	sgd	epochs:	15	hidden	200	eta:	0.2	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.53445378151261	

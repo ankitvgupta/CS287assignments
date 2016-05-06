@@ -1,30 +1,34 @@
 [?1034hUsing cuda	
-datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_3.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_5.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	200	embedding_size	10	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.2	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
 Num classes:	10	
 Vocab size:	37	
 Start class:	1	
-Test size	 83350
-     3
+Num features	5	
+Test size	 83200
+     5
 [torch.LongStorage of size 2]
 
 Using cuda	
  26500986
-        3
+        5
 [torch.LongStorage of size 2]
 
+ 26500986
+[torch.LongStorage of size 1]
+
      1
- 83350
-     3
+ 83200
+     5
 [torch.LongStorage of size 3]
 
      1
- 83350
+ 83200
 [torch.LongStorage of size 2]
 
 Data sizes	
     128
  207038
-      3
+      5
 [torch.LongStorage of size 3]
 
     128
@@ -46,11 +50,11 @@ nn.Sequential {
     [input -> (1) -> (2) -> (3) -> output]
     (1): nn.ConcatTable {
       input
-        |`-> (1): nn.Sequencer @ nn.FastLSTM(150 -> 150)
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(50 -> 50)
         |`-> (2): nn.Sequential {
         |      [input -> (1) -> (2) -> (3) -> output]
         |      (1): nn.ReverseTable
-        |      (2): nn.Sequencer @ nn.FastLSTM(150 -> 150)
+        |      (2): nn.Sequencer @ nn.FastLSTM(50 -> 50)
         |      (3): nn.ReverseTable
         |    }
          ... -> output
@@ -63,11 +67,11 @@ nn.Sequential {
     [input -> (1) -> (2) -> (3) -> output]
     (1): nn.ConcatTable {
       input
-        |`-> (1): nn.Sequencer @ nn.FastLSTM(300 -> 150)
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 50)
         |`-> (2): nn.Sequential {
         |      [input -> (1) -> (2) -> (3) -> output]
         |      (1): nn.ReverseTable
-        |      (2): nn.Sequencer @ nn.FastLSTM(300 -> 150)
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 50)
         |      (3): nn.ReverseTable
         |    }
          ... -> output
@@ -76,7 +80,7 @@ nn.Sequential {
     (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
   }
   (11): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
-  (12): nn.Sequencer @ nn.Recursor @ nn.Linear(300 -> 100)
+  (12): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 100)
   (13): nn.Sequencer @ nn.Recursor @ nn.ReLU
   (14): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
   (15): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
@@ -85,21 +89,21 @@ nn.Sequential {
 Input size	207038	
 Max train index	26	
 Num samples	207038	
-Epoch	1	113.99839019775	
-Epoch	2	57.328668057919	
-Epoch	3	55.685069441795	
-Epoch	4	55.230555176735	
-Epoch	5	54.222724854946	
-Epoch	6	54.582931935787	
-Epoch	7	52.949435770512	
-Epoch	8	53.710969865322	
-Epoch	9	53.024092674255	
-Epoch	10	53.033572614193	
-Epoch	11	52.690237522125	
-Epoch	12	52.258624255657	
-Epoch	13	52.256353199482	
-Epoch	14	51.304558396339	
-Epoch	15	51.965010225773	
+Epoch	1	462.79220485687	
+Epoch	2	251.272149086	
+Epoch	3	244.24315851927	
+Epoch	4	238.71987462044	
+Epoch	5	236.41719061136	
+Epoch	6	230.97001999617	
+Epoch	7	228.45986682177	
+Epoch	8	226.7246235013	
+Epoch	9	226.29091012478	
+Epoch	10	223.93779355288	
+Epoch	11	221.70066976547	
+Epoch	12	218.83752763271	
+Epoch	13	223.18991225958	
+Epoch	14	215.56036621332	
+Epoch	15	220.37511986494	
 Starting the testing	
-datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_3.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
-Accuracy	0.55503299340132	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/FILT_CB513_5.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	200	embedding_size	10	optimizer:	sgd	epochs:	15	hidden	100	eta:	0.2	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.54110576923077	
