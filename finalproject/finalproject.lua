@@ -24,6 +24,7 @@ cmd:option('-cuda', false, 'Set to use cuda')
 cmd:option('-minibatch_size', 320, 'Size of minibatches')
 cmd:option('-bidirectional', false, 'Use a bidirectional RNN.')
 cmd:option('-bidirectional_layers', 1, 'Number of layers of bidirectional RNN')
+cmd:option('-additional_features', false, 'Use additional features.')
 
 function main() 
 	-- Parse input params

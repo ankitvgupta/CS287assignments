@@ -68,7 +68,54 @@ function bidirectionalRNNmodel(vocab_size, embed_dim, output_dim, rnn_unit1, rnn
 end
 
 
+-- This expects inputs to NOT BE transposed. 
+-- The input's should be batched though. In particular, the input to this model should be
+-- b x n x w, where b is the number of batches, n is the sequence in the batch, and w is the # of features for each seq element.
+function bidirectionalRNNmodelExtraFeatures(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers)
+	batchLSTM = nn.Sequential()
+	batchLSTM:add(nn.Transpose{1,2})
+	batchLSTM:add(nn.SplitTable(1,3))
 
+	batchLSTM:add(nn.Sequencer(nn.Linear(num_features, embed_dim)))
+
+
+	local sequencers = {}
+
+	-- local biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+	-- batchLSTM:add(biseq)
+	-- batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	biseq = nil
+	for layer = 1, num_layers do 
+		if layer == 1 then 
+			biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+		else
+			biseq = nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim))
+		end
+		sequencers[layer] = biseq
+		batchLSTM:add(biseq)
+		batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	end
+	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
+	--batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	--batchLSTM:add(nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim)))
+	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
+	batchLSTM:add(nn.Sequencer(nn.ReLU()))
+	batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	batchLSTM:add(nn.Sequencer(nn.Linear(hidden, output_dim)))
+	batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
+
+	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
+	if usecuda then
+		--cudnn.convert(batchLSTM, cudnn)
+		batchLSTM:cuda()
+		print("Converted LSTM to CUDA")
+		--cudnn.convert(crit, cudnn)
+		crit:cuda()
+		print("Converted crit to CUDA")
+	end
+	print(batchLSTM)
+	return batchLSTM, crit, sequencers
+end
 
 function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda) 
 	-- if usecuda then
