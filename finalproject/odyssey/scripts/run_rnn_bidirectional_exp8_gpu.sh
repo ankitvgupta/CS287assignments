@@ -2,21 +2,21 @@
 
 #SBATCH -n 1                         #Number of cores
 #SBATCH -N 1                          #Run on 1 node
-#SBATCH --mem=5000                  #Memory per cpu in MB (see also --mem)
+#SBATCH --mem=7000                  #Memory per cpu in MB (see also --mem)
 
-#SBATCH -t 10:00:00              #Indicate duration using HH:MM:SS
+#SBATCH -t 20:00:00              #Indicate duration using HH:MM:SS
 #SBATCH -p holyseasgpu             #Partition to submit to
 #SBATCH --gres=gpu:1
 
-#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_bidirect_exp7/setup_%A_%a_out.txt            #File to which standard out will be written
-#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_bidirect_exp7/setup_%A_%a_err.txt            #File to which standard err will be written
+#SBATCH -o /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/out/rnn_bidirect_exp8/setup_%A_%a_out.txt            #File to which standard out will be written
+#SBATCH -e /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/outputs/err/rnn_bidirect_exp8/setup_%A_%a_err.txt            #File to which standard err will be written
 #SBATCH --mail-type=ALL                 #Type of email notification- BEGIN,END,FAIL,ALL
 #SBATCH --mail-user=ankitgupta@college.harvard.edu  #Email to which notifications will be sent
 
 #!/bin/bash
 
 # Read the config files and get the appropriate config
-readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/scripts/rnn_bidirectional_experiment7_config.txt
+readarray -t config < /n/home09/ankitgupta/CS287/CS287assignments/finalproject/odyssey/scripts/rnn_bidirectional_experiment8_config.txt
 selected_config=(${config[$SLURM_ARRAY_TASK_ID]})
 
 # Extract params

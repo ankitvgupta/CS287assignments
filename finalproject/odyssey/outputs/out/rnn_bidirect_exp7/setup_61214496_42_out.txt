@@ -1,0 +1,190 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	100	hidden	100	eta:	0.01	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Num features	45	
+Test size	 85200
+    45
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1188852
+      45
+[torch.LongStorage of size 2]
+
+ 1188852
+[torch.LongStorage of size 1]
+
+     1
+ 85200
+    45
+[torch.LongStorage of size 3]
+
+     1
+ 85200
+[torch.LongStorage of size 2]
+
+Data sizes	
+  128
+ 9287
+   45
+[torch.LongStorage of size 3]
+
+  128
+ 9287
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> output]
+  (1): nn.Transpose
+  (2): nn.SplitTable
+  (3): nn.Sequencer @ nn.Recursor @ nn.Linear(45 -> 100)
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (6): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(200 -> 100)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(200 -> 100)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (7): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (8): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 100)
+  (9): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (10): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (11): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (12): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9287	
+Max train index	1	
+Num samples	9287	
+Epoch	1	229.86581254005	
+Epoch	2	167.85771751404	
+Epoch	3	156.62983191013	
+Epoch	4	143.66047120094	
+Epoch	5	141.40228426456	
+Epoch	6	139.75915443897	
+Epoch	7	138.64209270477	
+Epoch	8	137.08280825615	
+Epoch	9	134.91620218754	
+Epoch	10	131.41796052456	
+Epoch	11	128.81071484089	
+Epoch	12	126.1697435379	
+Epoch	13	125.16411268711	
+Epoch	14	123.76356363297	
+Epoch	15	122.94061613083	
+Epoch	16	122.13205224276	
+Epoch	17	121.36461800337	
+Epoch	18	120.86827504635	
+Epoch	19	120.0487024188	
+Epoch	20	120.01673203707	
+Epoch	21	118.88840270042	
+Epoch	22	118.91625750065	
+Epoch	23	118.21129751205	
+Epoch	24	117.57792884111	
+Epoch	25	117.59967422485	
+Epoch	26	117.01090174913	
+Epoch	27	116.58741956949	
+Epoch	28	116.7708016634	
+Epoch	29	116.07123112679	
+Epoch	30	115.19234490395	
+Epoch	31	115.03319251537	
+Epoch	32	114.46603620052	
+Epoch	33	113.93748366833	
+Epoch	34	114.51444995403	
+Epoch	35	114.0576081872	
+Epoch	36	113.50819396973	
+Epoch	37	113.39612209797	
+Epoch	38	112.9556735158	
+Epoch	39	112.46981704235	
+Epoch	40	112.50702750683	
+Epoch	41	112.7566562295	
+Epoch	42	111.50474953651	
+Epoch	43	111.45218592882	
+Epoch	44	111.55385029316	
+Epoch	45	111.19670635462	
+Epoch	46	111.34474474192	
+Epoch	47	110.59340208769	
+Epoch	48	110.84142667055	
+Epoch	49	110.61099165678	
+Epoch	50	110.17759370804	
+Epoch	51	110.14192336798	
+Epoch	52	109.94759953022	
+Epoch	53	109.67853462696	
+Epoch	54	109.17025268078	
+Epoch	55	108.99555516243	
+Epoch	56	108.51120483875	
+Epoch	57	108.65775257349	
+Epoch	58	108.19231849909	
+Epoch	59	108.36761009693	
+Epoch	60	108.07762312889	
+Epoch	61	108.22771316767	
+Epoch	62	107.67007339001	
+Epoch	63	107.33078145981	
+Epoch	64	107.62799817324	
+Epoch	65	107.48796051741	
+Epoch	66	107.08576792479	
+Epoch	67	106.82344800234	
+Epoch	68	106.72586166859	
+Epoch	69	106.63781458139	
+Epoch	70	106.52182579041	
+Epoch	71	105.94778561592	
+Epoch	72	105.57599467039	
+Epoch	73	105.11461186409	
+Epoch	74	105.60913997889	
+Epoch	75	105.64956694841	
+Epoch	76	105.55405128002	
+Epoch	77	105.46978896856	
+Epoch	78	105.58247298002	
+Epoch	79	104.73479378223	
+Epoch	80	104.78592270613	
+Epoch	81	104.46904933453	
+Epoch	82	104.20520216227	
+Epoch	83	104.25506478548	
+Epoch	84	104.1103054285	
+Epoch	85	104.96864658594	
+Epoch	86	103.96533715725	
+Epoch	87	103.89512234926	
+Epoch	88	104.04114884138	
+Epoch	89	103.34403604269	
+Epoch	90	103.1047244072	
+Epoch	91	103.16570323706	
+Epoch	92	103.55308067799	
+Epoch	93	103.17046827078	
+Epoch	94	102.80646985769	
+Epoch	95	102.38164126873	
+Epoch	96	102.42718845606	
+Epoch	97	102.32086074352	
+Epoch	98	101.22858518362	
+Epoch	99	101.53302067518	
+Epoch	100	101.99404942989	
+Starting the testing	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	100	hidden	100	eta:	0.01	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.6231455399061	

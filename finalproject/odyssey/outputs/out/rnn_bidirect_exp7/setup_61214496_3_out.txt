@@ -1,0 +1,173 @@
+[?1034hUsing cuda	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	25	optimizer:	sgd	epochs:	100	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	1	
+Num classes:	10	
+Vocab size:	37	
+Start class:	1	
+Num features	45	
+Test size	 85250
+    45
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1188852
+      45
+[torch.LongStorage of size 2]
+
+ 1188852
+[torch.LongStorage of size 1]
+
+     1
+ 85250
+    45
+[torch.LongStorage of size 3]
+
+     1
+ 85250
+[torch.LongStorage of size 2]
+
+Data sizes	
+  128
+ 9287
+   45
+[torch.LongStorage of size 3]
+
+  128
+ 9287
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> output]
+  (1): nn.Transpose
+  (2): nn.SplitTable
+  (3): nn.Sequencer @ nn.Recursor @ nn.Linear(45 -> 25)
+  (4): nn.BiSequencer @ nn.Sequential {
+    [input -> (1) -> (2) -> (3) -> output]
+    (1): nn.ConcatTable {
+      input
+        |`-> (1): nn.Sequencer @ nn.FastLSTM(25 -> 25)
+        |`-> (2): nn.Sequential {
+        |      [input -> (1) -> (2) -> (3) -> output]
+        |      (1): nn.ReverseTable
+        |      (2): nn.Sequencer @ nn.FastLSTM(25 -> 25)
+        |      (3): nn.ReverseTable
+        |    }
+         ... -> output
+    }
+    (2): nn.ZipTable
+    (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+  }
+  (5): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (6): nn.Sequencer @ nn.Recursor @ nn.Linear(50 -> 100)
+  (7): nn.Sequencer @ nn.Recursor @ nn.ReLU
+  (8): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+  (9): nn.Sequencer @ nn.Recursor @ nn.Linear(100 -> 10)
+  (10): nn.Sequencer @ nn.Recursor @ nn.LogSoftMax
+}
+Input size	9287	
+Max train index	1	
+Num samples	9287	
+Epoch	1	113.48682999611	
+Epoch	2	65.072486996651	
+Epoch	3	61.839501142502	
+Epoch	4	58.771969199181	
+Epoch	5	56.864282310009	
+Epoch	6	55.745992898941	
+Epoch	7	55.127210795879	
+Epoch	8	54.24328315258	
+Epoch	9	53.604847848415	
+Epoch	10	52.551942408085	
+Epoch	11	53.069186866283	
+Epoch	12	52.832689404488	
+Epoch	13	51.39412766695	
+Epoch	14	50.906464278698	
+Epoch	15	51.510286569595	
+Epoch	16	50.508206546307	
+Epoch	17	50.981069743633	
+Epoch	18	50.560559332371	
+Epoch	19	50.708127915859	
+Epoch	20	50.432345569134	
+Epoch	21	49.414498746395	
+Epoch	22	49.897045075893	
+Epoch	23	49.343103885651	
+Epoch	24	48.947406828403	
+Epoch	25	50.310579299927	
+Epoch	26	49.394993543625	
+Epoch	27	49.908772349358	
+Epoch	28	49.203479886055	
+Epoch	29	50.075855970383	
+Epoch	30	49.542863368988	
+Epoch	31	49.939807891846	
+Epoch	32	49.177779972553	
+Epoch	33	49.234265685081	
+Epoch	34	49.427401721478	
+Epoch	35	48.568048834801	
+Epoch	36	49.2935115695	
+Epoch	37	49.133638739586	
+Epoch	38	49.409317731857	
+Epoch	39	48.512983858585	
+Epoch	40	48.975950360298	
+Epoch	41	48.598598659039	
+Epoch	42	48.499048173428	
+Epoch	43	48.713982105255	
+Epoch	44	49.20695656538	
+Epoch	45	48.507584095001	
+Epoch	46	48.994998514652	
+Epoch	47	49.438310921192	
+Epoch	48	48.287505209446	
+Epoch	49	49.05912810564	
+Epoch	50	48.53458750248	
+Epoch	51	49.315989971161	
+Epoch	52	49.055858373642	
+Epoch	53	49.530063331127	
+Epoch	54	48.721367955208	
+Epoch	55	48.475057959557	
+Epoch	56	48.691751480103	
+Epoch	57	49.473097085953	
+Epoch	58	48.718066096306	
+Epoch	59	49.108371675014	
+Epoch	60	49.430073916912	
+Epoch	61	48.710365474224	
+Epoch	62	49.164962172508	
+Epoch	63	48.657092273235	
+Epoch	64	49.502134621143	
+Epoch	65	49.299036979675	
+Epoch	66	48.848693847656	
+Epoch	67	49.032917976379	
+Epoch	68	49.458886027336	
+Epoch	69	49.275938630104	
+Epoch	70	48.679696619511	
+Epoch	71	49.350528478622	
+Epoch	72	49.10058927536	
+Epoch	73	48.774106323719	
+Epoch	74	49.123470902443	
+Epoch	75	48.673123657703	
+Epoch	76	48.617209553719	
+Epoch	77	48.989756643772	
+Epoch	78	48.796674072742	
+Epoch	79	48.968822002411	
+Epoch	80	49.187034070492	
+Epoch	81	48.312020540237	
+Epoch	82	48.466316580772	
+Epoch	83	49.337301790714	
+Epoch	84	48.190694630146	
+Epoch	85	48.879007995129	
+Epoch	86	48.987646102905	
+Epoch	87	48.786605060101	
+Epoch	88	48.290792703629	
+Epoch	89	48.770700395107	
+Epoch	90	48.053969562054	
+Epoch	91	48.645465016365	
+Epoch	92	48.440973103046	
+Epoch	93	48.433162212372	
+Epoch	94	48.51017254591	
+Epoch	95	48.373942196369	
+Epoch	96	48.619872331619	
+Epoch	97	49.079084992409	
+Epoch	98	48.299099504948	
+Epoch	99	48.224948227406	
+Epoch	100	48.130806088448	
+Starting the testing	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_CB513_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	25	optimizer:	sgd	epochs:	100	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	1	
+Accuracy	0.64236950146628	
