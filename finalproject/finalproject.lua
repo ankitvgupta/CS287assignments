@@ -110,7 +110,7 @@ function main()
 		print(train_output:size())
 		if opt.bidirectional then
 			if (opt.additional_features and opt.memm_layer) then
-				model, lstm_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, nclasses, opt.sequence_length, opt.b)
+				model, lstm_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, nclasses)
 			elseif opt.additional_features then
 				model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeatures(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			else

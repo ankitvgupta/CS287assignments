@@ -120,33 +120,33 @@ end
 -- This expects inputs to NOT BE transposed. 
 -- The input's should be batched though. In particular, the input to this model should be
 -- b x n x w, where b is the number of batches, n is the sequence in the batch, and w is the # of features for each seq element.
-function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers, num_classes, num_sequences, minibatch_size)
+function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers, num_classes)
 
 	parallel_table = nn.ParallelTable()
 
 	prev_class_part = nn.Sequential()
 	-- This is needed to deal with SplitTable being stupid about LongTensors
 	local copy = nn.Copy('torch.LongTensor', 'torch.DoubleTensor')
-	local firstsplit = nn.SplitTable(1,3)
+	--local firstsplit = nn.SplitTable(1,3)
 	local prevtranspose = nn.Transpose{1,2}
 	-- This is needed to deal with LookupTable and Transpose not having updateGradOutput
 	copy.updateGradInput = function() end
-	firstsplit.updateGradInput = function() end
+	--firstsplit.updateGradInput = function() end
 	prevtranspose.updateGradInput = function() end
-	
+
 	prev_class_part:add(copy)
 	prev_class_part:add(prevtranspose)
-	prev_class_part:add(firstsplit)
+	--prev_class_part:add(firstsplit)
 
-	local embedding = nn.Sequencer(nn.LookupTable(num_classes, embed_dim))
-	prev_class_part:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
-	prev_class_part:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))
-	prev_class_part:add(nn.Sequencer(nn.Unsqueeze(2)))
-	prev_class_part:add(nn.JoinTable(1, 2))
+	-- local embedding = nn.Sequencer(nn.LookupTable(num_classes, embed_dim))
+	-- prev_class_part:add(embedding) --will return a sequence-length x batch-size x embedDim tensor
+	-- prev_class_part:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))
+	-- prev_class_part:add(nn.Sequencer(nn.Unsqueeze(2)))
+	-- prev_class_part:add(nn.JoinTable(1, 2))
 
-	prev_class_part:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
+	-- prev_class_part:add(nn.SplitTable(1, 3)) --splits into a sequence-length table with batch-size x embedDim entries
 
-	prev_class_part:add(nn.Sequencer(nn.Linear(embed_dim, hidden)))
+	-- prev_class_part:add(nn.Sequencer(nn.Linear(embed_dim, hidden)))
 
 	-- prev_class_part:add(nn.Transpose{1,2})
 	-- prev_class_part:add(nn.Sequencer(nn.LookupTable(num_classes, embed_dim)))
@@ -178,23 +178,28 @@ function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_
 	-- batchLSTM:add(nn.Sequencer(nn.Linear(hidden, output_dim)))
 	-- batchLSTM:add(nn.Sequencer(nn.LogSoftMax()))
 
-	-- convert back to tensor so we can add
-	batchLSTM:add(nn.JoinTable(1, 2))
-	prev_class_part:add(nn.JoinTable(1, 2))
+	-- convert back to tensor so we can concat
+	batchLSTM:add(nn.Sequencer(nn.Unsqueeze(1)))
+	batchLSTM:add(nn.JoinTable(1, 3))
+	-- batchLSTM:add(nn.Reshape(num_sequences, hidden, true))
+	--prev_class_part:add(nn.JoinTable(1, 2))
 
 	parallel_table:add(batchLSTM)
 	parallel_table:add(prev_class_part)
 	lstmMEMM = nn.Sequential()
 	lstmMEMM:add(parallel_table)
-	lstmMEMM:add(nn.CAddTable())
+	lstmMEMM:add(nn.JoinTable(3, 3))
+
+	--split back before linear and softmax
+	lstmMEMM:add(nn.SplitTable(1, 3))
 
 	-- add a linear and a softmax
-	lstmMEMM:add(nn.Linear(hidden, num_classes))
-	lstmMEMM:add(nn.LogSoftMax())
+	lstmMEMM:add(nn.Sequencer(nn.Linear(hidden+1, num_classes)))
+	lstmMEMM:add(nn.Sequencer(nn.LogSoftMax()))
 
 	-- split back for evaluation
-	lstmMEMM:add(nn.Reshape(num_sequences, minibatch_size, num_classes))
-	lstmMEMM:add(nn.SplitTable(1, 3))
+	-- lstmMEMM:add(nn.Reshape(num_sequences, minibatch_size, num_classes))
+	-- lstmMEMM:add(nn.SplitTable(1, 3))
 
 	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
 	if usecuda then
