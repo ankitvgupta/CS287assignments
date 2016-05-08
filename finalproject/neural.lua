@@ -283,7 +283,7 @@ function trainRNN(model,
       	--local mse = (valid_numbers - valid_kaggle_output:narrow(1, 1, 500)):double():pow(2):mean()
       	--print("MSE", mse)
 		--collectgarbage()
-		for j = start_idx, ntrainingsamples, seq_length do
+		for j = start_idx, ntrainingsamples-seq_length, seq_length do
 			--print("Starting at", j)
 
 		    -- zero out our gradients

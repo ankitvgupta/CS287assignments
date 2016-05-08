@@ -118,7 +118,13 @@ def parse_princeton_extra(data_file, num_proteins):
     input_data = []
     output_data = []
 
-    input_idx = np.r_[0:21,31:33,35:57]
+    # start with an end token to simplify viterbi
+    first_input = np.zeros(46)
+    first_input[21] = 1
+    input_data.append(first_input)
+    output_data.append(LABELS['NoSeq'])
+
+    input_idx = np.r_[0:22,31:33,35:57]
     label_order = ['L', 'B', 'E', 'G', 'I', 'H', 'S', 'T','NoSeq']
 
     for p in range(num_proteins):
@@ -250,7 +256,7 @@ def main(arguments):
         f['vocab_size'] = np.array([max(ACIDS.values())], dtype=np.int32)
         f['nclasses'] = np.array([max(LABELS.values())], dtype=np.int32)
         f['dwin'] = np.array([dwin], dtype=np.int32)
-        f['start_idx'] = np.array([1], dtype=np.int32)
+        f['start_idx'] = np.array([2], dtype=np.int32)
         f['end_idx'] = np.array([2], dtype=np.int32)
 
     print "Done."
