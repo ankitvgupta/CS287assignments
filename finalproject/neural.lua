@@ -318,7 +318,7 @@ function trainRNN(model,
 				gradParameters:zero()
 
 				preds = model:forward(minibatch_inputs)
-				print("preds", preds)
+				-- print("preds", preds)
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
