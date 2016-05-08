@@ -117,6 +117,75 @@ function bidirectionalRNNmodelExtraFeatures(num_features, embed_dim, output_dim,
 	return batchLSTM, crit, sequencers
 end
 
+-- This expects inputs to NOT BE transposed. 
+-- The input's should be batched though. In particular, the input to this model should be
+-- b x n x w, where b is the number of batches, n is the sequence in the batch, and w is the # of features for each seq element.
+function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers, num_classes)
+
+	parallel_table = nn.ParallelTable()
+
+	prev_class_part = nn.Sequential()
+	-- This is needed to deal with SplitTable being stupid about LongTensors
+	local copy = nn.Copy('torch.LongTensor', 'torch.DoubleTensor')
+	local firstsplit = nn.SplitTable(2,3)
+	-- This is needed to deal with LookupTable not having updateGradOutput
+	copy.updateGradInput = function() end
+	firstsplit.updateGradInput = function() end
+
+	prev_class_part:add(copy)
+	prev_class_part:add(firstsplit)
+	prev_class_part:add(nn.Sequencer(nn.LookupTable(num_classes, num_classes)))
+	prev_class_part:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))
+	prev_class_part:add(nn.Sequencer(nn.Unsqueeze(1)))
+	prev_class_part:add(nn.JoinTable(1, 3))
+
+	batchLSTM = nn.Sequential()
+	batchLSTM:add(nn.SplitTable(2,3))
+	batchLSTM:add(nn.Sequencer(nn.Linear(num_features, embed_dim)))
+
+	local sequencers = {}
+
+	biseq = nil
+	for layer = 1, num_layers do 
+		if layer == 1 then 
+			biseq = nn.BiSequencer(nn.FastLSTM(embed_dim, embed_dim), nn.FastLSTM(embed_dim, embed_dim))
+		else
+			biseq = nn.BiSequencer(nn.FastLSTM(2*embed_dim, embed_dim), nn.FastLSTM(2*embed_dim, embed_dim))
+		end
+		sequencers[layer] = biseq
+		batchLSTM:add(biseq)
+		batchLSTM:add(nn.Sequencer(nn.Dropout(dropout)))
+	end
+	batchLSTM:add(nn.Sequencer(nn.Linear(2*embed_dim, hidden)))
+
+	-- convert back to tensor so we can concat
+	batchLSTM:add(nn.Sequencer(nn.Unsqueeze(1)))
+	batchLSTM:add(nn.JoinTable(1, 3))
+
+	parallel_table:add(batchLSTM)
+	parallel_table:add(prev_class_part)
+	lstmMEMM = nn.Sequential()
+	lstmMEMM:add(parallel_table)
+	lstmMEMM:add(nn.JoinTable(3, 3))
+
+	--split back before linear and softmax
+	lstmMEMM:add(nn.SplitTable(1, 3))
+
+	-- add a linear and a softmax
+	lstmMEMM:add(nn.Sequencer(nn.Linear(hidden+num_classes, num_classes)))
+	lstmMEMM:add(nn.Sequencer(nn.LogSoftMax()))
+
+	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
+	if usecuda then
+		lstmMEMM:cuda()
+		print("Converted LSTM to CUDA")
+		crit:cuda()
+		print("Converted crit to CUDA")
+	end
+	print(lstmMEMM)
+	return lstmMEMM, batchLSTM, crit, sequencers
+end
+
 function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda) 
 	-- if usecuda then
 	-- 	require 'cunn'
@@ -187,7 +256,8 @@ function trainRNN(model,
 				eta,
 				hacks_wanted,
 				bidirectional,
-				bisequencer_modules)
+				bisequencer_modules,
+				include_prev_classes)
 	local parameters, gradParameters = model:getParameters()
 
 	-- initialize the parameters between -.05 and .05
@@ -196,23 +266,34 @@ function trainRNN(model,
 	end
 	--embedding.weight:renorm(2, 1, 5)
 
-	print("Input size", training_input:size(2))
-	print("Max train index", torch.max(training_input))
-	print("Num samples", training_input:size(2))
+	ntrainingsamples = training_input:size(2)
+
+	start_idx = 1
+	if include_prev_classes then
+		start_idx = 2
+	end
+
+	print("Input size", ntrainingsamples)
+	-- print("Max train index", torch.max(training_input))
 	for i = 1, num_epochs do
 		--print("Beginning epoch", i)
 		--local valid_numbers = rnn_segment_and_count(valid_kaggle_input:narrow(1, 1, 500), model, space_idx, padding_idx)
       	--local mse = (valid_numbers - valid_kaggle_output:narrow(1, 1, 500)):double():pow(2):mean()
       	--print("MSE", mse)
 		--collectgarbage()
-		for j = 1, training_input:size(2)-seq_length, seq_length do
+		for j = start_idx, ntrainingsamples, seq_length do
 			--print("Starting at", j)
 
 		    -- zero out our gradients
 		    gradParameters:zero()
 		    model:zeroGradParameters()
+		   	
+		    if include_prev_classes then
+		    	minibatch_inputs = {training_input:narrow(2, j, seq_length), training_output:narrow(2, j-1, seq_length):reshape(training_output:size(1), seq_length, 1)}
+		    else
+		   		minibatch_inputs = training_input:narrow(2, j, seq_length)
+			end
 
-		   	local minibatch_inputs = training_input:narrow(2, j, seq_length)
 			local minibatch_outputs = training_output:narrow(2, j, seq_length):t()
 			-- print("Shapes")
 			-- print(minibatch_inputs:size())
@@ -235,7 +316,7 @@ function trainRNN(model,
 				gradParameters:zero()
 
 				preds = model:forward(minibatch_inputs)
-				--print("preds", preds)
+				print("preds", preds)
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2

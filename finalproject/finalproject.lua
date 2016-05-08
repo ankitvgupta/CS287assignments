@@ -25,6 +25,8 @@ cmd:option('-minibatch_size', 320, 'Size of minibatches')
 cmd:option('-bidirectional', false, 'Use a bidirectional RNN.')
 cmd:option('-bidirectional_layers', 1, 'Number of layers of bidirectional RNN')
 cmd:option('-additional_features', false, 'Use additional features.')
+cmd:option('-memm_layer', false, 'Use MEMM on top (LSTM with additional features only).')
+
 
 function main() 
 	-- Parse input params
@@ -107,7 +109,9 @@ function main()
 		print(train_input:size())
 		print(train_output:size())
 		if opt.bidirectional then
-			if opt.additional_features then
+			if (opt.additional_features and opt.memm_layer) then
+				model, lstm_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, nclasses)
+			elseif opt.additional_features then
 				model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeatures(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			else
 				model, crit, bisequencer_modules = bidirectionalRNNmodel(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, dwin)
@@ -115,9 +119,15 @@ function main()
 		else
 			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		end
+
+
 		model:remember("both")
       	model:training()
-		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, bisequencer_modules)
+		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, bisequencer_modules, opt.memm_layer)
+   		
+   		-- testing checkpoint
+		assert(false)
+   		
    		print("Starting the testing")
    		model:evaluate()
 		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, bisequencer_modules)
