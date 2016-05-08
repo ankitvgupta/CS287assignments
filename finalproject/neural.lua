@@ -384,7 +384,7 @@ function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectiona
 	--print(joined_table:size())
 end
 
-function testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class)
+function testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class, usecuda)
 	-- define the memm predictor
 	-- prediction model concats lstm output and prev_class rep
 	prediction_model = nn.Sequential()
@@ -394,6 +394,11 @@ function testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, ncl
 	prediction_model:add(parallel_table)
 	prediction_model:add(nn.JoinTable(1, 1)) -- concat lstm out and prev class
 	prediction_model:add(output_model) -- linear and softmax
+
+	if usecuda then
+		prediction_model:cuda()
+		print("Converted prediction model into CUDA")
+	end
 
 	predictor = function(c_prev, x_i)
 		this_input = {x_i, torch.LongTensor{c_prev}:reshape(1, 1, 1)} 

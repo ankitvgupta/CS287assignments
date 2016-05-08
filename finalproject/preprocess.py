@@ -143,7 +143,7 @@ def parse_princeton_extra(data_file, num_proteins):
 
     return input_data, output_data
 
-def ngram_encoder(vocab_dict, ngram, start_pad='<', end_pad='>'):
+def ngram_encoder(vocab_dict, ngram, start_pad='', end_pad='>'):
     halfwin = (ngram-1)/2
     def this_encoder(s):
         padded_str = ''.join([start_pad for _ in range(halfwin)])+s+''.join([end_pad for _ in range(halfwin)])

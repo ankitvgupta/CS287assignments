@@ -129,7 +129,7 @@ function main()
    		model:evaluate()
 
    		if opt.memm_layer then
-   			preds = testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class)
+   			preds = testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class, opt.cuda)
    		else
 			preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, bisequencer_modules)
    		end
