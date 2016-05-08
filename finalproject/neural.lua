@@ -323,7 +323,7 @@ function trainRNN(model,
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
 				--print("Epoch", i, j, loss)
-				if j == 1 then
+				if j == start_idx then
 					print("Epoch", i, loss)
 				end
 
