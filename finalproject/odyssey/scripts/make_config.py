@@ -1,7 +1,7 @@
 # Use this to quickly make configurations for experiments
 import itertools
 print_description = False
-datafiles=["EPRINC_CB513_1.hdf5"]
+datafiles=["EPRINC_1.hdf5"]
 classifier=["rnn"]
 b=[128]
 alpha=[1]

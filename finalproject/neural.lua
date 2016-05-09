@@ -120,7 +120,7 @@ end
 -- This expects inputs to NOT BE transposed. 
 -- The input's should be batched though. In particular, the input to this model should be
 -- b x n x w, where b is the number of batches, n is the sequence in the batch, and w is the # of features for each seq element.
-function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers, num_classes)
+function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda, hidden, num_layers)
 
 	parallel_table = nn.ParallelTable()
 
@@ -134,7 +134,7 @@ function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_
 
 	prev_class_part:add(copy)
 	prev_class_part:add(firstsplit)
-	prev_class_part:add(nn.Sequencer(nn.LookupTable(num_classes, num_classes)))
+	prev_class_part:add(nn.Sequencer(nn.LookupTable(output_dim, output_dim)))
 	prev_class_part:add(nn.Sequencer(nn.View(-1):setNumInputDims(2)))
 	prev_class_part:add(nn.Sequencer(nn.Unsqueeze(1)))
 	prev_class_part:add(nn.JoinTable(1, 3))
@@ -172,8 +172,10 @@ function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_
 	lstmMEMM:add(nn.SplitTable(1, 3))
 
 	-- add a linear and a softmax
-	lstmMEMM:add(nn.Sequencer(nn.Linear(hidden+num_classes, num_classes)))
-	lstmMEMM:add(nn.Sequencer(nn.LogSoftMax()))
+	output_layer = nn.Sequential()
+	output_layer:add(nn.Linear(hidden+output_dim, output_dim))
+	output_layer:add(nn:LogSoftMax())
+	lstmMEMM:add(nn.Sequencer(output_layer))
 
 	crit = nn.SequencerCriterion(nn.ClassNLLCriterion())
 	if usecuda then
@@ -183,7 +185,7 @@ function bidirectionalRNNmodelExtraFeaturesMEMM(num_features, embed_dim, output_
 		print("Converted crit to CUDA")
 	end
 	print(lstmMEMM)
-	return lstmMEMM, batchLSTM, crit, sequencers
+	return lstmMEMM, batchLSTM, output_layer, prev_class_part, crit, sequencers
 end
 
 function rnn_model(vocab_size, embed_dim, output_dim, rnn_unit1, rnn_unit2, dropout, usecuda) 
@@ -281,7 +283,7 @@ function trainRNN(model,
       	--local mse = (valid_numbers - valid_kaggle_output:narrow(1, 1, 500)):double():pow(2):mean()
       	--print("MSE", mse)
 		--collectgarbage()
-		for j = start_idx, ntrainingsamples, seq_length do
+		for j = start_idx, ntrainingsamples-seq_length, seq_length do
 			--print("Starting at", j)
 
 		    -- zero out our gradients
@@ -316,12 +318,12 @@ function trainRNN(model,
 				gradParameters:zero()
 
 				preds = model:forward(minibatch_inputs)
-				print("preds", preds)
+				-- print("preds", preds)
 				--print("outputs", torch.max(minibatch_outputs))
 				
 				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
 				--print("Epoch", i, j, loss)
-				if j == 1 then
+				if j == start_idx then
 					print("Epoch", i, loss)
 				end
 
@@ -381,3 +383,35 @@ function testRNN(model, crit, test_input, minibatch_size, nclasses, bidirectiona
 	return i
 	--print(joined_table:size())
 end
+
+function testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class, usecuda)
+	-- define the memm predictor
+	-- prediction model concats lstm output and prev_class rep
+	prediction_model = nn.Sequential()
+	parallel_table = nn.ParallelTable()
+	parallel_table:add(nn.Sequential()) -- takes the lstm output
+	parallel_table:add(prev_class_model:add(nn.Squeeze())) -- takes the previous class
+	prediction_model:add(parallel_table)
+	prediction_model:add(nn.JoinTable(1, 1)) -- concat lstm out and prev class
+	prediction_model:add(output_model) -- linear and softmax
+
+	if usecuda then
+		prediction_model:cuda()
+		print("Converted prediction model into CUDA")
+	end
+
+	predictor = function(c_prev, x_i)
+		this_input = {x_i, torch.LongTensor{c_prev}:reshape(1, 1, 1)} 
+		return torch.exp(prediction_model:forward(this_input))
+	end
+
+	-- convert raw input into lstm representation
+	print("Running LSTM on test data...")
+	lstm_encoded = lstm_model:forward(test_input)
+
+	print("Starting Viterbi...")
+	return viterbi(lstm_encoded:squeeze(), predictor, nclasses, start_class)
+
+end
+
+

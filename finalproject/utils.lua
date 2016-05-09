@@ -38,25 +38,23 @@ function printoptions(opt)
 		"num_bidir_layers", opt.bidirectional_layers)
 end
 
-
+function prediction_accuracy(preds, true_vals)
+	local total_matches = torch.eq(preds, true_vals):sum()
+	return total_matches/preds:size(1)
+end
 
 -- x is a sequence of inputs
 -- predictor is a function that takes in past class and xi and
 --   provides a
-function viterbi(x, predictor, numClasses, start_class, x_dense)
+function viterbi(x, predictor, numClasses, start_class)
 	local n = x:size(1)
 	local pi = torch.ones(n, numClasses):mul(-1e+31)
 	local bp = torch.ones(n, numClasses)
-	local hasDense = (x_dense ~= nil)
 	pi[1][start_class] = 0
 
 	for i=2, n do
 		for ci1=1, numClasses do
-			if (hasDense) then
-				yci1 = predictor(ci1, x[i], x_dense[i])
-			else
-				yci1 = predictor(ci1, x[i])
-			end
+			yci1 = predictor(ci1, x[i])
 			for ci=1, numClasses do
 				local v = pi[i-1][ci1] + torch.log(yci1[ci])
 				if v > pi[i][ci] then
@@ -86,9 +84,4 @@ function viterbi(x, predictor, numClasses, start_class, x_dense)
 	end
 
 	return yhat
-end
-
-function prediction_accuracy(preds, true_vals)
-	local total_matches = torch.eq(preds, true_vals):sum()
-	return total_matches/preds:size(1)
 end

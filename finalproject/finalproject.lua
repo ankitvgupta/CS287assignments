@@ -110,7 +110,7 @@ function main()
 		print(train_output:size())
 		if opt.bidirectional then
 			if (opt.additional_features and opt.memm_layer) then
-				model, lstm_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers, nclasses)
+				model, lstm_model, output_model, prev_class_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			elseif opt.additional_features then
 				model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeatures(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			else
@@ -125,12 +125,14 @@ function main()
       	model:training()
 		trainRNN(model,crit,embedding,train_input,train_output,opt.sequence_length, opt.epochs,opt.optimizer,opt.eta,opt.hacks_wanted, opt.bidirectional, bisequencer_modules, opt.memm_layer)
    		
-   		-- testing checkpoint
-		assert(false)
-   		
    		print("Starting the testing")
    		model:evaluate()
-		preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, bisequencer_modules)
+
+   		if opt.memm_layer then
+   			preds = testRNNMEMM(lstm_model, output_model, prev_class_model, test_input, nclasses, start_class, opt.cuda)
+   		else
+			preds = testRNN(model, crit, test_input, opt.sequence_length, nclasses, opt.bidirectional, bisequencer_modules)
+   		end
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
 		printoptions(opt)
 		print("Accuracy", accuracy)
