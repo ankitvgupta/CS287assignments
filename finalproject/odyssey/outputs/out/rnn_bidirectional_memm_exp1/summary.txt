@@ -1,0 +1,145 @@
+==> setup_61284940_1_out.txt <==
+  -additional_features  Use additional features. [false]
+  -memm_layer           Use MEMM on top (LSTM with additional features only). [false]
+
+==> setup_61284940_2_out.txt <==
+  -additional_features  Use additional features. [false]
+  -memm_layer           Use MEMM on top (LSTM with additional features only). [false]
+
+==> setup_61284940_3_out.txt <==
+
+==> setup_61284940_4_out.txt <==
+
+==> setup_61285293_1_out.txt <==
+[?1034hUsing cuda	
+
+==> setup_61285293_2_out.txt <==
+[?1034hUsing cuda	
+
+==> setup_61285293_3_out.txt <==
+
+==> setup_61285293_4_out.txt <==
+
+==> setup_61285591_1_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.62090322580645	
+
+==> setup_61285591_2_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	3	
+Accuracy	0.64500879765396	
+
+==> setup_61285591_3_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	2	
+Accuracy	0.63273900293255	
+
+==> setup_61285591_4_out.txt <==
+Epoch	93	27.046120762825	
+Epoch	94	26.892411798239	
+
+==> setup_61285591_5_out.txt <==
+Epoch	20	33.378501266241	
+Epoch	21	33.345845758915	
+
+==> setup_61349069_10_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	3	
+Accuracy	0.61458064516129	
+
+==> setup_61349069_11_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.55040469208211	
+
+==> setup_61349069_12_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	3	
+Accuracy	0.53912023460411	
+
+==> setup_61349069_13_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.61641055718475	
+
+==> setup_61349069_14_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	3	
+Accuracy	0.63910850439883	
+
+==> setup_61349069_15_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	2	
+Accuracy	0.62829325513196	
+
+==> setup_61349069_16_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	3	
+Accuracy	0.63588269794721	
+
+==> setup_61349069_17_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.58728445747801	
+
+==> setup_61349069_18_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	3	
+Accuracy	0.60365982404692	
+
+==> setup_61349069_19_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.63076832844575	
+
+==> setup_61349069_4_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	3	
+Accuracy	0.58351906158358	
+
+==> setup_61349069_5_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.58198240469208	
+
+==> setup_61349069_6_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	3	
+Accuracy	0.60789442815249	
+
+==> setup_61349069_7_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.59987096774194	
+
+==> setup_61349069_8_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	3	
+Accuracy	0.6058651026393	
+
+==> setup_61349069_9_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	50	embedding_size	50	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	2	
+Accuracy	0.60857478005865	
+
+==> setup_61384319_40_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	3	
+Accuracy	0.6112441314554	
+
+==> setup_61384319_41_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.49321596244131	
+
+==> setup_61384319_42_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	3	
+Accuracy	0.59698356807512	
+
+==> setup_61384319_43_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.55670187793427	
+
+==> setup_61384319_44_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	3	
+Accuracy	0.52043427230047	
+
+==> setup_61384319_45_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	2	
+Accuracy	0.5706220657277	
+
+==> setup_61384319_46_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.25	num_bidir_layers	3	
+Accuracy	0.59057511737089	
+
+==> setup_61384319_47_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.55558685446009	
+
+==> setup_61384319_48_out.txt <==
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	3	
+Accuracy	0.55046948356808	
+
+==> setup_61384319_49_out.txt <==
+  -additional_features  Use additional features. [false]
+  -memm_layer           Use MEMM on top (LSTM with additional features only). [false]
