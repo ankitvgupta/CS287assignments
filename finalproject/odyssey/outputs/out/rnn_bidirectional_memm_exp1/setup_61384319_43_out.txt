@@ -1,0 +1,161 @@
+[?1034hUsing cuda	
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Num classes:	10	
+Vocab size:	37	
+Start class:	2	
+Num features	46	
+Test size	 85200
+    46
+[torch.LongStorage of size 2]
+
+Using cuda	
+ 1188853
+      46
+[torch.LongStorage of size 2]
+
+ 1188853
+[torch.LongStorage of size 1]
+
+     1
+ 85200
+    46
+[torch.LongStorage of size 3]
+
+     1
+ 85200
+[torch.LongStorage of size 2]
+
+Data sizes	
+  128
+ 9287
+   46
+[torch.LongStorage of size 3]
+
+  128
+ 9287
+[torch.LongStorage of size 2]
+
+Converted LSTM to CUDA	
+Converted crit to CUDA	
+nn.Sequential {
+  [input -> (1) -> (2) -> (3) -> (4) -> output]
+  (1): nn.ParallelTable {
+    input
+      |`-> (1): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> output]
+      |      (1): nn.SplitTable
+      |      (2): nn.Sequencer @ nn.Recursor @ nn.Linear(46 -> 100)
+      |      (3): nn.BiSequencer @ nn.Sequential {
+      |        [input -> (1) -> (2) -> (3) -> output]
+      |        (1): nn.ConcatTable {
+      |          input
+      |            |`-> (1): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+      |            |`-> (2): nn.Sequential {
+      |            |      [input -> (1) -> (2) -> (3) -> output]
+      |            |      (1): nn.ReverseTable
+      |            |      (2): nn.Sequencer @ nn.FastLSTM(100 -> 100)
+      |            |      (3): nn.ReverseTable
+      |            |    }
+      |             ... -> output
+      |        }
+      |        (2): nn.ZipTable
+      |        (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+      |      }
+      |      (4): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+      |      (5): nn.BiSequencer @ nn.Sequential {
+      |        [input -> (1) -> (2) -> (3) -> output]
+      |        (1): nn.ConcatTable {
+      |          input
+      |            |`-> (1): nn.Sequencer @ nn.FastLSTM(200 -> 100)
+      |            |`-> (2): nn.Sequential {
+      |            |      [input -> (1) -> (2) -> (3) -> output]
+      |            |      (1): nn.ReverseTable
+      |            |      (2): nn.Sequencer @ nn.FastLSTM(200 -> 100)
+      |            |      (3): nn.ReverseTable
+      |            |    }
+      |             ... -> output
+      |        }
+      |        (2): nn.ZipTable
+      |        (3): nn.Sequencer @ nn.Recursor @ nn.JoinTable
+      |      }
+      |      (6): nn.Sequencer @ nn.Recursor @ nn.Dropout(0.5, busy)
+      |      (7): nn.Sequencer @ nn.Recursor @ nn.Linear(200 -> 100)
+      |      (8): nn.Sequencer @ nn.Recursor @ nn.Unsqueeze(dim 1)
+      |      (9): nn.JoinTable
+      |    }
+      |`-> (2): nn.Sequential {
+      |      [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> output]
+      |      (1): nn.Copy
+      |      (2): nn.SplitTable
+      |      (3): nn.Sequencer @ nn.Recursor @ nn.LookupTable
+      |      (4): nn.Sequencer @ nn.Recursor @ nn.View(-1)
+      |      (5): nn.Sequencer @ nn.Recursor @ nn.Unsqueeze(dim 1)
+      |      (6): nn.JoinTable
+      |    }
+       ... -> output
+  }
+  (2): nn.JoinTable
+  (3): nn.SplitTable
+  (4): nn.Sequencer @ nn.Recursor @ nn.Sequential {
+    [input -> (1) -> (2) -> output]
+    (1): nn.Linear(110 -> 10)
+    (2): nn.LogSoftMax
+  }
+}
+Input size	9287	
+Epoch	1	245.73864078522	
+Epoch	2	93.471108973026	
+Epoch	3	86.623524963856	
+Epoch	4	84.25394064188	
+Epoch	5	81.321474730968	
+Epoch	6	79.208417415619	
+Epoch	7	77.492914140224	
+Epoch	8	75.796444654465	
+Epoch	9	74.612958431244	
+Epoch	10	72.716098248959	
+Epoch	11	72.525757193565	
+Epoch	12	70.709112346172	
+Epoch	13	70.656141400337	
+Epoch	14	69.787683427334	
+Epoch	15	69.235646367073	
+Epoch	16	69.435116410255	
+Epoch	17	68.893973380327	
+Epoch	18	67.800697267056	
+Epoch	19	68.093115627766	
+Epoch	20	67.835538238287	
+Epoch	21	67.100087493658	
+Epoch	22	66.699653983116	
+Epoch	23	66.626581341028	
+Epoch	24	66.317947208881	
+Epoch	25	66.05659365654	
+Epoch	26	66.392753452063	
+Epoch	27	65.712820529938	
+Epoch	28	65.833944827318	
+Epoch	29	65.251118987799	
+Epoch	30	65.244000524282	
+Epoch	31	64.619320780039	
+Epoch	32	64.301015287638	
+Epoch	33	64.527466505766	
+Epoch	34	64.247155874968	
+Epoch	35	63.606581658125	
+Epoch	36	63.95973315835	
+Epoch	37	63.755685657263	
+Epoch	38	63.292907387018	
+Epoch	39	63.303807497025	
+Epoch	40	63.178721994162	
+Epoch	41	62.914962857962	
+Epoch	42	62.660641789436	
+Epoch	43	62.581665545702	
+Epoch	44	62.726890861988	
+Epoch	45	62.150199562311	
+Epoch	46	62.330343157053	
+Epoch	47	62.284798294306	
+Epoch	48	62.551793634892	
+Epoch	49	61.963933318853	
+Epoch	50	61.536411613226	
+Starting the testing	
+Converted prediction model into CUDA	
+Running LSTM on test data...	
+Starting Viterbi...	
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.55670187793427	
