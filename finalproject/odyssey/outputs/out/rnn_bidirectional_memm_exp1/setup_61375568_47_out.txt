@@ -122,3 +122,40 @@ Epoch	16	70.817405998707
 Epoch	17	71.065864026546	
 Epoch	18	70.567796707153	
 Epoch	19	70.110059916973	
+Epoch	20	69.585473001003	
+Epoch	21	69.0408436656	
+Epoch	22	69.380582392216	
+Epoch	23	68.472854137421	
+Epoch	24	68.448434323072	
+Epoch	25	68.184629976749	
+Epoch	26	68.624582916498	
+Epoch	27	67.666037708521	
+Epoch	28	67.482099533081	
+Epoch	29	67.010547399521	
+Epoch	30	67.378415346146	
+Epoch	31	67.212138563395	
+Epoch	32	67.196944177151	
+Epoch	33	66.326698690653	
+Epoch	34	66.293880343437	
+Epoch	35	66.230641454458	
+Epoch	36	66.085780382156	
+Epoch	37	66.139574468136	
+Epoch	38	66.027768313885	
+Epoch	39	65.709666520357	
+Epoch	40	65.749528080225	
+Epoch	41	65.556952297688	
+Epoch	42	65.400938779116	
+Epoch	43	65.005230844021	
+Epoch	44	64.636423915625	
+Epoch	45	64.780710339546	
+Epoch	46	64.811752438545	
+Epoch	47	64.457239717245	
+Epoch	48	64.633844196796	
+Epoch	49	64.632471621037	
+Epoch	50	64.211475908756	
+Starting the testing	
+Converted prediction model into CUDA	
+Running LSTM on test data...	
+Starting Viterbi...	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.75	num_bidir_layers	2	
+Accuracy	0.54974178403756	

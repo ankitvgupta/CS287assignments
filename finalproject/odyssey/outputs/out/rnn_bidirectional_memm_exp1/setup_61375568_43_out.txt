@@ -142,3 +142,20 @@ Epoch	36	63.713870376348
 Epoch	37	63.44045522809	
 Epoch	38	63.131728440523	
 Epoch	39	63.198931872845	
+Epoch	40	62.987385600805	
+Epoch	41	62.799769729376	
+Epoch	42	62.73542496562	
+Epoch	43	62.544752657413	
+Epoch	44	62.32444652915	
+Epoch	45	62.407376796007	
+Epoch	46	61.932254642248	
+Epoch	47	61.845039069653	
+Epoch	48	61.655533313751	
+Epoch	49	61.580938667059	
+Epoch	50	61.445035606623	
+Starting the testing	
+Converted prediction model into CUDA	
+Running LSTM on test data...	
+Starting Viterbi...	
+datafile:	/n/home09/ankitgupta/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length:	100	embedding_size	100	optimizer:	sgd	epochs:	50	hidden	100	eta:	0.05	rnn_unit1	lstm	rnn_unit2	lstm	dropout	0.5	num_bidir_layers	2	
+Accuracy	0.60951877934272	
