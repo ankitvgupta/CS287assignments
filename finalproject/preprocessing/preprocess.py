@@ -176,6 +176,27 @@ def split_data(input_data, output_data, split_perc=0.8):
     return input_data[:cutoff], output_data[:cutoff], input_data[cutoff:], output_data[cutoff:]
  
 
+def split_into_windows(input_data, dwin):
+    print "Splitting into", dwin, "windows..."
+    new_input_data = []
+    feats = len(input_data[0])
+    l = len(input_data)
+    for idx in range(0, l):
+        this_data = []
+        for left_neighbor_idx in range(idx-dwin/2, idx):
+            try:
+                this_data.extend(input_data[left_neighbor_idx])
+            except IndexError:
+                this_data.extend([0.0 for _ in range(feats)])
+        for right_neighbor_idx in range(idx, idx+dwin/2+1):
+            try:
+                this_data.extend(input_data[right_neighbor_idx])
+            except IndexError:
+                this_data.extend([0.0 for _ in range(feats)])
+        new_input_data.append(this_data)
+    return new_input_data
+
+
 def main(arguments):
     global args
     parser = argparse.ArgumentParser(
@@ -204,6 +225,9 @@ def main(arguments):
     if train_dataset == "EPRINC":
         train_input, train_output = parse_princeton_extra(train_data_file, 5534)
         test_input, test_output = parse_princeton_extra(FILE_PATHS["CB513"], 514)
+
+        train_input = split_into_windows(train_input, dwin)
+        test_input = split_into_windows(test_input, dwin)
 
     else:
         if train_dataset == "CB513":

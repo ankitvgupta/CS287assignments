@@ -36,7 +36,7 @@ function trainMEMM(training_input,
 				-- reset gradients
 				gradParameters:zero()
 				preds = model:forward(minibatch_inputs)
-				loss = criterion:forward(preds, minibatch_outputs) --+ lambda*torch.norm(parameters,2)^2/2
+				loss = criterion:forward(preds, minibatch_outputs)
 				if j == 2 then
 					print("    ", loss)
 				end
