@@ -28,7 +28,10 @@ for line in sys.stdin:
     if line[0] == 'd':
         splitted = line.split('\t')
         #sets.append([splitted[1].split("HW4/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23]])
-        sets.append([splitted[1].split("finalproject/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23], splitted[25]])
+        if len(splitted) > 27:
+            sets.append([splitted[1].split("finalproject/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23], splitted[25], splitted[27]])
+        else:
+            sets.append([splitted[1].split("finalproject/")[1], splitted[3], splitted[5], splitted[7], splitted[9], splitted[11], splitted[13], splitted[15], splitted[17], splitted[19], splitted[21], splitted[23], splitted[25]])
 
 print len(accuracies), len(sets)
 
@@ -38,11 +41,16 @@ print len(accuracies), len(sets)
 sets = np.array(sets)
 accuracies = np.array(accuracies)
 print sets.shape, accuracies.shape
-#alldata = np.append(sets, accuracies[:, np.newaxis], axis=1)
+
 alldata = np.append(sets, accuracies, axis=1)
 
+
+
 df = pd.DataFrame(alldata)
-df.columns = ['Datafile', 'Classifier', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', "RNN1", "RNN2", "Dropout", 'Accuracy']
+if sets.shape[1] == 14:
+    df.columns = ['Datafile', 'Classifier', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', "RNN1", "RNN2", "Dropout", "Numbidirlayers", 'Accuracy']
+elif sets.shape[1] == 13:
+    df.columns = ['Datafile', 'Classifier', 'b', 'alpha', 'sequence_length', 'embedding_size', 'optimizer', 'epochs', 'hidden', 'eta', "RNN1", "RNN2", "Dropout", 'Accuracy']
 df[['Accuracy']] = df[['Accuracy']].astype(float)
 
 if sys.argv[1] != "all":
@@ -51,20 +59,10 @@ if sys.argv[1] != "all":
 df.sort(columns='Accuracy', ascending=False, inplace=True)
 print "Full, sorted by Accuracy"
 print df
-# df.sort(columns='Precision2', ascending=False, inplace=True)
-# print "Full, sorted by PercentRealsPredicted"
-# print df
-# df.sort(columns='MSEPerp', ascending=True, inplace=True)
-# print "Full, sorted by MSEPerp"
-# print df
-#df.sort(columns='Perp', ascending=True, inplace=True)
-#print "Full, sorted by Perp"
-#print df
+
 df = df[df['RNN1'] == 'lstm']
 df = df[df['RNN2'] == 'none']
-# print "Single LSTM, sorted by MSE/Perp"
-# print df
-# df.sort(columns='Accuracy', ascending=False, inplace=True)
+
 print "Single LSTM, sorted by Accuracy"
 print df
 
