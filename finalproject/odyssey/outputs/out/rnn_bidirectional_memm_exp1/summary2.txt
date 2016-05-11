@@ -1,0 +1,21 @@
+Epoch	197	24.320960015059	
+Epoch	198	24.451855629683	
+Epoch	199	24.035523444414	
+Epoch	200	24.257601320744	
+Starting the testing	
+Converted prediction model into CUDA	
+Running LSTM on test data...	
+Starting Viterbi...	
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length50	embedding_size	100	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout0.5	num_bidir_layers	2	
+Accuracy	0.6459706744868	
+[tsilver@rclogin08 finalproject]$ tail twooff.out
+Epoch	197	21.212766438723	
+Epoch	198	20.807717055082	
+Epoch	199	21.408278733492	
+Epoch	200	21.047068119049	
+Starting the testing	
+Converted prediction model into CUDA	
+Running LSTM on test data...	
+Starting Viterbi...	
+datafile:	/n/home11/tsilver/CS287/CS287assignments/finalproject/EPRINC_1.hdf5	classifier:	rnn	b:	128	alpha:	1	sequence_length50	embedding_size	100	optimizer:	sgd	epochs:	200	hidden	100	eta:	0.1	rnn_unit1	lstm	rnn_unit2	lstm	dropout0.25	num_bidir_layers	2	
+Accuracy	0.65146041055718
