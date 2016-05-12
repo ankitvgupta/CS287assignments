@@ -74,8 +74,8 @@ where the `cuda` argument should be passed if running on a GPU, and the `additio
 - epochs: The number of epochs to train for
 - hidden: Hidden layer size for models that use hidden layers (bidirectional RNN uses it)
 - eta: Learning rate
-- rnn_unit1: For uni-directional LSTM: Indicates what the first RNN layer is. Set to lstm or gru.
-- rnn_unit2: For uni-directional LSTM: Indicates what the second RNN layer is. Set to lstm or gru or none (for no second layer).
+- rnn_unit1: For uni-directional LSTM only: Indicates what the first RNN layer is. Set to lstm or gru.
+- rnn_unit2: For uni-directional LSTM only: Indicates what the second RNN layer is. Set to lstm or gru or none (for no second layer).
 - dropout: Dropout probability.
 - cuda: Use cuda. Code should be running on a GPU with CUDA and torch GPU packages installed.
 - bidirectional: Set this to use a bidirectional LSTM
