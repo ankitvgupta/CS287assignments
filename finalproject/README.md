@@ -58,9 +58,6 @@ Then edit and use `preprocessing/createfilteredseqs.py` to create the final sequ
 
 ## Building and Evaluating Models
 
-### MEMMs
-TODO
-
 ### LSTMs
 To run an LSTM-based model, use the following options:
 
@@ -82,5 +79,17 @@ where the `cuda` argument should be passed if running on a GPU, and the `additio
 - bidirectional_layers: Integer which represents the number of stacked bidirectional layers with dropout in between.
 - additional_features: Set to true if using a dataset with additional features on top of the raw sequence.
 
+### MEMMs
+MEMMs are run with the same controller file as LSTMs:
 
+    th finalproject.lua -datafile PREPROCESSED_HDF5_FILE -classifier memm -additional_features
+
+The relevant optional command line arguments are as follows:
+
+- embedding_size: The 1D size of the embedding for the previous class
+- hidden: Hidden layer size for the MEMM
+- eta: Learning rate
+- minibatch_size: Size of the minibatches used during training
+- optimizer: Set to either SGD for Stochastic Gradient Descent or adagrad for Adagrad.
+- epochs: The number of epochs to train for
 
