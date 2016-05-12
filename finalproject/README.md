@@ -62,7 +62,25 @@ Then edit and use `preprocessing/createfilteredseqs.py` to create the final sequ
 TODO
 
 ### LSTMs
-TODO
+To run an LSTM-based model, use the following options:
+
+    th finalproject.lua -datafile PREPROCESSED_HDF5_FILE -classifier rnn -bidirectional -bidirectional_layers NLAYERS [-cuda] [-additional_features]
+
+where the `cuda` argument should be passed if running on a GPU, and the `additional_features` arguments should be set if using a dataset with additional features along with the raw sequence. There are a multitude of other parameters available, which you can see in the [finalproject.lua](finalproject.lua) file. Here is a summary of them:
+- b: The total number for sequences to split the training over.
+- sequence_length: The length of the sequence in a minibatch.
+- embedding_size: The 1D size of an embedding
+- optimizer: Set to either SGD for Stochastic Gradient Descent or adagrad for Adagrad.
+- epochs: The number of epochs to train for
+- hidden: Hidden layer size for models that use hidden layers (bidirectional RNN uses it)
+- eta: Learning rate
+- rnn_unit1: For uni-directional LSTM: Indicates what the first RNN layer is. Set to lstm or gru.
+- rnn_unit2: For uni-directional LSTM: Indicates what the second RNN layer is. Set to lstm or gru or none (for no second layer).
+- dropout: Dropout probability.
+- cuda: Use cuda. Code should be running on a GPU with CUDA and torch GPU packages installed.
+- bidirectional: Set this to use a bidirectional LSTM
+- bidirectional_layers: Integer which represents the number of stacked bidirectional layers with dropout in between.
+- additional_features: Set to true if using a dataset with additional features on top of the raw sequence.
 
 
 
