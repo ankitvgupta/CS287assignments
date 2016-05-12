@@ -1,4 +1,3 @@
--- Only requirement allowed
 require("hdf5")
 
 cmd = torch.CmdLine()
@@ -9,6 +8,7 @@ cmd:option('-classifier', 'laplace', 'classifier to use')
 cmd:option('-b', 128, 'Total number of sequences to split into (for rnn only)')
 cmd:option('-alpha', 1, 'laplacian smoothing factor')
 cmd:option('-odyssey', false, 'Set to true if running on odyssey')
+cmd:option('-tomodyssey', false, 'Set to true if running on toms odyssey')
 cmd:option('-sequence_length', 100, 'Length of sequence in batch (for rnn only)')
 cmd:option('-embedding_size', 50, 'Size of embeddings')
 cmd:option('-optimizer', 'sgd', 'optimizer to use')
@@ -32,19 +32,17 @@ function main()
 	-- Parse input params
 	opt = cmd:parse(arg)
 	_G.path = opt.odyssey and '/n/home09/ankitgupta/CS287/CS287assignments/finalproject/' or ''
+	_G.path = opt.tomodyssey and '/n/home11/tsilver/CS287/CS287assignments/finalproject/' or ''
 	if opt.cuda then
 		require 'cunn'
-		--print(cunn)
-		--print(cutorch)
 		cutorch.setDevice(1)
 		cutorch.setHeapTracking(true)
 		print("Using cuda")
 	end
 
-	dofile(_G.path..'neural.lua')
+	dofile(_G.path..'models.lua')
+	dofile(_G.path..'modelrunner.lua')
 	dofile(_G.path..'utils.lua')
-	dofile(_G.path..'hmm.lua')
-	dofile(_G.path..'memm.lua')
 	printoptions(opt)
 
 	local f = hdf5.open(opt.datafile, 'r')
@@ -54,11 +52,7 @@ function main()
 	local vocab_size = f:read('vocab_size'):all():long()[1] + 10
 	print("Num classes:", nclasses)
 	print("Vocab size:", vocab_size)
-	print("Start class:", start_class)
-	--local start_idx = f:read('start_idx'):all():long()[1]
-	--local end_indx = f:read('end_indx'):all():long()[1]
 
-	-- Count based laplace
 	local flat_train_input = f:read('train_input'):all()
 	if opt.additional_features == false then
 		flat_train_input = flat_train_input:long()
@@ -74,34 +68,24 @@ function main()
 	end
 	local test_output = f:read('test_output'):all():long()
 	
-	local desired_test_length = test_input:size(1) - (test_input:size(1) % opt.sequence_length)
-	--local desired_test_length = 1000
-	test_input = test_input:narrow(1, 1, desired_test_length)
-	test_output = test_output:narrow(1, 1, desired_test_length)
-	
-	print("Test size", test_input:size())
 	if opt.cuda then
-		--require 'cunn'
-		--cutorch.setDevice(1)
 		print("Using cuda")
 		flat_train_input = flat_train_input:cuda()
 		flat_train_output = flat_train_output:cuda()
 		test_input = test_input:cuda()
 		test_output = test_output:cuda()	
 	end
-	print(flat_train_input:size())
-	print(flat_train_output:size())
 
-
-	--printoptions(opt)
-
-	--print(flat_valid_output:narrow(1, 1, 20))
 	local model = nil
 	local crit = nil
 	local embedding = nil
 	local bisequencer_modules = nil
 
 	if (opt.classifier == 'rnn') then
+
+		local desired_test_length = test_input:size(1) - (test_input:size(1) % opt.sequence_length)
+		test_input = test_input:narrow(1, 1, desired_test_length)
+		test_output = test_output:narrow(1, 1, desired_test_length)
 		train_input, train_output = reshape_inputs(opt.b, flat_train_input, flat_train_output)
 		test_input, test_output = reshape_inputs(1, test_input, test_output)
 		print(test_input:size(), test_output:size())
@@ -110,7 +94,7 @@ function main()
 		print(train_output:size())
 		if opt.bidirectional then
 			if (opt.additional_features and opt.memm_layer) then
-				model, lstm_model, output_model, prev_class_model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeaturesMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
+				model, lstm_model, output_model, prev_class_model, crit, bisequencer_modules = biLSTMMEMM(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			elseif opt.additional_features then
 				model, crit, bisequencer_modules = bidirectionalRNNmodelExtraFeatures(num_features, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda, opt.hidden, opt.bidirectional_layers)
 			else
@@ -119,7 +103,6 @@ function main()
 		else
 			model, crit, embedding = rnn_model(vocab_size, opt.embedding_size, nclasses, opt.rnn_unit1, opt.rnn_unit2, opt.dropout, opt.cuda)
 		end
-
 
 		model:remember("both")
       	model:training()
@@ -136,24 +119,14 @@ function main()
    		accuracy = torch.sum(torch.eq(preds:double(),test_output:double()))/preds:size(1)
 		printoptions(opt)
 		print("Accuracy", accuracy)
-   	elseif (opt.classifier == 'hmm') then
-		test_input = test_input:reshape(1, test_input:size(1))
-   		
-		predictor = hmm_train(flat_train_input:squeeze(), flat_train_output, vocab_size, nclasses, opt.alpha)
-   		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
-   		print(test_predicted_output)
-   		acc = prediction_accuracy(test_predicted_output:long(), test_output)
-   		print("Accuracy:", acc)
    	elseif (opt.classifier == 'memm') then
-		test_input = test_input:reshape(1, test_input:size(1))
-   	
-		local model = train_memm(flat_train_input, nil, flat_train_output, 
-						vocab_size, 0, nclasses, opt.embedding_size, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer, opt.hidden)
+		model, crit = memm_model(num_features, nclasses, opt.embedding_size, opt.hidden)
+		trainMEMM(flat_train_input, flat_train_output, model, crit, opt.epochs, opt.minibatch_size, opt.eta, opt.optimizer)
 
-		predictor = make_predictor_function_memm(model, vocab_size)
+		predictor = make_predictor_function_memm(model, num_features)
    		test_predicted_output = viterbi(test_input, predictor, nclasses, start_class)
-   		print(test_predicted_output)
    		acc = prediction_accuracy(test_predicted_output:long(), test_output)
+   		printoptions(opt)
    		print("Accuracy:", acc)
    	else
    		print("Unknown classifier ", opt.classifier)

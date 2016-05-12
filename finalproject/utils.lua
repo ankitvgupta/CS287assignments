@@ -47,6 +47,7 @@ end
 -- predictor is a function that takes in past class and xi and
 --   provides a
 function viterbi(x, predictor, numClasses, start_class)
+	print("Starting Viterbi...")
 	local n = x:size(1)
 	local pi = torch.ones(n, numClasses):mul(-1e+31)
 	local bp = torch.ones(n, numClasses)
