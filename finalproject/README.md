@@ -1,4 +1,4 @@
-# Secondary Structure Prediction with Structured Prediction (and Bidirectional LSTMs)
+# Secondary Structure Prediction with Bidirectional LSTMs and Structured Prediction
 
 A final project for Harvard's [CS287](http://cs287.fas.harvard.edu) by @ankitvgupta and @tomsilver
 
